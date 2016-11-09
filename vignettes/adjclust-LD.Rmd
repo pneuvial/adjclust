@@ -1,0 +1,65 @@
+---
+title: "Adjacency-constrained hierarchical clustering of linkage disequilibrium"
+author: "Pierre Neuvial"
+output: pdf_document
+---
+
+In this short vignette we demonstrate the use of the `adjclust` package to perform adjacency-constrained hierarchical clustering of Linkage Disequilibrium data. The algorithm is described in [1].
+
+```{r}
+library("adjclust")
+```
+
+## Loading and displaying genotype data
+
+The beginning of this vignette closely follows the "LD vignette" of the SnpStats package [2]. First, we load genotype data.
+
+```{r}
+library("snpStats")
+data("ld.example", package="snpStats")
+```
+
+```{r, echo=FALSE}
+nSNP <- ncol(ceph.1mb)
+nSamples <- nrow(ceph.1mb)
+```
+
+We focus on the `ceph.1mb` data. These data are drawn from the International HapMap Project and concern `nSnp` SNPs over a 1Mb region of chromosome 22 in sample of `nSamples` Europeans. 
+
+```{r}
+head(ceph.1mb)
+```
+
+We can compute and display the LD between these SNPs.
+
+```{r}
+ld.ceph <- ld(ceph.1mb, stats="R.squared", depth=100)
+image(ld.ceph, lwd=0)
+```
+
+## Hierarchical clustering 
+
+```{r}
+fit <- adjclust(ceph.1mb, h=100, flavor="LD", stats="R.squared")
+```
+
+```{r}
+plot(fit)
+```
+
+
+## References
+
+[1] Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a blockwise approach in variable selection using linkage disequilibrium information. *BMC Bioinformatics* 16:148.
+
+[2] Clayton, D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods. R package version 1.20.0
+
+
+
+
+## Session information
+
+```{r}
+sessionInfo()
+```
+

@@ -1,0 +1,20 @@
+library("adjclust")
+
+
+context("post-hoc bounds derived from Simes' inequality")
+
+test_that("posthocBySimes is cherry::pickSimes on 'NAEP' data", {
+              ## Data from package `cherry`
+              data("NAEP", package="cherry")
+              m <- length(NAEP)
+              nms <- names(NAEP)
+              hom <- hommelFast(NAEP)
+
+              ntests <- 10
+              for (tt in 1:ntests) {
+                  nR <- round(runif(1)*m)
+                  R <- sample(nms, nR)
+                  expect_equal(pickSimes(hom, R, silent=TRUE),
+                               posthocBySimes(NAEP, R))
+              }
+          })
