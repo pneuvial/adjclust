@@ -2,7 +2,6 @@
 #'
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
-#’ @importFrom Rcpp evalCpp
 #' @useDynLib adjclust
 #'
 #'

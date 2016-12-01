@@ -2,7 +2,8 @@
 
 ## Version 0.2.2 [2016-12-01]
 
-* "Fixed" warning at check due to .hpp file in src
+* Added dummy R/adjclust.R so that document() adds 'importFrom Rcpp evalCpp' to NAMESPACE
+* "Fixed" warning at check due to .hpp file in src (this warning should not exist IMHO)
 
 ## Version 0.2.1 [2016-11-09]
 
