@@ -1,4 +1,4 @@
-adjClustBand_heap <- function(x, p, h, blMin=1, trace.time=FALSE, verbose=FALSE){
+adjClustBand_heap <- function(x, p, h, blMin=1, verbose=FALSE){
     len <- length(x)
     stopifnot(len==(p-1)*h-h*(h-1)/2)
     xt <- transpose(x, p, h)
@@ -15,11 +15,6 @@ adjClustBand_heap <- function(x, p, h, blMin=1, trace.time=FALSE, verbose=FALSE)
     rcCumR <- colCumsums(rCumR)  ## p x h matrix
 
     rm(x, xt)
-
-    if (trace.time) {
-        t0 <- Sys.time()
-        ts <- 0
-    }
 
     ## initialization
     gains <- rep(0, p-blMin)
@@ -70,8 +65,5 @@ adjClustBand_heap <- function(x, p, h, blMin=1, trace.time=FALSE, verbose=FALSE)
                  call = match.call(),
                  dist.method = attr(D, "method"))
     class(tree) <- "hclust"
-    if (trace.time) {
-        attr(tree, "time") <- ts
-    }
     return(tree)
 }

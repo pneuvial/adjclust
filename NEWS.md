@@ -1,8 +1,17 @@
 # Package: adjclust
 
+## Version 0.2.2 [2016-12-01]
+
+* "Fixed" warning at check due to .hpp file in src
+
+## Version 0.2.1 [2016-11-09]
+
+* Added minimal documentation
+* Replaced "std::cout" by "Rcpp::Rcout", and so on for "exit()" and "cerr".
+
 ## Version 0.2.0 [2016-06-24]
 
-* Incorporated the Michel's implementation (R function 'HeapHop')
+* Incorporated Michel's implementation (R function 'HeapHop')
 * 'adjClustBand' is now a wrapper to call either Alia's or Michel's
   implementation
 

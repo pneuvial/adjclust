@@ -14,6 +14,8 @@
 #include "GeneralFunctions.h"
 #include <math.h>
 #include <utility>
+#include <Rcpp.h>
+using namespace Rcpp;
 
 PseudoMatrix::PseudoMatrix()
 {
@@ -41,7 +43,8 @@ void PseudoMatrix::Initialize(double *V, int P, int H)
   for (int i = 0; i < p; i++)
     MyClasses[i].Initialize(this, i);
   clock_t End = clock();
-  std::cout << "Time needed to Initialize the pseudo matrix = " << ((double) End - Begin) / CLOCKS_PER_SEC << std::endl; 
+  // std::cout << "Time needed to Initialize the pseudo matrix = " << ((double) End - Begin) / CLOCKS_PER_SEC << std::endl;
+  Rcpp::Rcout << "Time needed to Initialize the pseudo matrix = " << ((double) End - Begin) / CLOCKS_PER_SEC << std::endl;
 }
 
 double PseudoMatrix::Value(int LineInA, int ColumnInA) const
@@ -101,9 +104,9 @@ void PseudoMatrix::Fusion(int LineIndex, int &NumFusionnedClass, ClassesHeap *H)
   Set(LineIndex, LineIndex, v);
 	Erase(LineIndex, NextAvailableIndex);
 	Erase(NextAvailableIndex, NextAvailableIndex);
-	
+
   // DisplayMatrixA(std::cout);
-  
+
   // Taking care of the line:
   int CurrentIndex = MyClasses[NextAvailableIndex].NextAvailableIndex;
   for (int d = 2; ((d<= h + 1) && (CurrentIndex > -1)); d++)
@@ -114,7 +117,7 @@ void PseudoMatrix::Fusion(int LineIndex, int &NumFusionnedClass, ClassesHeap *H)
 		CurrentIndex = MyClasses[CurrentIndex].NextAvailableIndex;
 		// DisplayMatrixA(std::cout);
   }
-	
+
   // Now taking care of the column:
   if (LineIndex > 0)
     CurrentIndex = MyClasses[LineIndex - 1].MyAvailableIndex;
@@ -171,7 +174,7 @@ std::ostream &operator<<(std::ostream &s, const PseudoMatrix &M)
   {
     s << "V[" << I->first.first << ", " << I->first.second << "] = " << I->second << std::endl;
   }
-  
+
     // s << "MyValues = (" << std::endl;
   int p = M.p;
     // int h = M.h;
@@ -180,7 +183,7 @@ std::ostream &operator<<(std::ostream &s, const PseudoMatrix &M)
   /*int CurrentIndex = 0;
   while (CurrentIndex > -1)
   {
-    
+
     for (int j = 0; j < h; j++)
       s << std::setw(5) << M.MyValues[CurrentIndex * h + j] << " ";
     s << std::endl;
@@ -194,9 +197,9 @@ std::ostream &operator<<(std::ostream &s, const PseudoMatrix &M)
   s << std::endl;
   s << "Now displaying Matrix A:" << std::endl;
   M.DisplayMatrixA(s);
-  
-  
-  
+
+
+
   s.precision(CurrentPrecision);
   return s;
 }

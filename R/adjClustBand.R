@@ -2,27 +2,39 @@
 #'
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
+#’ @importFrom Rcpp evalCpp
+#' @useDynLib adjclust
+#'
+#'
 #' @export
+#'
+#' @param x A vector of length \eqn{p*h - h*(h+1)/2} similarities
+#' @param p An integer, the number of items to be clustered
+#' @param h An integer, the size of the diagonal band to be considered
+#' @param flavor A character vector, the type of algorithm to be performed. Defaults to 'crayons' as described in Dehman (2015)
+#' @param minNbBlocks An integer, the number of blocks at which clustering should be stopped (to save time). Defaults to 1, which corresponds to perform the clustering until all items are merged.
+#' @param verbose A logical value: should extra information be displayed?
+#'
+#' @references Dehman A. (2015). "Spatial Clustering of Linkage Disequilibrium blocks for Genome-Wide Association Studies". PhD thesis. \url{https://tel.archives-ouvertes.fr/tel-01288568/}
 #'
 #' @examples
 #'
-#' data("ld_ceph", package="adjclust")
+#' data("R2.100", package="adjclust")
 #' x <- R2.100
-#' x <- Dprime.100
 #'
 #' h <- 100
 #' p <- 603
 #' res <- adjClustBand(x, p, h)
-#' resP <- adjClustBand(x, p, h, flavor="pseudoMatrix")
+#' resK <- adjClustBand(x, p, h, flavor="Koskas")
 
-adjClustBand <- function(x, p, h, flavor=c("heap", "pseudoMatrix"), minNbBlocks=1, trace.time=FALSE, verbose=FALSE) {
+adjClustBand <- function(x, p, h, flavor=c("crayons", "Koskas"), minNbBlocks=1, verbose=FALSE) {
     flavor <- match.arg(flavor)
-    if (flavor=="heap") {
+    if (flavor=="crayons") {
         if (minNbBlocks>1) {
-            stop("flavor 'heap' not implemented (properly) when minNbMblocks>1")
+            stop("flavor 'crayons' not implemented (properly) when minNbMblocks>1")
         }
-        res <- adjClustBand_heap(x, p, h, blMin=1, trace.time=trace.time, verbose=verbose)
-    } else if (flavor=="pseudoMatrix") {
+        res <- adjClustBand_heap(x, p, h, blMin=1, verbose=verbose)
+    } else if (flavor=="Koskas") {
         resP <- HeapHop(x, p, h, minNbBlocks)
         mg <- t(resP[1:2, ])
         gains0 <- resP[3, ]  ## seems to be broken?

@@ -6,9 +6,11 @@
 //  Copyright © 2016 INRA. All rights reserved.
 //
 
-#include "Permutation.hpp"
+#include "Permutation.h"
 #include "GeneralFunctions.h"
 #include <assert.h>
+#include <Rcpp.h>
+using namespace Rcpp;
 
 /*
 
@@ -65,8 +67,10 @@ void Permutation::Kill(int i)
   assert(Used[i]);
   if (!Used[i])
   {
-    std::cerr << "I Can NOT kill a corpse..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
-    exit(257);
+    //    std::cerr << "I Can NOT kill a corpse..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
+    Rcpp::Rcerr << "I Can NOT kill a corpse..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
+    // exit(257);
+    Rcpp::stop("257");
   }
   Free[NbFree] = IP[i];
   NbFree++;
@@ -77,8 +81,10 @@ void Permutation::Displace(int i)
 {
   if (!Used[i])
   {
-    std::cerr << "I Can NOT displace a corpse..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
-    exit(258);
+    // std::cerr << "I Can NOT displace a corpse..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
+    Rcpp::Rcerr << "I Can NOT displace a corpse..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
+    // exit(258);
+    Rcpp::stop("258");
   }
   if (NbFree == 0)
     return;
@@ -92,8 +98,10 @@ void Permutation::Add(int i)
 {
   if ((Used[i]) || (NbFree <= 0))
   {
-    std::cerr << "I Can NOT give birth to a living body..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
-    exit(259);
+    // std::cerr << "I Can NOT give birth to a living body..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
+    Rcpp::Rcerr << "I Can NOT give birth to a living body..."  << std::endl << "Please reconsider! " << std::endl << "I'm history." << std::endl;
+    // exit(259);
+    Rcpp::stop("259");
   }
   Used[i] = true;
   P[Free[NbFree - 1]] = i;

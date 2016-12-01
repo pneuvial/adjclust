@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include "FusionnedClasses.h"
-#include "Permutation.hpp"
+#include "Permutation.h"
 #include <map>
 #include <set>
 

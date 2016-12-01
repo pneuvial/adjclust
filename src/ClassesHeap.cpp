@@ -10,6 +10,8 @@
 #include "ClassesHeap.h"
 #include <iostream>
 #include <fstream>
+#include <Rcpp.h>
+using namespace Rcpp;
 
 ClassesHeap::ClassesHeap()
 {
@@ -28,10 +30,10 @@ ClassesHeap::ClassesHeap(PseudoMatrix *M, int NbWC, std::string OutputPath)
 
 void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
 {
-  
+
   assert(NbWC <= M->p);
   const clock_t Begin = clock();
-  
+
   if (OutputPath != "")
   {
     std::ofstream *f = new std::ofstream;
@@ -39,10 +41,11 @@ void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
     OutputStream = f;
   }
   else
-    OutputStream = &(std::cout);
+    //    OutputStream = &(std::cout);
+    OutputStream = &(Rcpp::Rcout);
 
   Output = new double[3 * (M->p - NbWC)];
-  
+
   NumFusionnedClasses = 0;
   HeapSize = 0;
   MyMatrix = M;
@@ -52,11 +55,11 @@ void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
   CurrentNbClasses = 1;
   Heap = new int[MaxSize];
   Which = new int[MaxSize + 1];
-  
+
   const clock_t EndInit = clock();
-  
-  std::cout << "Heap Init time = " << ((double) (EndInit - Begin)) / CLOCKS_PER_SEC << std::endl;
-  
+
+  //std::cout << "Heap Init time = " << ((double) (EndInit - Begin)) / CLOCKS_PER_SEC << std::endl;
+  Rcpp::Rcout << "Heap Init time = " << ((double) (EndInit - Begin)) / CLOCKS_PER_SEC << std::endl;
   for (int i = 0; i < MaxSize; i++)
   {
     AddNode();
@@ -64,8 +67,8 @@ void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
     // std::cout << HeapSize << " ";
   }
   Which[MaxSize] = MaxSize;
-  
-  
+
+
   while ((CurrentNbClasses > NbWantedClasses) && (HeapSize > 0))
   {
     // std::cout << "------------------------ >>>>>>   Before fusion:" << std::endl;
@@ -74,20 +77,21 @@ void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
     // std::cout << "------------------------ >>>>>>   After fusion:" << std::endl;
     // std::cout << *this;
 		// std::cout << "NbClasses = " << CurrentNbClasses << std::endl;
-    
+
     // assert(CheckMe());
     // std::cout << HeapSize << " ";
   }
 /*  if ((HeapSize == 1) && (CurrentNbClasses > NbWantedClasses))
   {
-    std::cerr << "Pretty starnge" << std::endl;
+    std::cerr << "Pretty strange" << std::endl;
     std::cerr << "HeapSize = 1" << std::endl;
     std::cerr << "NbWantedClasses = " << NbWantedClasses << std::endl;
     std::cerr << "CurrentNbClasses = " << CurrentNbClasses << std::endl;
   }*/
-  
+
   const clock_t End = clock();
-  std::cout << "Time computation for the heap = " << ((double) (End - EndInit)) / CLOCKS_PER_SEC << std::endl;  
+  // std::cout << "Time computation for the heap = " << ((double) (End - EndInit)) / CLOCKS_PER_SEC << std::endl;
+  Rcpp::Rcout << "Time computation for the heap = " << ((double) (End - EndInit)) / CLOCKS_PER_SEC << std::endl;
 }
 
 ClassesHeap::~ClassesHeap()
@@ -132,7 +136,7 @@ void ClassesHeap::Swap(int i, int j)
 {
   MySwap<int>(Heap[i], Heap[j]);
   MySwap<int>(Which[Heap[i]], Which[Heap[j]]);
-  
+
 }
 
 bool ClassesHeap::RebalanceToDown(int Index)
@@ -166,7 +170,7 @@ bool ClassesHeap::RebalanceToDown(int Index)
 bool ClassesHeap::RebalanceToUp(int IndexInHeap)
 {
   bool Res = false;
-  
+
   int CurrentIndex = IndexInHeap;
   if (CurrentIndex == -1)
     CurrentIndex = HeapSize - 1;
@@ -254,7 +258,7 @@ std::ostream &operator<<(std::ostream &s, const ClassesHeap &H)
     s << H.Which[i] << ", ";
   s << H.Which[H.MyMatrix->p - 1]<< ")" << std::endl;
   s << "My Pseudo Matrice is: " << *(H.MyMatrix);
-  
+
   for (int i = 0; i < H.MyMatrix->p - H.NbWantedClasses; i++)
     s << H.Output[3 * i] << '\t' << H.Output[3 * i + 1] << '\t' << H.Output[3 * i + 2] <<std::endl;
   return s;

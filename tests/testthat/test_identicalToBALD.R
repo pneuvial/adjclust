@@ -4,7 +4,8 @@ context("Comparison between the results of the 'BALD' and 'adjclust' packages")
 
 test_that("BALD::cWard and adjClustBand give idenctical results on CEPH data (R.squared and D.prime)", {
               library("adjclust")
-              data("ld_ceph", package="adjclust")
+              data("R2.100", package="adjclust")
+              data("Dprime.100", package="adjclust")
               h <- 100
               p <- 603
               dat <- list("R2"=R2.100, "Dprime"=Dprime.100)

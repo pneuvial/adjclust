@@ -1,4 +1,3 @@
-#' @export
 transpose <- function(x, p, h) {
     len <- length(x)
     stopifnot(len==(p-1)*h-h*(h-1)/2)

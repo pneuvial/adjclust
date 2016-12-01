@@ -4,6 +4,8 @@
 #include "FusionnedClasses.h"
 #include "PseudoMatrix.h"
 #include <fstream>
+#include <Rcpp.h>
+using namespace Rcpp;
 
 // [[Rcpp::export]]
 Rcpp::NumericVector  HeapHop(Rcpp::NumericVector Input,const int p, const int h, const int NbCLasses){
@@ -26,9 +28,11 @@ Rcpp::NumericVector  HeapHop(Rcpp::NumericVector Input,const int p, const int h,
 
   for (int Ligne = 0; Ligne < p; Ligne++) {
     for (int Colonne = 0; Colonne < h+1; Colonne++) {
-      std::cout << V[Ligne  * (h+1) + Colonne] << '\t';
+      // std::cout << V[Ligne  * (h+1) + Colonne] << '\t';
+      Rcpp::Rcout << V[Ligne  * (h+1) + Colonne] << '\t';
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
+    Rcpp::Rcout << std::endl;
   }
 
   // for (int Index = 0; Index<  p * (h+1) - (h*(h+1)/2); Index++) {
@@ -42,7 +46,8 @@ Rcpp::NumericVector  HeapHop(Rcpp::NumericVector Input,const int p, const int h,
   //   OutputFile << V[i] << " ";
   // OutputFile.close();
   ClassesHeap H(V, int(p), int(h), int(NbCLasses));
-  std::cout<<H;
+  // std::cout<<H;
+  Rcpp::Rcout<<H;
   for(int index=0; index< 3*(p-1); index++) merge[index]=H.Output[index];
   return merge;
 }
