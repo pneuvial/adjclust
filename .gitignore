@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+src/*.o
+src/*.so
+src/*.dll
+
+## Mac and Emacs oddities
+.DS_Store
+*~
