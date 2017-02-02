@@ -4,8 +4,8 @@
 \alias{adjClustBand}
 \title{Adjacency-constrained clustering of a band diagonal similarity matrix}
 \usage{
-adjClustBand(x, p, h, flavor = c("crayons", "Koskas"), minNbBlocks = 1,
-  verbose = FALSE)
+adjClustBand(x, p, h, flavor = c("crayons", "PseudoMatrix"),
+  minNbBlocks = 1, verbose = FALSE)
 }
 \arguments{
 \item{x}{A vector of length \eqn{p*h - h*(h+1)/2} similarities}
@@ -31,7 +31,7 @@ x <- R2.100
 h <- 100
 p <- 603
 res <- adjClustBand(x, p, h)
-resK <- adjClustBand(x, p, h, flavor="Koskas")
+resK <- adjClustBand(x, p, h, flavor="PseudoMatrix")
 }
 \references{
 Dehman A. (2015). "Spatial Clustering of Linkage Disequilibrium blocks for Genome-Wide Association Studies". PhD thesis. \url{https://tel.archives-ouvertes.fr/tel-01288568/}

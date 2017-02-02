@@ -1,5 +1,10 @@
 # Package: adjclust
 
+## Version 0.2.3 [2017-02-02]
+
+* Updated LD vignette
+* In adjClustBand, renamed flavor "Koskas" to "PseudoMatrix"
+
 ## Version 0.2.2 [2016-12-01]
 
 * Added dummy R/adjclust.R so that document() adds 'importFrom Rcpp evalCpp' to NAMESPACE

@@ -24,16 +24,16 @@
 #' h <- 100
 #' p <- 603
 #' res <- adjClustBand(x, p, h)
-#' resK <- adjClustBand(x, p, h, flavor="Koskas")
+#' resK <- adjClustBand(x, p, h, flavor="PseudoMatrix")
 
-adjClustBand <- function(x, p, h, flavor=c("crayons", "Koskas"), minNbBlocks=1, verbose=FALSE) {
+adjClustBand <- function(x, p, h, flavor=c("crayons", "PseudoMatrix"), minNbBlocks=1, verbose=FALSE) {
     flavor <- match.arg(flavor)
     if (flavor=="crayons") {
         if (minNbBlocks>1) {
             stop("flavor 'crayons' not implemented (properly) when minNbMblocks>1")
         }
         res <- adjClustBand_heap(x, p, h, blMin=1, verbose=verbose)
-    } else if (flavor=="Koskas") {
+    } else if (flavor=="PseudoMatrix") {
         resP <- HeapHop(x, p, h, minNbBlocks)
         mg <- t(resP[1:2, ])
         gains0 <- resP[3, ]  ## seems to be broken?
