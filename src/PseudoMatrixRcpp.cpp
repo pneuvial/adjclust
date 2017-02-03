@@ -44,7 +44,7 @@ Rcpp::NumericVector  HeapHop(Rcpp::NumericVector Input,const int p, const int h,
   //   OutputFile << V[i] << " ";
   // OutputFile.close();
   ClassesHeap H(V, int(p), int(h), int(NbCLasses));
-  Rcpp::Rcout<<H;
+  //  Rcpp::Rcout<<H;
   for(int index=0; index< 3*(p-1); index++) merge[index]=H.Output[index];
   return merge;
 }
