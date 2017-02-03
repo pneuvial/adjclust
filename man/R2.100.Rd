@@ -4,9 +4,9 @@
 \name{R2.100}
 \alias{R2.100}
 \title{Linkage disequilibrium on chromosome 22 in the European population}
-\format{A sparse matrix of class \code{\link{Matrix::dgCMatrix}}.}
+\format{A sparse matrix of class \code{\link[Matrix]{dgCMatrix-class}}.}
 \source{
-Data extracted from \code{snpStats::ld.example}. The original data is
+Data extracted from \code{\link[snpStats]{ld.example}}. The original data is
   from the HapMap project.
 }
 \usage{

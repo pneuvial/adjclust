@@ -2,7 +2,14 @@ library("adjclust")
 
 context("Comparison between the results of the 'BALD' and 'adjclust' packages")
 
-test_that("BALD::cWard and adjClustBand give idenctical results on CEPH data (R.squared and D.prime)", {
+check_BALD <- function() {
+  if (!require("BALD")) {
+    skip("BALD package not available")
+  }
+}
+test_that("BALD::cWard and adjClustBand_heap give idenctical results on CEPH data (R.squared and D.prime)", {
+              check_BALD()
+
               library("adjclust")
               data("R2.100", package="adjclust")
               data("Dprime.100", package="adjclust")
@@ -13,7 +20,7 @@ test_that("BALD::cWard and adjClustBand give idenctical results on CEPH data (R.
               elts <- c("traceW", "gains", "merge", "height", "seqdist", "order", "labels")
 
               for (stat in c("R2", "Dprime")) {
-                  x <- dat[[stat]]
+                  x <- slot(dat[[stat]], "x")
                   res <- adjclust:::adjClustBand_heap(x, p, h)
 
                   filename <- sprintf("cWard_ceph_%s,h=%s.rds", stat, h)

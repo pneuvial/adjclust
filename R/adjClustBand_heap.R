@@ -1,3 +1,5 @@
+#' @importFrom matrixStats rowCumsums
+#' @importFrom matrixStats colCumsums
 adjClustBand_heap <- function(x, p, h, blMin=1, verbose=FALSE){
     len <- length(x)
     stopifnot(len==(p-1)*h-h*(h-1)/2)
