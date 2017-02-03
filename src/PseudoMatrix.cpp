@@ -13,7 +13,6 @@
 #include <utility>
 #include "GeneralFunctions.h"
 #include <math.h>
-#include <utility>
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -23,7 +22,7 @@ PseudoMatrix::PseudoMatrix()
   p = 0;
   MyClasses = NULL;
   NbClasses = 0;
-  NbFusions = 0;
+  MyData = NULL;
 }
 
 PseudoMatrix::PseudoMatrix(double *V, int P, int H)
@@ -36,106 +35,87 @@ void PseudoMatrix::Initialize(double *V, int P, int H)
   clock_t Begin = clock();
   p = P;
   h = H;
-  for (int Line = 0; Line < p; Line++)
-    for (int Col = 0; Col <= h; Col++)
-      Set(Line, Line + Col, V[Line * (h + 1) + Col]);
   MyClasses = new FusionnedClasses[p];
   for (int i = 0; i < p; i++)
     MyClasses[i].Initialize(this, i);
+  MyData = new ColsArray[p];
+  for (int Line = 0; Line < p; Line++)
+  {
+    MyData[Line].Initialize(this);
+    for (int Col = 0; Col < h + 1; Col++)
+      MyData[Line].Set(Line + Col, V[Line * (h + 1) + Col], Col);
+  }
+  for (int i = 0; i < p; i++)
+    MyClasses[i].InitializeFusionCost();
+
   clock_t End = clock();
-  // std::cout << "Time needed to Initialize the pseudo matrix = " << ((double) End - Begin) / CLOCKS_PER_SEC << std::endl;
   Rcpp::Rcout << "Time needed to Initialize the pseudo matrix = " << ((double) End - Begin) / CLOCKS_PER_SEC << std::endl;
+}
+
+double PseudoMatrix::Value(int LineInA, int ColumnInA, int SupposedPlace) const
+{
+  return MyData[LineInA].Value(ColumnInA, SupposedPlace);
 }
 
 double PseudoMatrix::Value(int LineInA, int ColumnInA) const
 {
-  if (LineInA >= p)
-    return 0;
-  if (ColumnInA >= p)
-    return 0;
-  if (MyClasses[LineInA].MyIndex != MyClasses[LineInA].MyAvailableIndex)
-    return 0;
-  std::map<std::pair<int, int>, double>::const_iterator El = MyValues.find(std::make_pair(LineInA, ColumnInA));
-  if (El == MyValues.end())
-    return 0;
-  else
-    return El->second;
+  return MyData[LineInA].Value(ColumnInA);
 }
 
 void PseudoMatrix::Set(int LineInA, int ColumnInA, double v)
 {
-  if (LineInA >= p)
-    return;
-  if (LineInA < 0)
-    return;
-  if (ColumnInA >= p)
-    return;
-  if (ColumnInA < 0)
-    return;
-  MyValues[std::make_pair(LineInA, ColumnInA)] = v;
+  MyData[LineInA].Set(ColumnInA, v);
 }
 
-void PseudoMatrix::Erase(int LineIndex, int ColumnIndex)
+void PseudoMatrix::Set(int LineInA, int ColumnInA, double v, int ForceIndex, bool Assumption)
 {
-  std::map<std::pair<int, int>, double>::iterator El = MyValues.find(std::make_pair(LineIndex, ColumnIndex));
-  if (El != MyValues.end())
-  {
-    MyValues.erase(El);
-    return;
-  }
-  // std::cerr << "Warning: you're trying to erase an inexisting value" << std::endl;
+  MyData[LineInA].Set(ColumnInA, v, ForceIndex, Assumption);
 }
 
 
 PseudoMatrix::~PseudoMatrix()
 {
   delete[] MyClasses;
+  delete[] MyData;
 }
 
 
-void PseudoMatrix::Fusion(int LineIndex, int &NumFusionnedClass, ClassesHeap *H)
+void PseudoMatrix::Fusion(int LineIndex, int &NumFusionnedClass)
 {
   assert(MyClasses[LineIndex].MyAvailableIndex == LineIndex);
   int NextAvailableIndex = MyClasses[LineIndex].NextAvailableIndex;
   assert(NextAvailableIndex > -1);
 
-  // Taking care of the diagonal value
-  double v = Value(LineIndex, LineIndex) + Value(NextAvailableIndex, NextAvailableIndex) + 2 * Value(LineIndex, NextAvailableIndex);
-  Set(LineIndex, LineIndex, v);
-	Erase(LineIndex, NextAvailableIndex);
-	Erase(NextAvailableIndex, NextAvailableIndex);
+  MyData[LineIndex].Restructure();
 
-  // DisplayMatrixA(std::cout);
+  // Taking care of the diagonal value
+  double v = Value(LineIndex, LineIndex, 0) + Value(NextAvailableIndex, NextAvailableIndex, 0) + 2 * Value(LineIndex, NextAvailableIndex, 1);
+  Set(LineIndex, LineIndex, v, 0);
+
+  // DisplayMatrixA(Rcpp::Rcout);
 
   // Taking care of the line:
   int CurrentIndex = MyClasses[NextAvailableIndex].NextAvailableIndex;
   for (int d = 2; ((d<= h + 1) && (CurrentIndex > -1)); d++)
   {
-		v = Value(LineIndex, CurrentIndex) + Value(NextAvailableIndex, CurrentIndex);
-		Erase(NextAvailableIndex, CurrentIndex);
-		Set(LineIndex, CurrentIndex, v);
+		v = Value(LineIndex, CurrentIndex, d) + Value(NextAvailableIndex, CurrentIndex, d - 1);
+		Set(LineIndex, CurrentIndex, v, d - 1);
 		CurrentIndex = MyClasses[CurrentIndex].NextAvailableIndex;
-		// DisplayMatrixA(std::cout);
+    MyData[LineIndex].ArraySize = d;
+		// DisplayMatrixA(Rcpp::Rcout);
   }
 
   // Now taking care of the column:
-  if (LineIndex > 0)
-    CurrentIndex = MyClasses[LineIndex - 1].MyAvailableIndex;
-  else
-    CurrentIndex = -1;
+  CurrentIndex = MyClasses[LineIndex].PrevAvailableIndex;
   for (int i = 1; ((i <= h) && (CurrentIndex > -1)); i++)
   {
-    v = Value(CurrentIndex, LineIndex) + Value(CurrentIndex, NextAvailableIndex);
-    Set(CurrentIndex, LineIndex, v);
-    if (i < h)
-      Erase(CurrentIndex, NextAvailableIndex);
-    if (CurrentIndex > 0)
-      CurrentIndex = MyClasses[CurrentIndex - 1].MyAvailableIndex;
-    else
-      CurrentIndex = -1;
+    v = Value(CurrentIndex, LineIndex, i) + Value(CurrentIndex, NextAvailableIndex, i + 1);
+    Set(CurrentIndex, LineIndex, v, i, true);
+    CurrentIndex = MyClasses[CurrentIndex].PrevAvailableIndex;
   }
-  NbFusions += 1 + MyClasses[NextAvailableIndex].NbFusions;
-  MyClasses[LineIndex].Swallow(NumFusionnedClass, H);
+  MyClasses[LineIndex].Swallow(NumFusionnedClass);
+  delete[] MyData[NextAvailableIndex].ColIndex;
+  delete[] MyData[NextAvailableIndex].Data;
 }
 
 void PseudoMatrix::DisplayMatrixA(std::ostream &s) const
@@ -156,8 +136,8 @@ void PseudoMatrix::DisplayMatrixA(std::ostream &s) const
 						V =Value(j, i);
 					MyPrint(V, s);
 				}
+      s << std::endl << std::endl;
 		}
-		s << std::endl << std::endl;
   }
   s << std::endl << std::endl;
   s.precision(CurrentPrecision);
@@ -170,11 +150,6 @@ std::ostream &operator<<(std::ostream &s, const PseudoMatrix &M)
   s << "h = " << M.h << ", ";
   s << "p = " << M.p << ", ";
 	s << "Displaying WhichColumn: " << std::endl;
-  for (std::map<std::pair<int, int>, double>::const_iterator I = M.MyValues.begin(); I != M.MyValues.end(); I++)
-  {
-    s << "V[" << I->first.first << ", " << I->first.second << "] = " << I->second << std::endl;
-  }
-
     // s << "MyValues = (" << std::endl;
   int p = M.p;
     // int h = M.h;
@@ -195,6 +170,10 @@ std::ostream &operator<<(std::ostream &s, const PseudoMatrix &M)
     if (M.MyClasses[i].Exist())
       s << M.MyClasses[i] << std::endl;
   s << std::endl;
+  s << "Displaying ColsArrays. "  << std::endl;
+  for (int i = 0; i < p; i++)
+    if (M.MyClasses[i].Exist())
+      s << M.MyData[i] << std::endl;
   s << "Now displaying Matrix A:" << std::endl;
   M.DisplayMatrixA(s);
 

@@ -16,12 +16,12 @@
 
 
 /* (default is ok (no allocation is ever made).
-FusionnedClasses::~FusionnedClasses()
+FusionnedClasses::~FusionnedClasses() TrucTruc
 {
-
+  
 }
 */
-
+ 
 FusionnedClasses::FusionnedClasses()
 {
   NbFusions = 0;
@@ -29,6 +29,7 @@ FusionnedClasses::FusionnedClasses()
   MyIndex = -1;
   MyAvailableIndex = -1;
   NextAvailableIndex = -1;
+  PrevAvailableIndex = -1;
   MyMatrix = NULL;
   WhoIAm = 0;
 }
@@ -43,11 +44,19 @@ void FusionnedClasses::Initialize(PseudoMatrix *M, int ClassIndex)
   MyMatrix = M;
   MyIndex = ClassIndex;
   MyAvailableIndex = ClassIndex;
+  PrevAvailableIndex = ClassIndex - 1;
+  NextAvailableIndex = ClassIndex + 1;
+  if (ClassIndex == MyMatrix->p - 1)
+    NextAvailableIndex = -1;
+  WhoIAm = -(ClassIndex + 1);
+}
+
+void FusionnedClasses::InitializeFusionCost()
+{
   if (MyIndex == MyMatrix->p - 1)
     NextAvailableIndex = -1;
   else
-    NextAvailableIndex = ClassIndex + 1;
-  WhoIAm = -(ClassIndex + 1);
+    NextAvailableIndex = MyIndex + 1;
   if (NextAvailableIndex < 0)
     FusionCost = -1;
   else
@@ -63,42 +72,21 @@ double FusionnedClasses::MyValue() const
   return MyMatrix->Value(MyAvailableIndex, MyAvailableIndex);
 }
 
-
-void FusionnedClasses::Swallow(int &NumFusionnedClass, ClassesHeap *H)
+void FusionnedClasses::Swallow(int &NumFusionnedClass)
 {
   assert(MyAvailableIndex == MyIndex);
   assert(NextAvailableIndex > -1);
-    // int NextClassIndex = NextAvailableIndex;
   FusionnedClasses *Next = (MyMatrix->MyClasses) + NextAvailableIndex;
   NbFusions += 1 + Next->NbFusions;
-  for (int i = MyIndex; i < Next->MyIndex; i++)
-    MyMatrix->MyClasses[i].NextAvailableIndex = Next->NextAvailableIndex;
-  int LastIndex = MyMatrix->p;
-  if (Next->NextAvailableIndex > -1)
-    LastIndex = Next->NextAvailableIndex;
-  for (int i = Next->MyIndex; i < LastIndex; i++)
-    (*MyMatrix).MyClasses[i].MyAvailableIndex = MyAvailableIndex;
-
-  H->Output[3 * NumFusionnedClass] = WhoIAm;
-  H->Output[3 * NumFusionnedClass + 1] = Next->WhoIAm;
-  H->Output[3 * NumFusionnedClass + 2] = FusionCost;
-    // std::cout << "( " << WhoIAm << '\t' << Next->WhoIAm << ")" << std::endl;
-
-
+  Next->MyAvailableIndex = MyIndex;
+  NextAvailableIndex = Next->NextAvailableIndex;
+  if (NextAvailableIndex > -1)
+  {
+    Next = (MyMatrix->MyClasses) + NextAvailableIndex;
+    Next->PrevAvailableIndex = MyIndex;
+  }
   WhoIAm = NumFusionnedClass + 1;
   NumFusionnedClass++;
-  if (NextAvailableIndex > -1)
-    {
-      ComputeMyFusionCost();
-    }
-  else
-    FusionCost = -1;
-
-  if (MyAvailableIndex > 0)
-  {
-    FusionnedClasses *Prec = MyMatrix->MyClasses + MyMatrix->MyClasses[MyAvailableIndex - 1].MyAvailableIndex;
-    Prec->ComputeMyFusionCost();
-  }
 }
 
 
@@ -113,9 +101,7 @@ void FusionnedClasses::ComputeMyFusionCost()
   double a = MyCardinal();
   double b = MyMatrix->MyClasses[NextAvailableIndex].MyCardinal();
   double Coefficient = (a * b) / (a + b);
-
-  // BEWARE: It's really MyIndex + 1 because coefficients have been stored even on unavailable columns!
-
+  
   FusionCost = Coefficient * (MyValue() / (a * a)  - 2 * MyMatrix->Value(MyIndex, NextAvailableIndex) / (a * b) + MyMatrix->Value(NextAvailableIndex, NextAvailableIndex) / (b * b));
 }
 
@@ -148,7 +134,7 @@ std::ostream &operator<<(std::ostream &s, const FusionnedClasses &C)
   s << "NbFusions = " << C.NbFusions << ", ";
   s << "MyMatrix = " << C.MyMatrix << ".";
   s << ")  ";
-  return s;
+  return s; 
 }
 
 
@@ -158,16 +144,4 @@ bool operator<(const FusionnedClasses &Left, const FusionnedClasses &Right)
     return (Left.MyAvailableIndex < Right.MyAvailableIndex);
   return (Left.FusionCost < Right.FusionCost);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

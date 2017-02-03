@@ -41,7 +41,6 @@ void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
     OutputStream = f;
   }
   else
-    //    OutputStream = &(std::cout);
     OutputStream = &(Rcpp::Rcout);
 
   Output = new double[3 * (M->p - NbWC)];
@@ -58,39 +57,38 @@ void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
 
   const clock_t EndInit = clock();
 
-  //std::cout << "Heap Init time = " << ((double) (EndInit - Begin)) / CLOCKS_PER_SEC << std::endl;
   Rcpp::Rcout << "Heap Init time = " << ((double) (EndInit - Begin)) / CLOCKS_PER_SEC << std::endl;
+
   for (int i = 0; i < MaxSize; i++)
   {
     AddNode();
     // assert(CheckMe());
-    // std::cout << HeapSize << " ";
+    // Rcpp::Rcout << HeapSize << " ";
   }
   Which[MaxSize] = MaxSize;
-
-
   while ((CurrentNbClasses > NbWantedClasses) && (HeapSize > 0))
   {
-    // std::cout << "------------------------ >>>>>>   Before fusion:" << std::endl;
-    // std::cout << *this;
+    // Rcpp::Rcout << "------------------------ >>>>>>   Before fusion:" << std::endl;
+    // Rcpp::Rcout << *this;
     MakeAFusion();
-    // std::cout << "------------------------ >>>>>>   After fusion:" << std::endl;
-    // std::cout << *this;
-		// std::cout << "NbClasses = " << CurrentNbClasses << std::endl;
+    // Rcpp::Rcout << "------------------------ >>>>>>   After fusion:" << std::endl;
+    // Rcpp::Rcout << *this;
+		// Rcpp::Rcout << "NbClasses = " << CurrentNbClasses << std::endl;
 
     // assert(CheckMe());
-    // std::cout << HeapSize << " ";
+    // Rcpp::Rcout << HeapSize << " ";
+    if (CurrentNbClasses % 10000 == 0)
+      Rcpp::Rcout << "CurrentNbClasses = " << CurrentNbClasses <<  std::endl;
   }
 /*  if ((HeapSize == 1) && (CurrentNbClasses > NbWantedClasses))
   {
-    std::cerr << "Pretty strange" << std::endl;
-    std::cerr << "HeapSize = 1" << std::endl;
-    std::cerr << "NbWantedClasses = " << NbWantedClasses << std::endl;
-    std::cerr << "CurrentNbClasses = " << CurrentNbClasses << std::endl;
+    Rcpp::Rcerr << "Pretty starnge" << std::endl;
+    Rcpp::Rcerr << "HeapSize = 1" << std::endl;
+    Rcpp::Rcerr << "NbWantedClasses = " << NbWantedClasses << std::endl;
+    Rcpp::Rcerr << "CurrentNbClasses = " << CurrentNbClasses << std::endl;
   }*/
 
   const clock_t End = clock();
-  // std::cout << "Time computation for the heap = " << ((double) (End - EndInit)) / CLOCKS_PER_SEC << std::endl;
   Rcpp::Rcout << "Time computation for the heap = " << ((double) (End - EndInit)) / CLOCKS_PER_SEC << std::endl;
 }
 
@@ -201,18 +199,12 @@ void ClassesHeap::MakeAFusion()
 	assert(IndexNextClass > 0);
   int NextToNextClass = MyMatrix->MyClasses[IndexNextClass].NextAvailableIndex;
   int IndexCurrentClass = Heap[0];
-  int IndexPrecClass;
-  if (Heap[0] > 0)
-    IndexPrecClass = MyMatrix->MyClasses[Heap[0] - 1].MyAvailableIndex;
-  else
-    IndexPrecClass = -1;
-  MyMatrix->Fusion(IndexCurrentClass, NumFusionnedClasses, this);
-	MyMatrix->MyClasses[IndexCurrentClass].ComputeMyFusionCost();
-	if (IndexPrecClass > -1)
-	{
-		MyMatrix->MyClasses[IndexPrecClass].ComputeMyFusionCost();
-		FullRebalance(Which[IndexPrecClass]);
-	}
+  int IndexPrecClass = MyMatrix->MyClasses[Heap[0]].PrevAvailableIndex;
+  Output[3 * NumFusionnedClasses] = MyMatrix->MyClasses[IndexCurrentClass].WhoIAm;
+  Output[3 * NumFusionnedClasses + 1] = MyMatrix->MyClasses[IndexNextClass].WhoIAm;
+  Output[3 * NumFusionnedClasses + 2] = MyMatrix->MyClasses[IndexCurrentClass].FusionCost;
+  MyMatrix->Fusion(IndexCurrentClass, NumFusionnedClasses);
+
   if (NextToNextClass == -1)
   {
     Swap(0, HeapSize - 1);
@@ -224,8 +216,19 @@ void ClassesHeap::MakeAFusion()
     int ModifiedIndex = Which[IndexNextClass];
     Swap(ModifiedIndex, HeapSize - 1);
     HeapSize--;
+      //  Next rebalance takes care of swallowed class
     FullRebalance(ModifiedIndex);
+      // Next rebalance takes care of swallowing class
+    MyMatrix->MyClasses[IndexCurrentClass].ComputeMyFusionCost();
+    RebalanceToDown();
   }
+  if (IndexPrecClass > -1)
+  {
+    MyMatrix->MyClasses[IndexPrecClass].ComputeMyFusionCost();
+      // Next rebalance takes care of preceding class
+    FullRebalance(Which[IndexPrecClass]);
+  }
+
 	CurrentNbClasses--;
 }
 

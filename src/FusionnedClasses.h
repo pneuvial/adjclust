@@ -32,18 +32,20 @@ public:
   int MyAvailableIndex; // indice actualise de la classe
     // NextAvailableIndex is the smallest index of the next class (-1 if I bezlon to the last class) 
   int NextAvailableIndex;
+  int PrevAvailableIndex;
   int WhoIAm;
   FusionnedClasses(PseudoMatrix *M, int ClassIndex);
   FusionnedClasses();
   void Initialize(PseudoMatrix *M, int ClassIndex);
     // A FusionnedClass should only swallow next one
-  void Swallow(int &NumFusionnedClass, ClassesHeap *H); // avale la voisine de droite
+  void Swallow(int &NumFusionnedClass); // avale la voisine de droite
   void Disappear();
   bool Exist();
   void DisplayMatrixA();
     // ~FusionnedClasses();
   int MyCardinal() const;
   void ComputeMyFusionCost();
+  void InitializeFusionCost();
   
 private:
 };

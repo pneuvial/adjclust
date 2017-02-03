@@ -26,8 +26,39 @@ void MySwap(T &A, T &B)
   B = C;
 }
 
-
-
+template <typename T>
+bool Find(T *Array, int ArraySize, T x, int &Res)
+{
+  int First =0, Last = ArraySize;
+  if (ArraySize == 0)
+  {
+    Res = 0;
+    return false;
+  }
+  if (x < Array[0])
+  {
+    Res = 01;
+    return false;
+  }
+  if (x > Array[ArraySize - 1])
+  {
+    Res = ArraySize;
+    return false;
+  }
+  while (Last - First > 1)
+  {
+    int m = (First + Last) / 2;
+    if (x < Array[m])
+      Last = m;
+    else
+      First = m;
+  }
+  Res = First;
+  if (x == Array[First])
+    {Res = First; return true;}
+  else
+    {Res = First + 1; return false;}
+}
 
 
 

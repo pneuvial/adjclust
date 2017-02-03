@@ -21,3 +21,4 @@ void MyPrint(double &f, std::ostream &s)
   if ((m > 0) && (n != f))
     s << '\t';
 }
+
