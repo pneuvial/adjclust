@@ -21,6 +21,7 @@ library("adjclust")
 The begining of this vignette closely follows the "LD vignette" of the SnpStats package [1]. First, we load genotype data.
 
 ```{r, results="hide", message=FALSE}
+library("matrixStats")
 library("snpStats")
 data("ld.example", package="snpStats")
 ```
@@ -30,7 +31,7 @@ p <- ncol(ceph.1mb)
 nSamples <- nrow(ceph.1mb)
 ```
 
-We focus on the `ceph.1mb` data. These data are drawn from the International HapMap Project and concern `r p` SNPs over a 1Mb region of chromosome 22 in sample of `r nSamples` Europeans. 
+We focus on the `ceph.1mb` data. These data are drawn from the International HapMap Project and concern `r p` SNPs over a 1Mb region of chromosome 22 in sample of `r nSamples` Europeans.
 
 ```{r}
 ceph.1mb
@@ -44,7 +45,7 @@ image(ld.ceph, lwd=0)
 ```
 
 
-## Adjacency-constrained Hierarchical Agglomerative Clustering 
+## Adjacency-constrained Hierarchical Agglomerative Clustering
 
 The above figure suggests that the LD signal is concentrated close to the diagonal. Therefore, we focus on a diagonal band:
 
