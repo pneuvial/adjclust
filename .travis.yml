@@ -32,6 +32,8 @@ matrix:
     - os: osx
       r: release
 
+bioc_packages:
+  - snpStats
 
 notifications:
   email:
