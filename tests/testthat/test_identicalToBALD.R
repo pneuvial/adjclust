@@ -14,7 +14,7 @@ test_that("BALD::cWard and adjClustBand give idenctical results on CEPH data (R.
 
               for (stat in c("R2", "Dprime")) {
                   x <- dat[[stat]]
-                  res <- adjClustBand(x, p, h)
+                  res <- adjclust:::adjClustBand_heap(x, p, h)
 
                   filename <- sprintf("cWard_ceph_%s,h=%s.rds", stat, h)
                   pathname <- system.file("extdata", filename, package="adjclust")
