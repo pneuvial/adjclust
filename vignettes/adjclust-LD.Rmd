@@ -1,8 +1,14 @@
 ---
 title: "Adjacency-constrained hierarchical clustering of linkage disequilibrium"
 author: "Pierre Neuvial"
-output: pdf_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
 
 In this short vignette we demonstrate the use of the `adjclust` package to perform adjacency-constrained hierarchical clustering of Linkage Disequilibrium data. The algorithm is described in [1].
 
@@ -37,14 +43,26 @@ ld.ceph <- ld(ceph.1mb, stats="R.squared", depth=100)
 image(ld.ceph, lwd=0)
 ```
 
-## Hierarchical clustering 
+## Adjacency-constrained Hierarchical Agglomerative Clustering 
 
 ```{r}
-fit <- adjclust(ceph.1mb, h=100, flavor="LD", stats="R.squared")
+fit <- adjClustBand(ld.ceph@x, p=nSNP, h=100)
 ```
 
 ```{r}
 plot(fit)
+```
+
+
+## Alternative flavor
+
+```{r, results="hide"}
+fitP <- adjClustBand(ld.ceph@x, p=nSNP, h=100, flavor="PseudoMatrix")
+```
+
+
+```{r}
+plot(fitP)
 ```
 
 
@@ -55,11 +73,8 @@ plot(fit)
 [2] Clayton, D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods. R package version 1.20.0
 
 
-
-
 ## Session information
 
 ```{r}
 sessionInfo()
 ```
-
