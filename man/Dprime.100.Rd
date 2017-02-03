@@ -4,22 +4,19 @@
 \name{Dprime.100}
 \alias{Dprime.100}
 \title{Linkage disequilibrium on chromosome 22 in the European population}
-\format{A list of two numeric vectors of length \eqn{p-h*(h+1)/2}:
-\describe{
-  \item{R2.100}{"R squared" LD statistic}
-  \item{Dprime.100}{"R squared" LD statistic}
-}
-\code{h} is the size of the diagonal band considered}
+\format{A sparse matrix of class \code{\link{Matrix::dgCMatrix}}.}
 \source{
-Data extracted from \code{snpStats::ld.example}. The original data is from the HapMap project.
+Data extracted from \code{snpStats::ld.example}. The original data is
+  from the HapMap project.
 }
 \usage{
 Dprime.100
 }
 \description{
-A dataset containing linkage disequilibrium (LD) statistics ("R-squared" and "D
-prime") for \eqn{p=603} SNPs spanning a one megabase regions on chromosome 22, in a 
-sample of 90 Europeans (CEPH)
+A dataset containing D' linkage disequilibrium (LD) statistics for 
+\eqn{p=603} SNPs spanning a one megabase regions on chromosome 22, in a 
+sample of 90 Europeans (CEPH). LD values were only calculated for entries in 
+a diagonal band of size \code{h=100}; the other values are assumed to be 0.
 }
 \keyword{datasets}
 

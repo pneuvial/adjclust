@@ -10,7 +10,7 @@ vignette: >
 ---
 
 
-In this short vignette we demonstrate the use of the `adjclust` package to perform adjacency-constrained hierarchical clustering of Linkage Disequilibrium data. The algorithm is described in [1].
+In this short vignette we demonstrate the use of low-level functions in the `adjclust` package to perform adjacency-constrained hierarchical clustering of Linkage Disequilibrium data.
 
 ```{r}
 library("adjclust")
@@ -18,62 +18,74 @@ library("adjclust")
 
 ## Loading and displaying genotype data
 
-The beginning of this vignette closely follows the "LD vignette" of the SnpStats package [2]. First, we load genotype data.
+The begining of this vignette closely follows the "LD vignette" of the SnpStats package [1]. First, we load genotype data.
 
-```{r}
+```{r, results="hide", message=FALSE}
 library("snpStats")
 data("ld.example", package="snpStats")
 ```
 
 ```{r, echo=FALSE}
-nSNP <- ncol(ceph.1mb)
+p <- ncol(ceph.1mb)
 nSamples <- nrow(ceph.1mb)
 ```
 
-We focus on the `ceph.1mb` data. These data are drawn from the International HapMap Project and concern `nSnp` SNPs over a 1Mb region of chromosome 22 in sample of `nSamples` Europeans. 
+We focus on the `ceph.1mb` data. These data are drawn from the International HapMap Project and concern `r p` SNPs over a 1Mb region of chromosome 22 in sample of `r nSamples` Europeans. 
 
 ```{r}
-head(ceph.1mb)
+ceph.1mb
 ```
 
 We can compute and display the LD between these SNPs.
 
 ```{r}
-ld.ceph <- ld(ceph.1mb, stats="R.squared", depth=100)
+ld.ceph <- ld(ceph.1mb, stats="R.squared", depth=p-1)
 image(ld.ceph, lwd=0)
 ```
 
-## Adjacencty-constrained Hierarchical Agglomerative Clustering 
+
+## Adjacency-constrained Hierarchical Agglomerative Clustering 
+
+The above figure suggests that the LD signal is concentrated close to the diagonal. Therefore, we focus on a diagonal band:
 
 ```{r}
-fit <- adjClustBand(ld.ceph@x, p=nSNP, h=100)
+h <- 100
+ld.ceph <- ld(ceph.1mb, stats="R.squared", depth=h)
+image(ld.ceph, lwd=0)
 ```
+
+### Using "crayons"
+
+```{r}
+fit <- adjclust:::adjClustBand_heap(ld.ceph@x, p, h, blMin=1)
+```
+
+This function implements the algorithm described in the third chapter of [2]. It is an extension of the algorithm described in [3].  The output is of class "hclust" a can be plotted as a dendrogram:
 
 ```{r}
 plot(fit)
 ```
 
 
-## Alternative flavor
+## Using "PseudoMatrix"
+
+Below we apply another algorithm which is currently not described but solves the same problem (using a slightly different input):
 
 ```{r, results="hide"}
+## some reshaping
 ld <- ld.ceph
 diag(ld) <- 1
 x <- t(ld)@x
-fitP <- adjClustBand(x, p=nSNP, h=100, flavor="PseudoMatrix")
+resP <- adjclust:::HeapHop(x, p, h, 1)
 ```
-
-
-```{r}
-plot(fitP)
-```
-
 
 ## References
 
-[1] Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a blockwise approach in variable selection using linkage disequilibrium information. *BMC Bioinformatics* 16:148.
+[1] Clayton, D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods. R package version 1.20.0
 
-[2] Clayton, D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods. R package version 1.20.0
+[2] Dehman A. (2015). [Spatial clustering of linkage disequilibrium blocks for genome-wide association studies](https://tel.archives-ouvertes.fr/tel-01288568/). Phd Thesis, Université Paris Saclay.
+
+[3] Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a blockwise approach in variable selection using linkage disequilibrium information. *BMC Bioinformatics* 16:148.
 
 
 ## Session information
