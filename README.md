@@ -4,16 +4,14 @@ Adjacency-constrained clustering of a block-diagonal similarity matrix
 
 ## Low-level clustering function
 
-data("ld_ceph", package="adjclust")
-
-x <- R2.100
-x <- Dprime.100
-
+library("adjclust")
+data("R2.100", package="adjclust")
+str(R2.100)
 h <- 100
 p <- 603
 
 ## default flavor: "crayons"
-res <- adjClustBand(x, p, h)
+res <- adjClustBand(R2.100, p, h)
 
-## alternative flavor: "pseudoMatrix"
-resP <- adjClustBand(x, p, h, flavor="pseudoMatrix")
+## alternative flavor: "PseudoMatrix"
+resP <- adjClustBand(R2.100, p, h, flavor="PseudoMatrix")

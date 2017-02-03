@@ -36,18 +36,17 @@ adjClustBand <- function(x, p, h, flavor=c("crayons", "PseudoMatrix"), minNbBloc
     } else if (flavor=="PseudoMatrix") {
         resP <- HeapHop(x, p, h, minNbBlocks)
         mg <- t(resP[1:2, ])
-        gains0 <- resP[3, ]  ## seems to be broken?
-        gains <- 1:(p-minNbBlocks)  ## FIXME: terrible hack here
+        gains <- cumsum(resP[3, ])  ## seems to be broken?
+        ord <- 1:(ncol(resP)+1)
         res <- list(
             traceW=NULL,
             gains=gains,
-            gains0=gains0, ## for debugging purposes
             merge=mg,
             height=gains,
             seqdist=gains,
-            order=1:p,
+            order=ord,
             labels=as.character(1:p),
-            method="adhclust-pseudoMatrix",
+            method="adhclust-PseudoMatrix",
             call=NULL,
             distMethod="Ward")
         class(res) <- "hclust"

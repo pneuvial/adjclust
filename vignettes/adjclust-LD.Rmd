@@ -56,8 +56,11 @@ plot(fit)
 
 ## Alternative flavor
 
-```{r}
-fitP <- adjClustBand(ld.ceph@x, p=nSNP, h=100, flavor="PseudoMatrix")
+```{r, results="hide"}
+ld <- ld.ceph
+diag(ld) <- 1
+x <- t(ld)@x
+fitP <- adjClustBand(x, p=nSNP, h=100, flavor="PseudoMatrix")
 ```
 
 
