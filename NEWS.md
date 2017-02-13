@@ -1,5 +1,11 @@
 # Package: adjclust
 
+## Version 0.3.0 [2017-02-13]
+
+* Removed 'adjClustBand': main entry points are now 'HeapHop' and 'adjClustBand_heap'.
+* Updated test scripts and LD vignette accordingly.
+* Added Travis CI and Appveyor support.
+
 ## Version 0.2.3 [2017-02-02]
 
 * Updated LD vignette
