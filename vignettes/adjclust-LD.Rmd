@@ -66,7 +66,11 @@ This function implements the algorithm described in the third chapter of [2]. It
 ```{r}
 plot(fit)
 ```
+In particular, the output contains an element named `merge` which describes the successive merges of the clustering, and an element `gains` which gives the improvement in the criterion optimized by the clustering at each successive merge:
 
+```{r}
+head(cbind(fit$merge, fit$gains))
+```
 
 ## Using "PseudoMatrix"
 
@@ -77,7 +81,14 @@ Below we apply another algorithm which is currently not described but solves the
 ld <- ld.ceph
 diag(ld) <- 1
 x <- t(ld)@x
+
+## adjacency-constrained clustering
 resP <- adjclust:::HeapHop(x, p, h, 1)
+```
+The result is not an object of type 'hclust', but it does contain the successive merges of the clustering, and the improvement in the criterion optimized by the clustering at each successive merge:
+
+```{r}
+head(t(resP))
 ```
 
 ## References
