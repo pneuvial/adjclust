@@ -2,13 +2,13 @@
 #' @importFrom matrixStats colCumsums
 adjClustBand_heap <- function(x, p, h, blMin=1, verbose=FALSE){
     len <- length(x)
-    stopifnot(len==(p-1)*h-h*(h-1)/2)
+    stopifnot(len==(p-1)*h-h*(h-1)/2)  ## also equals p*h-h*(h+1)/2...
     xt <- transpose(x, p, h)
 
     ## sum of the "rectangles" beginning from the left
-    matL <- .toMatLeft(xt, p, h)     ## a matrix p x h (with zeros at the bottom) of the LD values
+    matL <- .toMatLeft(xt, p, h)      ## a matrix p x h (with zeros at the bottom) of the LD values
     rCumL <- rowCumsums(matL)         ## p x h matrix
-    rcCumL <- colCumsums(rCumL)        ## p x h matrix
+    rcCumL <- colCumsums(rCumL)       ## p x h matrix
 
     ## sum of the "rectangles" beginning from the right
     matR <- .toMatRight(x, p, h)
