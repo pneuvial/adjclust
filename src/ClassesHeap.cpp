@@ -57,7 +57,7 @@ void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
 
   const clock_t EndInit = clock();
 
-  Rcpp::Rcout << "Heap Init time = " << ((double) (EndInit - Begin)) / CLOCKS_PER_SEC << std::endl;
+//  Rcpp::Rcout << "Heap Init time = " << ((double) (EndInit - Begin)) / CLOCKS_PER_SEC << std::endl;
 
   for (int i = 0; i < MaxSize; i++)
   {
