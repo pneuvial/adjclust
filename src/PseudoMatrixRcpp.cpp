@@ -26,13 +26,14 @@ Rcpp::NumericVector  HeapHop(Rcpp::NumericVector Input,const int p, const int h,
     for (int Colonne = 0; Colonne < h - (Ligne - p + h); Colonne++)
       V[Ligne * (h + 1) + Colonne] = W[Indice++];
 
+/*  
   for (int Ligne = 0; Ligne < p; Ligne++) {
     for (int Colonne = 0; Colonne < h+1; Colonne++) {
       Rcpp::Rcout << V[Ligne  * (h+1) + Colonne] << '\t';
     }
     Rcpp::Rcout << std::endl;
   }
-
+*/
   // for (int Index = 0; Index<  p * (h+1) - (h*(h+1)/2); Index++) {
   //   Rcpp::cout << W[Index] << '\t';
   //   Rcpp::cout << std::endl;
