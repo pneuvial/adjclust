@@ -49,7 +49,7 @@ void PseudoMatrix::Initialize(double *V, int P, int H)
     MyClasses[i].InitializeFusionCost();
 
   clock_t End = clock();
-  Rcpp::Rcout << "Time needed to Initialize the pseudo matrix = " << ((double) End - Begin) / CLOCKS_PER_SEC << std::endl;
+//  Rcpp::Rcout << "Time needed to Initialize the pseudo matrix = " << ((double) End - Begin) / CLOCKS_PER_SEC << std::endl;
 }
 
 double PseudoMatrix::Value(int LineInA, int ColumnInA, int SupposedPlace) const
