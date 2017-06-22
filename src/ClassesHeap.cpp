@@ -89,7 +89,7 @@ void ClassesHeap::Initialize(PseudoMatrix *M, int NbWC, std::string OutputPath)
   }*/
 
   const clock_t End = clock();
-  Rcpp::Rcout << "Time computation for the heap = " << ((double) (End - EndInit)) / CLOCKS_PER_SEC << std::endl;
+//  Rcpp::Rcout << "Time computation for the heap = " << ((double) (End - EndInit)) / CLOCKS_PER_SEC << std::endl;
 }
 
 ClassesHeap::~ClassesHeap()
