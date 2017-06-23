@@ -1,7 +1,13 @@
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
-adjClustBand_heap <- function(mat, p, h, blMin=1, verbose=FALSE){
+adjClustBand_heap <- function(mat, h, blMin=1, verbose=FALSE){
+
+    if (!is.numeric(h))
+      stop("Input bandwidth is not numeric")
+    
+    mat <- modify(mat) # modifies input, if required, to convert into similarity matrix with diagonal 1
     p <- nrow(mat)
+    
     
     x <- .Call("DiagBand",mat, as.integer(h))
     
