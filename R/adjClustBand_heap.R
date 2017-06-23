@@ -3,7 +3,7 @@
 adjClustBand_heap <- function(mat, h, blMin=1, verbose=FALSE){
 
     if (!is.numeric(h))
-      stop("Input bandwidth is not numeric")
+      stop("Input band width is not numeric")
     
     mat <- modify(mat) # modifies input, if required, to convert into similarity matrix with diagonal 1
     p <- nrow(mat)
