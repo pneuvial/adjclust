@@ -6,12 +6,13 @@ adjClustBand_heap <- function(mat, h, blMin=1, verbose=FALSE){
       stop("Input band width is not numeric")
     
     mat <- modify(mat) # modifies input, if required, to convert into similarity matrix with diagonal 1
+    
     p <- nrow(mat)
     
     if (h >= p)
       stop("Input band width should be strictly less than dimensions of matrix")    
     
-    x <- .Call("DiagBand",mat, as.integer(h))
+    x <- band(mat, h)
     
     len <- length(x)
     stopifnot(len==(p-1)*h-h*(h-1)/2)
