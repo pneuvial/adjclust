@@ -20,7 +20,7 @@ SEXP DiagBand(SEXP X, SEXP h){
 
   k=0;
   for ( i = 0; i < p; i++ ) {
-    for ( j = i+1; j< i+(*hptr)+1 && j<p ; j++ ) {
+    for ( j = ( i-(*hptr) > 0 ? i-(*hptr): 0 ); j< i; j++ ) {      
       outptr[k++] = xptr[i+j*p];
     }
   }
