@@ -21,7 +21,7 @@ SEXP DiagBand(SEXP X, SEXP h){
   k=0;
   for ( i = 0; i < p; i++ ) {
     for ( j = i+1; j< i+(*hptr)+1 && j<p ; j++ ) {
-      outptr[k++] = xptr[j+i*p];
+      outptr[k++] = xptr[i+j*p];
     }
   }
 
@@ -47,7 +47,7 @@ SEXP OneDiagBand(SEXP X, SEXP h){
       if (j == i) {
       outptr[k++] = 1;
       } else {
-      outptr[k++] = xptr[j+i*p];
+      outptr[k++] = xptr[i+j*p];
       }
     }
   }
