@@ -17,7 +17,8 @@ modify <- function(m) {
   
   if ("dist" %in% class(m)) {
   d <- as.matrix(m)
-  mat <- 1 - 0.5*(d^2)
+ #  mat <- 1 - 0.5*(d^2)
+  mat <- 1 - 0.5*d   
   } else {
     if (all(diag(m) == 1))
     {
