@@ -1,10 +1,10 @@
 modify <- function(m) {
   
-  t <- is.matrix(m)
-  if (!(t || ("dist" %in% class(m))))
+  matcheck <- is.matrix(m)
+  if (!(matcheck || ("dist" %in% class(m))))
     stop("Input must be a similarity matrix or a dist object")
 
-  if (t) {
+  if (matcheck) {
     if (!(nrow(m) == ncol(m)))
       stop("Input matrix is not a square matrix")
     if (!is.numeric(m))
