@@ -27,7 +27,6 @@ modify <- function(m) {
         if (!(condnCheck(m))) {
           m1 <- sweep(m, 1, diag(m))
           l <- max(m1)  
-          if (l<0) l <- 0
           diag(m) <- diag(m) + l + (0.1*l)   #Taking epsilon = 0.1*l 
         }
         mat <- makeDiagOne(m)
