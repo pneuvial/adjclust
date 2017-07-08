@@ -1,3 +1,34 @@
+#' Constrained Hierarchical Agglomerative Clustering
+#' 
+#' Function to perform adjacency-constrained hierarchical agglomerative clustering
+#' 
+#' \code{adjClustBand_heap} performes constrained hierarchichal agglomerative clustering which is   
+#' hierarchical agglomerative clustering in which each observation is associated to a position, 
+#' and the clustering is constrained so as only adjacent clusters are merged. These methods are  
+#' useful in various application fields, including ecology (Quaternary data) and bioinformatics 
+#' (e.g. in Genome-Wide Association Studies (GWAS))
+#' 
+#' @param mat A similarity matrix or a dist object
+#' @param h band width. It is assumed that the similarity between two items is 
+#' 0 when these items are at a distance of more than band width h
+#' @param blMin to be added
+#' @param verbose to be added
+#' 
+#' @return Function \code{adjClustBand_heap} returns an object of
+#' class \code{\link[stats]{hclust}}.  
+#'
+#' @examples
+#' 
+#' h <- 100
+#' fit1 <- adjClustBand_heap(mat, h,1,FALSE)
+#' plot(fit1, \dots)
+#' 
+#' #Compatibility with dist objects
+#' fit2 <- adjClustBand_heap(dist, h,1,FALSE)
+#' plot(fit2, \dots)
+#' 
+#' @export
+#' 
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
 adjClustBand_heap <- function(mat, h, blMin=1, verbose=FALSE){
