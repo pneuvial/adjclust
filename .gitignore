@@ -39,8 +39,14 @@ vignettes/*.pdf
 .Rhistory
 .RData
 .Ruserdata
+
 inst/doc
+fig/
 
 ## OS X
 .DS_Store
 *~
+
+## compiled C/C++ files
+src/*.o
+src/*.so
