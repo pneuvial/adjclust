@@ -11,8 +11,8 @@
 #' @param mat A similarity matrix or a dist object
 #' @param h band width. It is assumed that the similarity between two items is 
 #' 0 when these items are at a distance of more than band width h
-#' @param blMin to be added
-#' @param verbose to be added
+#' @param blMin depth of clustering. It is number of clusters at which the algorithm stops. Default value is 1.
+#' @param verbose Currently not used
 #' 
 #' @return Function \code{adjClustBand_heap} returns an object of
 #' class \code{\link[stats]{hclust}}.  
