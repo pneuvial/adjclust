@@ -27,8 +27,6 @@
 #' fit2 <- adjClustBand_heap(dist, h,1,FALSE)
 #' plot(fit2, \dots)
 #' 
-#' @export
-#' 
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
 adjClustBand_heap <- function(mat, h, blMin=1, verbose=FALSE){
