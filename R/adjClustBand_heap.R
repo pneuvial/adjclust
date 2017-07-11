@@ -17,16 +17,17 @@
 #' @return Function \code{adjClustBand_heap} returns an object of
 #' class \code{\link[stats]{hclust}}.  
 #'
-#' @examples
+#' sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
+#' h <- 3
+#' fit1 <- adjclust:::adjClustBand_heap(sim, h,1,FALSE)
+#' plot(fit1)
 #' 
-#' h <- 100
-#' fit1 <- adjClustBand_heap(mat, h,1,FALSE)
-#' plot(fit1, \dots)
+#' dist <- as.dist(sqrt(2-(2*sim)))
 #' 
 #' #Compatibility with dist objects
-#' fit2 <- adjClustBand_heap(dist, h,1,FALSE)
-#' plot(fit2, \dots)
-#' 
+#' fit2 <- adjclust:::adjClustBand_heap(dist, h,1,FALSE)
+#' plot(fit2)
+#'
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
 adjClustBand_heap <- function(mat, h, blMin=1, verbose=FALSE){
