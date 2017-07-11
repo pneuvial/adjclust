@@ -11,8 +11,9 @@ check_rioja <- function() {
 test_that("rioja and adjClustBand_heap with full band give idenctical results on simmatrix.rda", {
   check_rioja()
   
-  data("simmatrix", package="adjclust")  
+  data("simmatrix", package="adjclust")
   sim <- simmatrix
+  rownames(sim) <- colnames(sim) #to avoid dissimilarity error  
   p <- nrow(sim)
       
   dis_sq <- 2 - (2*sim)
