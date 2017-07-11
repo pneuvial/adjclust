@@ -23,7 +23,7 @@ test_that("rioja and adjClustBand_heap with full band give idenctical results on
   dis <- as.dist(dis)
   
   fit1 <- adjclust:::adjClustBand_heap(sim, p-1)
-  fit2 <- chclust(dis_sq,method="coniss")
+  fit2 <- chclust(dis_sq, method="coniss")
   fit3 <- adjclust:::adjClustBand_heap(dis, p-1)
   
   expect_equal(fit1$merge, fit2$merge)
