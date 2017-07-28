@@ -1,4 +1,4 @@
-//C functions
+//C functions to matL and RmatR matrices from bands of sparse matrix
 
 #include <stdio.h>
 #include <R.h>
