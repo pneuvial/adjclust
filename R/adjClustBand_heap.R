@@ -113,19 +113,12 @@ adjClustBand_heap <- function(mat, type = "similarity", h, blMin=1, verbose=FALS
       matL <- findMatL(mat, p, h)
       rotatedMatR <- findRMatR(mat, p, h)        
     }
-
-    ## sum of the "rectangles" beginning from the left
-    matL <- .toMatLeft(xt, p, h)     ## a matrix p x h (with zeros at the bottom) of the LD values
+    
     rCumL <- rowCumsums(matL)         ## p x h matrix
     rcCumL <- colCumsums(rCumL)        ## p x h matrix
 
-    ## sum of the "rectangles" beginning from the right
-    matR <- .toMatRight(x, p, h)
-    rotatedMatR <- .rotate(.rotate(matR))  ## WTF ??
     rCumR <- rowCumsums(rotatedMatR)  ## p x h matrix
     rcCumR <- colCumsums(rCumR)  ## p x h matrix
-
-    rm(x, xt)
 
     ## initialization
     gains <- rep(0, p-blMin)
