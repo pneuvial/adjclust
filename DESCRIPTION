@@ -7,6 +7,7 @@ License: GPL-3
 Title: Adjacency-constrained clustering of a block-diagonal similarity matrix
 Description: Adjacency-constrained clustering of a block-diagonal similarity
     matrix.
+Depends: R(>= 2.10.0)    
 Imports:
     Matrix,
     matrixStats,
