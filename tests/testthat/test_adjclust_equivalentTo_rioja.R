@@ -6,6 +6,7 @@ check_rioja <- function() {
     skip("rioja package not available")
   }
 }
+
 test_that("rioja and adjClustBand_heap with full band give idenctical results on simmatrix.rda", {
   check_rioja()
   
