@@ -1,0 +1,23 @@
+Package: adjclust
+Maintainer: Pierre Neuvial <pierre.neuvial@math.cnrs.fr>
+Author: Christophe Ambroise, Alia Dehman, Michel Koskas, Pierre Neuvial and Guillem Rigaill
+Date: 2017-02-13
+Version: 0.3.0
+License: GPL-3
+Title: Adjacency-constrained clustering of a block-diagonal similarity matrix
+Description: Adjacency-constrained clustering of a block-diagonal similarity
+    matrix.
+Depends: R(>= 2.10.0)    
+Imports:
+    Matrix,
+    matrixStats,
+    Rcpp (>= 0.12.3)
+LinkingTo: Rcpp
+Suggests:
+    snpStats,
+    knitr,
+    testthat,
+    rmarkdown,
+    rioja
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
