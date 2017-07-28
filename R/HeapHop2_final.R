@@ -3,7 +3,7 @@ HeapHop2_final <- function(mat, p, h, NbCLasses){
   
   x <- .Call("OneDiagBand",mat, as.integer(h))
   
-  resP <- adjclust:::HeapHop2(x, p, h, 1)
+  resP <- HeapHop2(x, p, h, 1)
   
   gains <- t(resP)[,3]
   res <- t(resP)[,1:2]
