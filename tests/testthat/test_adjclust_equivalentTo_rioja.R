@@ -1,7 +1,6 @@
 library("adjclust")
 
 context("Comparison between the results of the 'rioja' and 'adjclust' packages")
-
 check_rioja <- function() {
   if (!require("rioja")) {
     skip("rioja package not available")
