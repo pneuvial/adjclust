@@ -20,4 +20,4 @@ Suggests:
     rmarkdown,
     rioja
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
