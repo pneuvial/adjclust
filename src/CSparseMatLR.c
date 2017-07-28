@@ -59,38 +59,6 @@ SEXP CSparseRmatR(SEXP X, SEXP Rp, SEXP Rh)
   SEXP out;
   PROTECT(out = allocMatrix(REALSXP, *p, *h) );
   outptr = REAL(out);
-
-/*
-  // intialize "out" matrix values to zero
-  for(j = 0; j < *p; j++)
-  {
-    for(k = 0; k < *h ; k++)
-    {
-      outptr[j + (*p)*k] = 0;      
-    }
-  }
-
-	l=0;
-  for(i = 1; i < *p ; i++)
-  {
-    j = i;
-    k = 1;
-    while( (j<*p)&&(k<*h+1) )
-    {
-      tempptr[l++] = xptr[j + (*p)*k];
-      j++;k++;
-    }
-  }
-  l--;
-
-  for(i = 0; i < *p ; i++)
-  {
-  	for(j = 0 ;j < min(*h,*p-1-i); j++)
-  	{
-      outptr[i + (*p)*j] = tempptr[l--];
-  	}
-  }
-*/
   
   for(i = *p-1 ; i >= 0 ; i--)
   {
