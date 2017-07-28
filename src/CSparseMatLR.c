@@ -56,13 +56,6 @@ SEXP CSparseRmatR(SEXP X, SEXP Rp, SEXP Rh)
   p = INTEGER(Rp);
   h = INTEGER(Rh);
 
-// int k,l; double *tempptr;
-/*  
-  SEXP temp;
-  PROTECT(temp = allocVector(REALSXP, (*p)*(*h) ));
-  tempptr = REAL(temp);
-*/
-
   SEXP out;
   PROTECT(out = allocMatrix(REALSXP, *p, *h) );
   outptr = REAL(out);
