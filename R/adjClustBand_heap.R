@@ -34,23 +34,85 @@
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
 
-adjClustBand_heap <- function(mat, h, blMin=1, verbose=FALSE){
-
+adjClustBand_heap <- function(mat, type = "similarity", h, blMin=1, verbose=FALSE){
+    
     if (!is.numeric(h))
       stop("Input band width is not numeric")
     
-    mat <- modify(mat) # modifies input, if required, to convert into similarity matrix with diagonal 1
+  
+    CLASS <- c("matrix","dgCMatrix","dsCMatrix","dist")
+    classcheck <- pmatch(class(mat), CLASS)
     
-    p <- nrow(mat)
+    if(is.na(classcheck))
+      stop("Input matrix class not supported")
+    if(classcheck == -1)
+      stop("Ambiguous matrix class")
+    class <- CLASS[classcheck]
     
-    if (h >= p)
-      stop("Input band width should be strictly less than dimensions of matrix")    
     
-    x <- band(mat, h)
+    TYPES <- c("similarity", "dissimilarity")
+    typecheck <- pmatch(type, TYPES)
     
-    len <- length(x)
-    stopifnot(len==(p-1)*h-h*(h-1)/2)
-    xt <- transpose(x, p, h)
+    if(is.na(typecheck))
+      stop("Invalid matrix type")
+    if(typecheck == -1)
+      stop("Ambiguous matrix type")
+    type <- TYPES[typecheck]
+    
+    
+    if (class == "matrix")  ## for standard matrices
+    {
+      if (!(nrow(mat) == ncol(mat)))
+        stop("Input matrix is not a square matrix")
+      if (!is.numeric(mat))
+        stop("Input matrix is not numeric")
+      if (!(isSymmetric.matrix(mat)))
+        stop("Input matrix is not symmetric")
+      if (any(is.na(mat)))
+        stop("Missing values in the input")
+      
+      p <- nrow(mat)
+      if (h >= p) {
+        stop("Input band width should be strictly less than dimensions of matrix")
+      }
+      
+      
+      if (type == "dissimilarity") {
+        mat <- 1 - 0.5*(mat^2)
+      }
+      
+      mat <- modify(mat, as.integer(p), as.integer(h)) ## modifies, if required, input similarity matrix and returns a similiarity matrix with diagonal 1
+      
+      matL <- findMatL(mat, as.integer(p), as.integer(h))
+      rotatedMatR <- findRMatR(mat, as.integer(p), as.integer(h))
+        
+    } else if(class == "dgCMatrix" || class == "dsCMatrix") {   ## for dgC/dsC sparse matrices
+      
+      if (mat@Dim[1] != mat@Dim[2])
+        stop("Input matrix is not a square matrix")
+      if (any(!(is.numeric(mat@x))))
+        stop("Input matrix is not numeric")
+      
+      p <- mat@Dim[1]
+      
+      mat <- sparseBand(mat@x, mat@p, mat@i, as.integer(p), as.integer(h))
+      mat <- modifySparse(mat, as.integer(p), as.integer(h))
+      
+      matL <- findSparseMatL(mat, as.integer(p), as.integer(h))
+      rotatedMatR <- findSparseRMatR(mat, as.integer(p), as.integer(h))
+        
+    } else { ## for dist objects 
+      
+      mat <- as.matrix(mat)
+      p <- nrow(mat)
+      if (h >= p)
+        stop("Input band width should be strictly less than dimensions of matrix")
+      
+      mat <- 1 - 0.5*(mat^2)
+      
+      matL <- findMatL(mat, p, h)
+      rotatedMatR <- findRMatR(mat, p, h)        
+    }
 
     ## sum of the "rectangles" beginning from the left
     matL <- .toMatLeft(xt, p, h)     ## a matrix p x h (with zeros at the bottom) of the LD values
