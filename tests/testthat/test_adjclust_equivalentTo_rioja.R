@@ -25,6 +25,5 @@ test_that("rioja and adjClustBand_heap with full band give idenctical results on
   
   expect_equal(fit1$merge, fit2$merge)
   expect_equal(fit3$merge, fit2$merge)
-  
 })
 
