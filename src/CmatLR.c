@@ -68,25 +68,6 @@ SEXP CRmatR(SEXP X, SEXP Rp, SEXP Rh)
     }
   }
 
-/*
-	k=0;
-  for(i = 0; i < *p ; i++)
-  {
-  	for(j = i+1 ; j <= min(i + *h, *p-1); j++)
-  	{
-      tempptr[k++] = xptr[i + (*p)*j];
-  	}
-  }
-  k--;
-
-  for(i = 0; i < *p ; i++)
-  {
-  	for(j = 0 ;j < min(*h,*p-1-i); j++)
-  	{
-      outptr[i + (*p)*j] = tempptr[k--];
-  	}
-  }
-*/
   for(j = 0; j < *p; j++)
   {
     for(k = 0; k < *h ; k++)
