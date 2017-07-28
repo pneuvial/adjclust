@@ -9,6 +9,7 @@
 #' (e.g. in Genome-Wide Association Studies (GWAS))
 #' 
 #' @param mat A similarity matrix or a dist object
+#' @param type Type of matrix : similarity or dissimilarity
 #' @param h band width. It is assumed that the similarity between two items is 
 #' 0 when these items are at a distance of more than band width h
 #' @param blMin depth of clustering. It is number of clusters at which the algorithm stops. Default value is 1.
@@ -19,17 +20,20 @@
 #'
 #' sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
 #' h <- 3
-#' fit1 <- adjclust:::adjClustBand_heap(sim, h,1,FALSE)
+#' fit1 <- adjclust:::adjClustBand_heap(sim, "similarity", h, 1, FALSE)
 #' plot(fit1)
 #' 
 #' dist <- as.dist(sqrt(2-(2*sim)))
 #' 
 #' #Compatibility with dist objects
-#' fit2 <- adjclust:::adjClustBand_heap(dist, h,1,FALSE)
+#' fit2 <- adjclust:::adjClustBand_heap(dist, "dissimilarity", h, 1, FALSE)
 #' plot(fit2)
-#'
+#' 
+#' @export
+#' 
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
+
 adjClustBand_heap <- function(mat, h, blMin=1, verbose=FALSE){
 
     if (!is.numeric(h))
