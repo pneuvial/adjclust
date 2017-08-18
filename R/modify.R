@@ -16,7 +16,7 @@ modify <- function(m, p, h) {
     {
       stop("Some diagonal elements are not 1 and h<p-1; this case is not handled by the current implementation")
     } else {
-      makeDiagOne(m)
+      m <- makeDiagOne(m)
     }
   }
   return(m)
