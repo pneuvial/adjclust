@@ -3,7 +3,7 @@
 #' Function to perform adjacency-constrained hierarchical agglomerative clustering 
 #' of genomic regions(loci)
 #' 
-#' \code{lociclust} performes constrained hierarchichal agglomerative clustering of 
+#' \code{hicclust} performes constrained hierarchichal agglomerative clustering of 
 #' genomic regions(loci).Constrained Hierarchical Agglomerative Clustering is hierarchical
 #'  agglomerative clustering in which each observation is associated to a position, and 
 #'  the clustering is constrained so as only adjacent clusters are merged.
@@ -20,18 +20,18 @@
 #' @param h band width. It is assumed that the similarity between two items is 0 when these 
 #' items are at a distance of more than band width h
 #' 
-#' @return Function \code{lociclust} returns an object of class \code{\link[stats]{hclust}}.  
+#' @return Function \code{hicclust} returns an object of class \code{\link[stats]{hclust}}.  
 #' 
 #' @examples
 #' #Input as HiTC::HTCexp object
 #' library("HiTC")
 #' data("hic_imr90_40$chrXchrX", package="adjclust")
 #' h <- 3881
-#' res1 <- lociclust(obj, h)
+#' res1 <- hicclust(obj, h)
 #' 
 #' #Input as Matrix::dsCMatrix contact map
 #' mat <- intdata(obj) 
-#' res2 <- lociclust(mat, h)
+#' res2 <- hicclust(mat, h)
 #' 
 #' #Input as text file
 #' V3 <- c(201,300,203,103, 34, 21, 41, 22, 35, 66)
@@ -41,14 +41,14 @@
 #' content <- cbind(V1, V2, V3)
 #' tf <- tempfile(fileext = ".txt")
 #' write.table(content, tf, sep = " ", col.names = FALSE, row.names = FALSE)
-#' res3 <- lociclust(tf, h)
+#' res3 <- hicclust(tf, h)
 #' 
 #' @export 
 #' 
 #' @importFrom utils read.table
 #' @importFrom HiTC intdata
 
-lociclust <- function(x, h) {
+hicclust <- function(x, h) {
 
   if (!is.numeric(h))
     stop("h should be numeric")
