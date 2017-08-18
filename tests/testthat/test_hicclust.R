@@ -1,18 +1,18 @@
 library("adjclust")
 library("HiTC")
 
-context("Checking the consistency of the results of lociclust function across various input formats")
+context("Checking the consistency of the results of hicclust function across various input formats")
 
-test_that("lociclust function identical results for the same data in all three inputs formats", {
+test_that("hicclust function identical results for the same data in all three inputs formats", {
 
   #case1: Input as HiTC::HTCexp object
   data("hic_imr90_40$chrXchrX", package="adjclust")
   h <- 3881
-  fit1 <- lociclust(obj, h)
+  fit1 <- hicclust(obj, h)
   
   #case2: Input as Matrix::dsCMatrix contact map
   mat <- intdata(obj) 
-  fit2 <- lociclust(mat, h)
+  fit2 <- hicclust(mat, h)
   
   #case3: Input as text file
   V3 <- mat@x
@@ -30,7 +30,7 @@ test_that("lociclust function identical results for the same data in all three i
   
   tf <- tempfile(fileext = ".txt")
   write.table(content, tf, sep = " ", col.names = FALSE, row.names = FALSE)
-  fit3 <- lociclust(tf, h)  
+  fit3 <- hicclust(tf, h)  
   
   expect_equal(fit1$merge, fit2$merge)
   expect_equal(fit1$height, fit2$height)  
