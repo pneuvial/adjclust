@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-In this short vignette we demonstrate the use of `lociclust` function in the `adjclust` package.`lociclust` performs adjacency-constrained hierarchical clustering of genomic regions or loci.`lociclust` is a specialized version of `adjClustBand_heap` function designed specially to perform clustering of genomic regions or loci.This function implements the algorithm same as `adjClustBand_heap` that is described in the third chapter of [2]. It is an extension of the algorithm described in [3].  
+In this short vignette we demonstrate the use of `hicclust` function in the `adjclust` package.`hicclust` performs adjacency-constrained hierarchical clustering of genomic regions or loci.`hicclust` is a specialized version of `adjClustBand_heap` function designed specially to perform clustering of genomic regions or loci.This function implements the algorithm same as `adjClustBand_heap` that is described in the third chapter of [2]. It is an extension of the algorithm described in [3].  
 
 
 ```{r, message = FALSE}
@@ -27,21 +27,21 @@ mat <- intdata(obj)
 image(mat, lwd=0)
 ```
 
-## Using lociclust function for various input classes
+## Using hiciclust function for various input classes
 
 ###  Case 1: Input as HiTC::HTCexp object
 
 ```{r}
   h <- 3881
   class(obj)
-  fit1 <- lociclust(obj, h)
+  fit1 <- hicclust(obj, h)
 ```
     
 ### Case 2: Input as Matrix::dsCMatrix contact map
 
 ```{r}
   class(mat)
-  fit2 <- lociclust(mat, h)
+  fit2 <- hicclust(mat, h)
 ```
 
 ### Case 3: Input as text file
@@ -68,10 +68,10 @@ Here, we first create a sample text file with the above format using sparse matr
   write.table(content, tf, sep = " ", col.names = FALSE, row.names = FALSE)
 ```
 
-Now that we have a text file `tf`, we are ready to pass it as input to the function `lociclust`
+Now that we have a text file `tf`, we are ready to pass it as input to the function `hicclust`
 
 ```{r}
-  fit3 <- lociclust(tf, h)  
+  fit3 <- hicclust(tf, h)  
 ```
 
 In particular, the output contains an element named `merge` which describes the successive merges of the clustering, and an element `gains` which gives the improvement in the criterion optimized by the clustering at each successive merge.
