@@ -18,6 +18,7 @@
 #' @return Function \code{adjClustBand_heap} returns an object of
 #' class \code{\link[stats]{hclust}}.  
 #'
+#' @examples
 #' sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
 #' h <- 3
 #' fit1 <- adjclust:::adjClustBand_heap(sim, "similarity", h, 1, FALSE)
