@@ -8,7 +8,7 @@
 
 SEXP CMakeDiagOne(SEXP X){
   
-  int p, i, j, k;
+  int p, i, j;
   double *xptr,*outptr;
   xptr = REAL(X);
   p = INTEGER(GET_DIM(X))[0];
