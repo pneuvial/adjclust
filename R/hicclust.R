@@ -65,7 +65,7 @@ hicclust <- function(x, h, ...) {
   rtargs <- c(x, inoptions)
   df <- do.call("read.table", rtargs)
   
-  lis <- sort(unique(c(df$V1, df$V2)))
+  lis <- sort(unique(c(df[,1], df[,2])))
   p <- length(lis)
   rowindx <- match(df[,1], lis)
   colindx <- match(df[,2], lis)
