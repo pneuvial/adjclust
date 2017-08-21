@@ -21,13 +21,13 @@
 #' @examples
 #' sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
 #' h <- 3
-#' fit1 <- adjclust:::adjClustBand_heap(sim, "similarity", h, 1, FALSE)
+#' fit1 <- adjClustBand_heap(sim, "similarity", h, 1, FALSE)
 #' plot(fit1)
 #' 
 #' dist <- as.dist(sqrt(2-(2*sim)))
 #' 
 #' #Compatibility with dist objects
-#' fit2 <- adjclust:::adjClustBand_heap(dist, "dissimilarity", h, 1, FALSE)
+#' fit2 <- adjClustBand_heap(dist, "dissimilarity", h, 1, FALSE)
 #' plot(fit2)
 #' 
 #' @export
