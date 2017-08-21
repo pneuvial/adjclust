@@ -67,11 +67,11 @@ hicclust <- function(x, h, ...) {
   
   lis <- sort(unique(c(df$V1, df$V2)))
   p <- length(lis)
-  rowindx <- match(df$V1, lis)
-  colindx <- match(df$V2, lis)
+  rowindx <- match(df[,1], lis)
+  colindx <- match(df[,2], lis)
   
   m <- matrix(0, nrow = p, ncol = p)
-  m[cbind(rowindx,colindx)] <- m[cbind(colindx,rowindx)] <- df$V3
+  m[cbind(rowindx,colindx)] <- m[cbind(colindx,rowindx)] <- df[,3]
   res <- adjClustBand_heap(m, type = "similarity", h)
   return(res)
   
