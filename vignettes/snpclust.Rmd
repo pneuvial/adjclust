@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-In this short vignette we demonstrate the use of `snpclust` function in the `adjclust` package.`snpclust` performs adjacency-constrained hierarchical clustering of single nucleotide polymorphisms.`snpclust` is specialized version of `adjClustBand_heap` function designed specially to perform clustering of single nucleotide polymorphisms.This function implements the algorithm same as `adjClustBand_heap` described in the third chapter of [2]. It is an extension of the algorithm described in [3].  
+In this short vignette we demonstrate the use of `snpclust` function in the `adjclust` package. `snpclust` performs adjacency-constrained hierarchical clustering of single nucleotide polymorphisms. `snpclust` is specialized version of `adjClustBand_heap` function designed specially to perform clustering of single nucleotide polymorphisms. This function implements the algorithm same as `adjClustBand_heap` described in the third chapter of [2]. It is an extension of the algorithm described in [3].  
 
 
 ```{r, message = FALSE}
@@ -89,7 +89,7 @@ diag(ld.ceph) <- 1
   fit3 <- snpclust(ceph.1mb, h, "R.squared")  
 ```
   
-The output is of class "hclust" a can be plotted as a dendrogram.
+The output is of class "hclust" and can be plotted as a dendrogram.
 
 
 In particular, the output contains an element named `merge` which describes the successive merges of the clustering, and an element `gains` which gives the improvement in the criterion optimized by the clustering at each successive merge.
