@@ -30,7 +30,7 @@ test_that("hicclust function identical results for the same data in all three in
   
   tf <- tempfile(fileext = ".txt")
   write.table(content, tf, sep = " ", col.names = FALSE, row.names = FALSE)
-  fit3 <- hicclust(tf, h)  
+  fit3 <- hicclust(tf, h, sep = " ")  
   
   expect_equal(fit1$merge, fit2$merge)
   expect_equal(fit1$height, fit2$height)  
