@@ -17,8 +17,7 @@
 #' @param h band width. It is assumed that the similarity between two items is 0 when these 
 #' items are at a distance of more than band width h
 #' 
-#' @param \dots further arguments to be passed to read.table function.It can contain any argument(s) of 
-#' \code{\link{read.table}} except the file argument.
+#' @param \dots further arguments to be passed to \code{\link{read.table}} function. If NULL the text file is supposed to be separated by tab with no header.
 #'  
 #' @return Function \code{hicclust} returns an object of class \code{\link[stats]{hclust}}.  
 #' 
