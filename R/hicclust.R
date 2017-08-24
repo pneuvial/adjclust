@@ -14,7 +14,7 @@
 #' 2. An object of class HiTC::HTCexp. The corresponding Hi-C data is stored as a Matrix::dsCMatrix object in the intdata slot
 #' 3. A text file with one line per pair of loci for which an interaction has been observed (in the format: locus1<tab>locus2<tab>signal). 
 #' 
-#' @param h band width. It is assumed that the similarity between two items is 0 when these 
+#' @param h band width. If NULL `h` is set to default value `p-1`.It is assumed that the similarity between two items is 0 when these 
 #' items are at a distance of more than band width h
 #' 
 #' @param \dots further arguments to be passed to \code{\link{read.table}} function. If NULL the text file is supposed to be separated by tab with no header.
