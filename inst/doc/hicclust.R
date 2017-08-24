@@ -34,7 +34,7 @@ image(mat, lwd=0)
   write.table(content, tf, sep = " ", col.names = FALSE, row.names = FALSE)
 
 ## ------------------------------------------------------------------------
-  fit3 <- hicclust(tf, h)  
+  fit3 <- hicclust(tf, h, sep=" ")  
 
 ## ------------------------------------------------------------------------
 head(cbind(fit1$merge, fit1$gains))
