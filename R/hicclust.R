@@ -56,7 +56,7 @@ hicclust <- function(x, h = NULL, ...) {
     if(class == "HTCexp")
       x <- intdata(x)
     
-    p <- mat@Dim[1]
+    p <- x@Dim[1]
     if(is.null(h)) h <- p-1  
     res <- adjClustBand_heap(x, type = "similarity", h)
     return(res)
