@@ -62,9 +62,13 @@ hicclust <- function(x, h, ...) {
   } else {
   
   inoptions <- list(...)
-  rtargs <- c(x, inoptions)
-  df <- do.call("read.table", rtargs)
-  
+  inoptions$file <- x
+  if (is.null(inoptions$sep)) inoptions$sep <- "\t"
+  if (is.null(inoptions$header)) inoptions$header <- FALSE  
+#  rtargs <- c(x, inoptions)
+#  df <- do.call("read.table", rtargs)
+  df <- do.call("read.table", inoptions) 
+    
   lis <- sort(unique(c(df[,1], df[,2])))
   p <- length(lis)
   rowindx <- match(df[,1], lis)
