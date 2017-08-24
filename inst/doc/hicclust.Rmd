@@ -71,7 +71,7 @@ Here, we first create a sample text file with the above format using sparse matr
 Now that we have a text file `tf`, we are ready to pass it as input to the function `hicclust`
 
 ```{r}
-  fit3 <- hicclust(tf, h)  
+  fit3 <- hicclust(tf, h, sep=" ")  
 ```
 
 In particular, the output contains an element named `merge` which describes the successive merges of the clustering, and an element `gains` which gives the improvement in the criterion optimized by the clustering at each successive merge.
