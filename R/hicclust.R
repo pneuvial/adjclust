@@ -57,7 +57,7 @@ hicclust <- function(x, h = NULL, ...) {
       x <- intdata(x)
     
     p <- mat@Dim[1]
-    if(h == NULL) h <- p-1  
+    if(is.null(h)) h <- p-1  
     res <- adjClustBand_heap(x, type = "similarity", h)
     return(res)
   
@@ -79,7 +79,7 @@ hicclust <- function(x, h = NULL, ...) {
   m <- matrix(0, nrow = p, ncol = p)
   m[cbind(rowindx,colindx)] <- m[cbind(colindx,rowindx)] <- df[,3]
 
-  if(h == NULL) h <- p-1  
+  if(is.null(h)) h <- p-1  
   res <- adjClustBand_heap(m, type = "similarity", h)
   return(res)
   
