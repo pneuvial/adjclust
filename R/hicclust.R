@@ -25,16 +25,20 @@
 #' #Input as HiTC::HTCexp object
 #' library("HiTC")
 #' data("hic_imr90_40$chrXchrX", package="adjclust")
-#' h <- 3881
-#' res1 <- hicclust(obj, h)
+#' 
+#' #Removing rows and columns containing only zeros
+#' selected <- apply(intdata(obj), 1, sum) > 0
+#' obj <- new("HTCexp", intdata(obj)[selected,selected], x_intervals(obj)[selected,], y_intervals(obj)[selected, ])
+#' 
+#' #Input as HiTC::HTCexp object
+#' res1 <- hicclust(obj)
 #' 
 #' #Input as Matrix::dsCMatrix contact map
 #' mat <- intdata(obj) 
-#' res2 <- hicclust(mat, h)
+#' res2 <- hicclust(mat)
 #' 
 #' #Input as text file
-#' h <- 5
-#' res3 <- hicclust(system.file("extdata", "sample.txt", package = "adjclust"), h)
+#' res3 <- hicclust(system.file("extdata", "sample.txt", package = "adjclust"))
 #' 
 #' @export 
 #' 
@@ -43,8 +47,10 @@
 
 hicclust <- function(x, h = NULL, ...) {
 
-  if ((h!=NULL)&&(!is.numeric(h)))
+  if (!is.null(h)) {
+    if (!is.numeric(h))
     stop("h should be numeric")
+  }
   
   class <- class(x)
   if( (class != "dsCMatrix")&&(class !=  "HTCexp")&&(!file.exists(x)) )
