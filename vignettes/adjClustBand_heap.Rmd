@@ -97,6 +97,7 @@ head(cbind(fit$merge, fit$gains))
 
 [3] Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a blockwise approach in variable selection using linkage disequilibrium information. *BMC Bioinformatics* 16:148.
 
+
 ## Session information
 
 ```{r}
