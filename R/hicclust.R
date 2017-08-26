@@ -28,15 +28,20 @@
 #' 
 #' #Removing rows and columns containing only zeros
 #' selected <- apply(intdata(obj), 1, sum) > 0
-#' obj <- new("HTCexp", intdata(obj)[selected,selected], x_intervals(obj)[selected,], y_intervals(obj)[selected, ])
+#' intd <- intdata(obj)[selected,selected]
+#' x_int <- x_intervals(obj)[selected,]
+#' y_int <- y_intervals(obj)[selected,]
+#' obj <- new("HTCexp", intd, x_int, y_int)
 #' 
+#' \dontrun{
 #' #Input as HiTC::HTCexp object
 #' res1 <- hicclust(obj)
 #' 
 #' #Input as Matrix::dsCMatrix contact map
 #' mat <- intdata(obj) 
 #' res2 <- hicclust(mat)
-#' 
+#' } 
+#'
 #' #Input as text file
 #' res3 <- hicclust(system.file("extdata", "sample.txt", package = "adjclust"))
 #' 
