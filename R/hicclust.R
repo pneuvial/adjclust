@@ -68,7 +68,7 @@ hicclust <- function(x, h = NULL, ...) {
     
     p <- x@Dim[1]
     if(is.null(h)) h <- p-1  
-    res <- adjClustBand_heap(x, type = "similarity", h)
+    res <- adjClust(x, type = "similarity", h)
     return(res)
   
   } else {
@@ -88,7 +88,7 @@ hicclust <- function(x, h = NULL, ...) {
   m[cbind(rowindx,colindx)] <- m[cbind(colindx,rowindx)] <- df[,3]
 
   if(is.null(h)) h <- p-1  
-  res <- adjClustBand_heap(m, type = "similarity", h)
+  res <- adjClust(m, type = "similarity", h)
   return(res)
   
   }
