@@ -80,7 +80,7 @@ snpclust <- function(x ,h ,stats) {
   }
   
   diag(x) <- 1
-  res <- adjClustBand_heap(x, "similarity", h, 1, FALSE)
+  res <- adjClust(x, "similarity", h, 1, FALSE)
   
   return(res)
 }
