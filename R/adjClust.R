@@ -2,7 +2,7 @@
 #' 
 #' Function to perform adjacency-constrained hierarchical agglomerative clustering
 #' 
-#' \code{adjClustBand_heap} performes constrained hierarchichal agglomerative clustering which is   
+#' \code{adjClust} performes constrained hierarchichal agglomerative clustering which is   
 #' hierarchical agglomerative clustering in which each observation is associated to a position, 
 #' and the clustering is constrained so as only adjacent clusters are merged. These methods are  
 #' useful in various application fields, including ecology (Quaternary data) and bioinformatics 
@@ -15,19 +15,19 @@
 #' @param blMin depth of clustering. It is number of clusters at which the algorithm stops. Default value is 1.
 #' @param verbose Currently not used
 #' 
-#' @return Function \code{adjClustBand_heap} returns an object of
+#' @return Function \code{adjClust} returns an object of
 #' class \code{\link[stats]{hclust}}.  
 #'
 #' @examples
 #' sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
 #' h <- 3
-#' fit1 <- adjClustBand_heap(sim, "similarity", h, 1, FALSE)
+#' fit1 <- adjClust(sim, "similarity", h, 1, FALSE)
 #' plot(fit1)
 #' 
 #' dist <- as.dist(sqrt(2-(2*sim)))
 #' 
 #' #Compatibility with dist objects
-#' fit2 <- adjClustBand_heap(dist, "dissimilarity", h, 1, FALSE)
+#' fit2 <- adjClust(dist, "dissimilarity", h, 1, FALSE)
 #' plot(fit2)
 #' 
 #' @export
@@ -35,7 +35,7 @@
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
 
-adjClustBand_heap <- function(mat, type = "similarity", h, blMin=1, verbose=FALSE){
+adjClust <- function(mat, type = "similarity", h, blMin=1, verbose=FALSE){
     
     if (!is.numeric(h))
       stop("Input band width is not numeric")
