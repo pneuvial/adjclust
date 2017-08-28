@@ -23,7 +23,7 @@ library("HiTC")
 `hic_imr90_40` is a list of objects of class `HTCexp`. Each of these objects corresponds to a Hi-C contact map between one chromosome and another. Below, `hic_imr90_40$chrXchrX` contains object `obj` which is the contact map corresponding to chromosome X vs chromosome X. The corresponding Hi-C data is stored as a Matrix::dsCMatrix in the slot named intdata.
 
 ```{r}
-data("hic_imr90_40$chrXchrX", package="adjclust")
+data("hic_chrXchrX", package="adjclust")
 ```
 
 Remove all the rows and columns containing only zeros from the dataset.
