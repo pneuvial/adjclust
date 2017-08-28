@@ -1,9 +1,9 @@
-#' Results obtained from primitive version of adjClustBand_heap function
+#' Results obtained from primitive version of adjClust function
 #'
-#' A hclust object obtained from primitve version of adjClustBand_heap function
+#' A hclust object obtained from primitve version of adjClust function
 #'
 #' @format An object of class hclust.
 #'
-#' @source primitive version of adjClustBand_heap function.
+#' @source primitive version of adjClust function.
 #'
 "prevfit"
