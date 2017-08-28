@@ -8,7 +8,7 @@ check_rioja <- function() {
   }
 }
 
-test_that("rioja and adjClustBand_heap with full band give idenctical results on simmatrix.rda", {
+test_that("rioja and adjClust with full band give idenctical results on simmatrix.rda", {
   check_rioja()
   
   data("simmatrix", package="adjclust")
@@ -22,9 +22,9 @@ test_that("rioja and adjClustBand_heap with full band give idenctical results on
   dis_sq <- as.dist(dis_sq)
   dis <- as.dist(dis)
   
-  fit1 <- adjclust:::adjClustBand_heap(sim, "similarity", p-1)
+  fit1 <- adjClust(sim, "similarity", p-1)
   fit2 <- chclust(dis_sq, method="coniss")
-  fit3 <- adjclust:::adjClustBand_heap(dis, "dissimilarity", p-1)
+  fit3 <- adjClust(dis, "dissimilarity", p-1)
   
   expect_equal(fit1$merge, fit2$merge)
   expect_equal(fit1$height, fit2$height, tolerance=0.000001)
