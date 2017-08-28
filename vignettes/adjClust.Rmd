@@ -10,7 +10,7 @@ vignette: >
 ---
 
 
-In this short vignette we demonstrate the use of `adjClustBand_heap` function in the `adjclust` package to perform adjacency-constrained hierarchical clustering of Linkage Disequilibrium data.
+In this short vignette we demonstrate the use of `adjClust` function in the `adjclust` package to perform adjacency-constrained hierarchical clustering of Linkage Disequilibrium data.
 
 ```{r}
 library("adjclust")
@@ -74,7 +74,7 @@ diag(ld.ceph) <- 1
 ### Using "crayons"
 
 ```{r}
-fit <- adjClustBand_heap(ld.ceph, "similarity", h, blMin=1)
+fit <- adjClust(ld.ceph, "similarity", h, blMin=1)
 ```
 
 This function implements the algorithm described in the third chapter of [2]. It is an extension of the algorithm described in [3].  The output is of class "hclust" a can be plotted as a dendrogram:
