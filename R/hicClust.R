@@ -3,7 +3,7 @@
 #' Function to perform adjacency-constrained hierarchical agglomerative clustering 
 #' of genomic regions(loci)
 #' 
-#' \code{hicclust} performs constrained hierarchichal agglomerative clustering of 
+#' \code{hicClust} performs constrained hierarchichal agglomerative clustering of 
 #' genomic regions (loci) according to information provided by high-throughput conformation capture
 #'  data (Hi-C). Constrained Hierarchical Agglomerative Clustering is hierarchical agglomerative 
 #'  clustering in which each observation is associated to a position, and the clustering is 
@@ -19,7 +19,7 @@
 #' 
 #' @param \dots further arguments to be passed to \code{\link{read.table}} function. If NULL the text file is supposed to be separated by tab with no header.
 #'  
-#' @return Function \code{hicclust} returns an object of class \code{\link[stats]{hclust}}.  
+#' @return Function \code{hicClust} returns an object of class \code{\link[stats]{hclust}}.  
 #' 
 #' @examples
 #' #Input as HiTC::HTCexp object
@@ -35,22 +35,22 @@
 #' 
 #' \dontrun{
 #' #Input as HiTC::HTCexp object
-#' res1 <- hicclust(obj)
+#' res1 <- hicClust(obj)
 #' 
 #' #Input as Matrix::dsCMatrix contact map
 #' mat <- intdata(obj) 
-#' res2 <- hicclust(mat)
+#' res2 <- hicClust(mat)
 #' } 
 #'
 #' #Input as text file
-#' res3 <- hicclust(system.file("extdata", "sample.txt", package = "adjclust"))
+#' res3 <- hicClust(system.file("extdata", "sample.txt", package = "adjclust"))
 #' 
 #' @export 
 #' 
 #' @importFrom utils read.table
 #' @importFrom HiTC intdata
 
-hicclust <- function(x, h = NULL, ...) {
+hicClust <- function(x, h = NULL, ...) {
 
   if (!is.null(h)) {
     if (!is.numeric(h))
