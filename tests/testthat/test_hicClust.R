@@ -6,7 +6,7 @@ context("Checking the consistency of the results of hicclust function across var
 test_that("hicClust function identical results for the same data in all three inputs formats", {
 
   #case1: Input as HiTC::HTCexp object
-  data("hic_imr90_40$chrXchrX", package="adjclust")
+  data("hic_chrXchrX", package="adjclust")
   h <- 3881
   fit1 <- hicClust(obj, h)
   
