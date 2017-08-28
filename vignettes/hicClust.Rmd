@@ -29,7 +29,10 @@ Remove all the rows and columns containing only zeros from the dataset.
 
 ```{r}
 selected <- apply(intdata(obj), 1, sum) > 0
-obj <- new("HTCexp", intdata(obj)[selected,selected], x_intervals(obj)[selected,], y_intervals(obj)[selected, ])
+intd <- intdata(obj)[selected,selected]
+x_int <- x_intervals(obj)[selected,]
+y_int <- y_intervals(obj)[selected,]
+obj <- new("HTCexp", intd, x_int, y_int)
 ```
 
 Now we have a look at the data.
