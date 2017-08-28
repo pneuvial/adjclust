@@ -2,7 +2,7 @@
 #' 
 #' Function to perform adjacency-constrained hierarchical agglomerative clustering of Single Nucleotide Polymorphisms
 #' 
-#' \code{snpclust} performs constrained hierarchichal agglomerative clustering of single nucleotide 
+#' \code{snpClust} performs constrained hierarchichal agglomerative clustering of single nucleotide 
 #' polymorphisms. Constrained Hierarchical Agglomerative Clustering is hierarchical agglomerative
 #' clustering in which each observation is associated to a position, and the clustering is 
 #' constrained so as to merge only adjacent clusters.
@@ -14,27 +14,27 @@
 #' @param stats a character vector specifying the linkage disequilibrium measure to be calculated. This should contain one or 
 #' more of the strings: "LLR", "OR", "Q", "Covar", "D.prime", "R.squared" or "R"
 #' 
-#' @return Function \code{snpclust} returns an object of class \code{\link[stats]{hclust}}.  
+#' @return Function \code{snpClust} returns an object of class \code{\link[stats]{hclust}}.  
 #' 
 #' @examples
 #' library(snpStats)
 #' data(testdata)
 #' 
 #' #Input as snpStats::SnpMatrix
-#' fit1 <- snpclust(Autosomes[1:200, 1:5], 3, "R.squared")
+#' fit1 <- snpClust(Autosomes[1:200, 1:5], 3, "R.squared")
 #' 
 #' #Input as base::matrix
-#' fit2 <- snpclust(as.matrix(Autosomes[1:200, 1:5]), 3, "R.squared")
+#' fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), 3, "R.squared")
 #' 
 #' #Input as Matrix::dgCMatrix
 #' ld <- ld(Autosomes[1:200, 1:5], depth=3, stats="R.squared")
-#' fit3 <- snpclust(ld, 3)
+#' fit3 <- snpClust(ld, 3)
 #' 
 #' @export
 #' 
 #' @importFrom methods as
 #' @importFrom snpStats ld
-snpclust <- function(x ,h ,stats) {
+snpClust <- function(x ,h ,stats) {
   
   if (!is.numeric(h))
     stop("h should be numeric")
