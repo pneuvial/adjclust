@@ -9,8 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-In this short vignette we demonstrate the use of `hicClust` function in the `adjclust` package. `hicClust` performs adjacency-constrained hierarchical clustering of genomic regions or loci. `hicClust` is a specialized version of `adjClust` function designed specially to perform clustering of genomic regions or loci.This function implements the algorithm same as `adjClust` that is described in the third chapter of [2]. 
+In this vignette we demonstrate the use of `hicClust` function in the `adjclust` package. `hicClust` performs adjacency-constrained hierarchical clustering of genomic regions or loci. `hicClust` is a specialized version of `adjClust` function designed specially to perform clustering of genomic regions or loci, where the similarity between any pair of regions quantifies the intensity of the physical interactions between these two regions at the DNA level. These similarities are measured by Chromosome conformation capture techniques such as Hi-C.
 
+This function implements the algorithm described in the third chapter of [2].
 
 ```{r, message = FALSE}
 library("adjclust")
@@ -81,13 +82,22 @@ Now that we have a text file `tf`, we are ready to pass it as input to the funct
   fit3 <- hicClust(tf, sep = " ")  
 ```
 
-In particular, the output contains an element named `merge` which describes the successive merges of the clustering, and an element `gains` which gives the improvement in the criterion optimized by the clustering at each successive merge.
+## Output
+
+The output of the `snpClust` is of class "hclust". In particular, it can be plotted as a dendrogram:
+
+```{r}
+plot(fit1)
+```
+
+
+Moreover, the output contains an element named `merge` which describes the successive merges of the clustering, and an element `gains` which gives the improvement in the criterion optimized by the clustering at each successive merge.
 
 ```{r}
 head(cbind(fit1$merge, fit1$gains))
 ```
 
-The output can also be plotted as dendogram
+
 
 For equivalent input in different classes, we get equivalent results.In this example, fit1, fit2 and fit3 are equivalent.
 
