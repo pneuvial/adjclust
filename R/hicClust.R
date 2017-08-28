@@ -24,7 +24,7 @@
 #' @examples
 #' #Input as HiTC::HTCexp object
 #' library("HiTC")
-#' data("hic_imr90_40$chrXchrX", package="adjclust")
+#' data("hic_chrXchrX", package="adjclust")
 #' 
 #' #Removing rows and columns containing only zeros
 #' selected <- apply(intdata(obj), 1, sum) > 0
