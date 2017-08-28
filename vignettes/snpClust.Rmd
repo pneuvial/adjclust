@@ -96,6 +96,7 @@ fit2 <- snpClust(ceph.1mb, h, "R.squared")
 
 ```{r, warning = FALSE}
 ceph.1mb <- as(ceph.1mb, "matrix")
+class(ceph.1mb)
 fit3 <- snpClust(ceph.1mb, h, "R.squared")  
 ```
   
