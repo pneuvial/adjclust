@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-In this short vignette we demonstrate the use of `hicclust` function in the `adjclust` package. `hicclust` performs adjacency-constrained hierarchical clustering of genomic regions or loci. `hicclust` is a specialized version of `adjClustBand_heap` function designed specially to perform clustering of genomic regions or loci.This function implements the algorithm same as `adjClustBand_heap` that is described in the third chapter of [2]. 
+In this short vignette we demonstrate the use of `hicClust` function in the `adjclust` package. `hicClust` performs adjacency-constrained hierarchical clustering of genomic regions or loci. `hicClust` is a specialized version of `adjClust` function designed specially to perform clustering of genomic regions or loci.This function implements the algorithm same as `adjClust` that is described in the third chapter of [2]. 
 
 
 ```{r, message = FALSE}
@@ -45,14 +45,14 @@ image(mat, lwd=0)
 
 ```{r}
   class(obj)
-  fit1 <- hicclust(obj)
+  fit1 <- hicClust(obj)
 ```
     
 ### Case 2: Input as Matrix::dsCMatrix contact map
 
 ```{r}
   class(mat)
-  fit2 <- hicclust(mat)
+  fit2 <- hicClust(mat)
 ```
 
 ### Case 3: Input as text file
@@ -75,7 +75,7 @@ Here, we first create a sample text file with the above format using sparse matr
 Now that we have a text file `tf`, we are ready to pass it as input to the function `hicclust`
 
 ```{r}
-  fit3 <- hicclust(tf, sep = " ")  
+  fit3 <- hicClust(tf, sep = " ")  
 ```
 
 In particular, the output contains an element named `merge` which describes the successive merges of the clustering, and an element `gains` which gives the improvement in the criterion optimized by the clustering at each successive merge.
