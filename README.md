@@ -6,7 +6,7 @@ adjclust is a package that provides methods to perform adjacency-constrained hie
 
 Present version of adjclust package provides three user level functions: `adjClust`, `snpClust` and `hicClust`.
 
-`adjClust` function performs adjacency-constrained hierarchichal agglomerative clustering for standard and sparse, similarity and dissimilarity matrices and dist objects.Matrix::dgCMatrix and Matrix::dsCMatrix are the supported sparse matrix classes. Lets look at a basic example
+`adjClust` function performs adjacency-constrained hierarchichal agglomerative clustering for standard and sparse, similarity and dissimilarity matrices and dist objects. Matrix::dgCMatrix and Matrix::dsCMatrix are the supported sparse matrix classes. Lets look at a basic example
 
 ```r
 > library("adjclust")
@@ -18,7 +18,7 @@ Present version of adjclust package provides three user level functions: `adjClu
 ```
 ![cluster dendogram](images/dendogram.png)
 
-The result `fit` can be plotted as dendogram(as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
+The result `fit` can be plotted as dendogram (as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
 
 `snpClust` function performs adjacency-constrained hierarchichal agglomerative clustering for specific application of Genome Wide Association Studies (GWAS). See [GWAS Vignette](vignettes/snpClust.Rmd) for details.
 
