@@ -16,7 +16,7 @@ Present version of adjclust package provides three user level functions: `adjClu
 > fit1 <- adjClust(sim, "similarity", h, 1, FALSE)
 > plot(fit1)
 ```
-![cluster dendogram](images/dendogram1.png)
+![cluster dendogram](images/dendogram.png)
 
 Now we look at compatibility with dist objects
 
