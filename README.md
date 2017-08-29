@@ -16,6 +16,8 @@ Present version of adjclust package provides three user level functions: `adjClu
 > fit1 <- adjClust(sim, "similarity", h, 1, FALSE)
 > plot(fit1)
 ```
+![cluster dendogram](images/dendogram1.png)
+
 Now we look at compatibility with dist objects
 
 ```r
@@ -23,6 +25,7 @@ Now we look at compatibility with dist objects
 > fit2 <- adjClust(dist, "dissimilarity", h, 1, FALSE)
 > plot(fit2)
 ```
+![cluster dendogram](images/dendogram2.png)
 
 
 `snpClust` function performs adjacency-constrained hierarchichal agglomerative clustering for specific application of Genome Wide Association Studies (GWAS). See [GWAS Vignette](vignettes/snpClust.Rmd) for details.
