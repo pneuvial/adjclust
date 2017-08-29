@@ -13,10 +13,12 @@ Present version of adjclust package provides three user level functions: `adjClu
 
 > sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
 > h <- 3
-> fit1 <- adjClust(sim, "similarity", h, 1, FALSE)
-> plot(fit1)
+> fit <- adjClust(sim, "similarity", h, 1, FALSE)
+> plot(fit)
 ```
 ![cluster dendogram](images/dendogram.png)
+
+The result `fit` can be plotted as dendogram(as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
 
 `snpClust` function performs adjacency-constrained hierarchichal agglomerative clustering for specific application of Genome Wide Association Studies (GWAS). See [GWAS Vignette](vignettes/snpClust.Rmd) for details.
 
