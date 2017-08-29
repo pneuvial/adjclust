@@ -2,16 +2,12 @@
 
 ## Version 0.4.0 [2017-08-29]
 
-* Implemented user level function 'adjClust' for standard matrices and added documentation for it.
-* Implemented user level function 'adjClust' for sparse matrices.
-* For 'adjClust' function, introduced argument 'type' which can takes values 'similarity' or 'dissimilarity'.
-* Added test to check equivalence with rioja.
-* Implemented user level function 'snpClust' for specific application of Genome Wide Association Studies(GWAS).
-* Implemented user level function 'hicClust' for specific application of Hi-C data analysis.
-* Added vignettes for 'snpClust' and 'hicClust'.
-* Updated test scripts to increase code coverage.
-* Removed functions that are not in use.
-
+* Implemented interface to handle standard and sparse matrices in adjClust
+* Implemented interface to handle either kernel or dissimilarities
+* Implemented wrapper for SNP and Hi-C data
+* Documented the package and created vignettes for the different use cases
+* Added scripts to increase package coverage and test the equivalence with rioja for the small dimensional case
+* Cleaned up code to improve efficiency and removed unnecessary scripts and functions
 
 ## Version 0.3.0 [2017-02-13]
 
