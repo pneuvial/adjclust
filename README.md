@@ -4,7 +4,7 @@ adjclust is a package that provides methods to perform adjacency-constrained hie
 
 <em> Version 0.4.0 of this package was completed as a part of the [Google Summer of Code 2017](https://summerofcode.withgoogle.com/projects/#4961904920363008) program.</em>
 
-Present version adjclust package provides three user level functions: `adjClust`, `snpClust` and `hicClust`.
+Present version of adjclust package provides three user level functions: `adjClust`, `snpClust` and `hicClust`.
 
 `adjClust` function performs adjacency-constrained hierarchichal agglomerative clustering for standard and sparse, similarity and dissimilarity matrices and dist objects.Matrix::dgCMatrix and Matrix::dsCMatrix are the supported sparse matrix classes. Lets look at a basic example
 
