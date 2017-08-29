@@ -9,19 +9,18 @@ Present version adjclust package provides three user level functions: `adjClust`
 `adjClust` function performs adjacency-constrained hierarchichal agglomerative clustering for standard and sparse, similarity and dissimilarity matrices and dist objects.Matrix::dgCMatrix and Matrix::dsCMatrix are the supported sparse matrix classes. Lets look at an example
 
 ```r
-library("adjclust")
+> library("adjclust")
 
-sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
-h <- 3
-fit1 <- adjClust(sim, "similarity", h, 1, FALSE)
-plot(fit1)
+> sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
+> h <- 3
+> fit1 <- adjClust(sim, "similarity", h, 1, FALSE)
+> plot(fit1)
 
-dist <- as.dist(sqrt(2-(2*sim)))
+> dist <- as.dist(sqrt(2-(2*sim)))
 
 #Compatibility with dist objects
-fit2 <- adjClust(dist, "dissimilarity", h, 1, FALSE)
-plot(fit2)
-
+> fit2 <- adjClust(dist, "dissimilarity", h, 1, FALSE)
+> plot(fit2)
 ```
 
 
