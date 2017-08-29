@@ -1,5 +1,18 @@
 # Package: adjclust
 
+## Version 0.4.0 [2017-08-29]
+
+* Implemented user level function 'adjClust' for standard matrices and added documentation for it.
+* Implemented user level function 'adjClust' for sparse matrices.
+* For 'adjClust' function, introduced argument 'type' which can takes values 'similarity' or 'dissimilarity'.
+* Added test to check equivalence with rioja.
+* Implemented user level function 'snpClust' for specific application of Genome Wide Association Studies(GWAS).
+* Implemented user level function 'hicClust' for specific application of Hi-C data analysis.
+* Added vignettes for 'snpClust' and 'hicClust'.
+* Updated test scripts to increase code coverage.
+* Removed functions that are not in use.
+
+
 ## Version 0.3.0 [2017-02-13]
 
 * Removed 'adjClustBand': main entry points are now 'HeapHop' and 'adjClustBand_heap'.
