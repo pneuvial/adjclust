@@ -4,6 +4,6 @@
 
 # adjclust
 
-Adjacency-constrained clustering of a block-diagonal similarity matrix
+adjclust is a package that provides methods to perform adjacency-constrained hierarchical agglomerative clustering. Adjacency-constrained hierarchical agglomerative clustering is hierarchical agglomerative clustering in which each observation is associated to a position, and the clustering is constrained so as only adjacent clusters are merged. It is a common method used widely in various application fields including ecology (Quaternary data) and bioinformatics (for instance in Genome Wide Association Studies).
 
-High-level functions are not implemented yet. See the [LD vignette](vignettes/adjclust-LD.Rmd) for an example of usage of the low-level functions of the package.
+<em> Version 0.4.0 of this package was initiated as a part of the [Google Summer of Code 2017](https://github.com/rstats-gsoc/gsoc2017/wiki/Constrained-Hierarchical-Agglomerative-Clustering) program. [Pierre Neuvial](https://www.math.univ-toulouse.fr/~pneuvial/) and [Nathalie Villa-Vialaneix](http://www.nathalievilla.org/) were the mentors.</em><br> 
