@@ -16,7 +16,6 @@ Present version of adjclust package provides three user level functions: `adjClu
 > fit <- adjClust(sim, "similarity", h, 1, FALSE)
 > plot(fit)
 ```
-![cluster dendogram](images/dendogram.png)
 
 The result `fit` can be plotted as dendogram (as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
 
