@@ -24,6 +24,7 @@ plot(fit2)
 
 ```
 
+
 `snpClust` function performs adjacency-constrained hierarchichal agglomerative clustering for specific application of Genome Wide Association Studies (GWAS). See [GWAS Vignette](vignettes/snpClust.Rmd) for details.
 
 `hicClust`function performs adjacency-constrained hierarchichal agglomerative clustering for specific application of Hi-C data analysis. See [Hi-C Vignette](vignettes/hicClust.Rmd) for details.
