@@ -1,3 +1,2 @@
-#' @useDynLib adjclust
-#' @importFrom Rcpp evalCpp
+#' @useDynLib adjclust, .registration = TRUE
 NULL

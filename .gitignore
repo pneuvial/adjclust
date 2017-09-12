@@ -39,7 +39,6 @@ vignettes/*.pdf
 .Rhistory
 .RData
 .Ruserdata
-inst/doc
 
 ## OS X
 .DS_Store

@@ -1,9 +1,24 @@
-[![Travis Build Status](https://travis-ci.org/pneuvial/adjclust.svg?branch=develop)](https://travis-ci.org/pneuvial/adjclust)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=develop&svg=true)](https://ci.appveyor.com/project/pneuvial/adjclust)
-[![Coverage Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg)](https://codecov.io/github/pneuvial/adjclust?branch=develop)
-
 # adjclust
 
-Adjacency-constrained clustering of a block-diagonal similarity matrix
+adjclust is a package that provides methods to perform adjacency-constrained hierarchical agglomerative clustering. Adjacency-constrained hierarchical agglomerative clustering is hierarchical agglomerative clustering in which each observation is associated to a position, and the clustering is constrained so as only adjacent clusters are merged. It is a common method used widely in various application fields including ecology (Quaternary data) and bioinformatics (for instance in Genome Wide Association Studies).
 
-High-level functions are not implemented yet. See the [LD vignette](vignettes/adjclust-LD.Rmd) for an example of usage of the low-level functions of the package.
+<em> Version 0.4.0 of this package was completed as a part of the [Google Summer of Code 2017](https://summerofcode.withgoogle.com/projects/#4961904920363008) program.</em>
+
+Present version of adjclust package provides three user level functions: `adjClust`, `snpClust` and `hicClust`.
+
+- `adjClust` function performs adjacency-constrained hierarchichal agglomerative clustering for standard and sparse, similarity and dissimilarity matrices and dist objects. Matrix::dgCMatrix and Matrix::dsCMatrix are the supported sparse matrix classes. Lets look at a basic example
+
+```r
+> library("adjclust")
+
+> sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
+> h <- 3
+> fit <- adjClust(sim, "similarity", h, 1, FALSE)
+> plot(fit)
+```
+
+The result `fit` can be plotted as dendogram (as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
+
+- `snpClust` function performs adjacency-constrained hierarchichal agglomerative clustering for specific application of Genome Wide Association Studies (GWAS). See [GWAS Vignette](vignettes/snpClust.Rmd) for details.
+
+- `hicClust`function performs adjacency-constrained hierarchichal agglomerative clustering for specific application of Hi-C data analysis. See [Hi-C Vignette](vignettes/hicClust.Rmd) for details.

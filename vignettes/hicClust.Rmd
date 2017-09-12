@@ -1,0 +1,124 @@
+---
+title: "Adjacency-constrained hierarchical clustering of Genomic Regions(loci)"
+author: "Pierre Neuvial, Shubham Chaturvedi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adjacency-constrained hierarchical clustering of Genomic Regions(loci)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+In this vignette we demonstrate the use of `hicClust` function in the `adjclust` package. `hicClust` performs adjacency-constrained hierarchical clustering of genomic regions or loci. `hicClust` is a specialized version of `adjClust` function designed specially to perform clustering of genomic regions or loci, where the similarity between any pair of regions quantifies the intensity of the physical interactions between these two regions at the DNA level. These similarities are measured by Chromosome conformation capture techniques such as Hi-C.
+
+This function implements the algorithm described in the third chapter of [2].
+
+```{r, message = FALSE}
+library("adjclust")
+library("HiTC")
+```
+
+## Loading genome wide contact maps 
+
+`hic_imr90_40` is a list of objects of class `HTCexp`. Each of these objects corresponds to a Hi-C contact map between one chromosome and another. Below, `hic_imr90_40$chrXchrX` contains object `obj` which is the contact map corresponding to chromosome X vs chromosome X. The corresponding Hi-C data is stored as a Matrix::dsCMatrix in the slot named intdata.
+
+```{r}
+data("hic_chrXchrX", package="adjclust")
+```
+
+Remove all the rows and columns containing only zeros from the dataset.
+
+```{r}
+selected <- apply(intdata(obj), 1, sum) > 0
+intd <- intdata(obj)[selected,selected]
+x_int <- x_intervals(obj)[selected,]
+y_int <- y_intervals(obj)[selected,]
+obj <- new("HTCexp", intd, x_int, y_int)
+```
+
+Now we have a look at the data.
+
+```{r}
+mat <- intdata(obj)
+image(mat, lwd=0)
+```
+
+## Using hiciclust function for various input classes
+
+###  Case 1: Input as HiTC::HTCexp object
+
+```{r}
+  class(obj)
+  fit1 <- hicClust(obj)
+```
+    
+### Case 2: Input as Matrix::dsCMatrix contact map
+
+```{r}
+  class(mat)
+  fit2 <- hicClust(mat)
+```
+
+### Case 3: Input as text file
+
+The input text file should have one line per pair of loci for which an interaction has been observed (in the format: locus1 <space> locus2 <space> signal).
+
+Here, we first create a sample text file with the above format using sparse matrix `mat` created above. 
+
+```{r}
+  V3 <- mat@x
+  V1 <- mat@Dimnames[[1]][mat@i+1]          #loci1names
+  V2 <- rep(mat@Dimnames[[2]], diff(mat@p)) #loci2names
+  
+  content <- cbind(as.numeric(V1), as.numeric(V2), as.numeric(V3))
+  
+  tf <- tempfile(fileext = ".txt")
+  write.table(content, tf, sep = " ", col.names = FALSE, row.names = FALSE)
+```
+
+Now that we have a text file `tf`, we are ready to pass it as input to the function `hicclust`
+
+```{r}
+  fit3 <- hicClust(tf, sep = " ")  
+```
+
+## Output
+
+The output of the `snpClust` is of class "hclust". In particular, it can be plotted as a dendrogram:
+
+```{r}
+plot(fit1)
+```
+
+
+Moreover, the output contains an element named `merge` which describes the successive merges of the clustering, and an element `gains` which gives the improvement in the criterion optimized by the clustering at each successive merge.
+
+```{r}
+head(cbind(fit1$merge, fit1$gains))
+```
+
+
+
+For equivalent input in different classes, we get equivalent results.In this example, fit1, fit2 and fit3 are equivalent.
+
+```{r}
+all.equal(fit1$merge, fit2$merge)
+all.equal(fit1$gains, fit2$gains)
+
+all.equal(fit2$merge, fit3$merge)
+all.equal(fit2$gains, fit3$gains)
+```
+
+## References
+
+[1] Servant N., Lajoie B.R., Nora E.P., Giorgetti L., Chen C., Heard E., Dekker J., Barillot E. (2012) HiTC : Exploration of High-Throughput 'C' experiments. Bioinformatics
+
+[2] Dehman A. (2015). [Spatial clustering of linkage disequilibrium blocks for genome-wide association studies](https://tel.archives-ouvertes.fr/tel-01288568/). Phd Thesis, Université Paris Saclay.
+
+[3] Fotuhi Siahpirani A, Ay F, Roy S. (2016) A multi-task graph-clustering approach for chromosome conformation capture data sets identifies conserved modules of chromosomal interactions. Genome Biology. 17: 114. PMID 27233632 DOI: 10.1186/s13059-016-0962-8 
+
+## Session information
+
+```{r}
+sessionInfo()
+```
