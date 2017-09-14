@@ -6,3 +6,7 @@
 ^\.travis\.yml$
 ^appveyor\.yml$
 appveyor.yml
+
+fig
+localTests
+^docs$

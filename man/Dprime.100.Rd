@@ -19,4 +19,3 @@ sample of 90 Europeans (CEPH). LD values were only calculated for entries in
 a diagonal band of size \code{h=100}; the other values are assumed to be 0.
 }
 \keyword{datasets}
-

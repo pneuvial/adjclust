@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-In this vignette we demonstrate the use of `snpClust` function in the `adjclust` package. `snpClust` performs adjacency-constrained hierarchical clustering of single nucleotide polymorphisms (SNPs), where the similarity between SNPs is defined by linkage disequilibrium (LD). 
+In this vignette we demonstrate the use of `snpClust` function in the `adjclust` package. `snpClust` performs adjacency-constrained hierarchical clustering of single nucleotide polymorphisms (SNPs), where the similarity between SNPs is defined by linkage disequilibrium (LD).
 
 This function implements the algorithm described in the third chapter of [2]. It is an extension of the algorithm described in [3]. Denoting by $p$ the number of SNPs to cluster and assuming that the similarity between SNPs whose indices are more distant than $h$, its time complexity is $O(p (\log(p) + h))$, and its space complexity is $O(hp)$.
 
@@ -65,8 +65,8 @@ which(is.na(ld.ceph), arr.ind = TRUE)
 As a quick fix for this vignette, we modify one of the observed genotypes as follows, and recalculate the LD:
 
 ```{r}
-ceph.1mb[4, 286]@.Data[1,1] <- as.raw(3) 
-ld.ceph <- ld(ceph.1mb, stats="R.squared", depth=h)  
+ceph.1mb[4, 286]@.Data[1,1] <- as.raw(3)
+ld.ceph <- ld(ceph.1mb, stats="R.squared", depth=h)
 ```
 
 Due to numerical errors in the LD estimation, some of the estimated values are slightly larger than 1, so we round the estimates to 1e-10:
@@ -89,7 +89,7 @@ fit1 <- snpClust(ld.ceph, h)
 
 ```{r}
 class(ceph.1mb)
-fit2 <- snpClust(ceph.1mb, h, "R.squared")  
+fit2 <- snpClust(ceph.1mb, h, "R.squared")
 ```
 
 ###Case3: Input belongs class base::matrix
@@ -97,9 +97,9 @@ fit2 <- snpClust(ceph.1mb, h, "R.squared")
 ```{r, warning = FALSE}
 ceph.1mb <- as(ceph.1mb, "matrix")
 class(ceph.1mb)
-fit3 <- snpClust(ceph.1mb, h, "R.squared")  
+fit3 <- snpClust(ceph.1mb, h, "R.squared")
 ```
-  
+
 ## Output
 
 The output of the `snpClust` is of class "hclust". In particular, it can be plotted as a dendrogram:
