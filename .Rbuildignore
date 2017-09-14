@@ -10,3 +10,4 @@ appveyor.yml
 fig
 localTests
 ^docs$
+^_pkgdown\.yml$

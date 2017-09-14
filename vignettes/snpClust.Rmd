@@ -1,10 +1,11 @@
 ---
-title: "Adjacency-constrained hierarchical clustering of Single Nucleotide Polymorphisms"
+title: "Inferring Linkage Disequilibrium blocks from genotypes"
 author: "Pierre Neuvial, Shubham Chaturvedi"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{Adjacency-constrained hierarchical clustering of Single Nucleotide Polymorphisms}
+  %\VignetteIndexEntry{Inferring Linkage Disequilibrium blocks from genotypes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

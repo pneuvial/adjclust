@@ -1,0 +1,25 @@
+reference:
+  - title: "Main functions"
+    contents: 
+      - adjClust
+      - hicClust
+      - snpClust
+  - title: "Data objects"
+    contents:
+      - obj
+      - R2.100
+      - simmatrix
+      - Dprime.100
+    exclude: 
+      - prevfit
+      
+articles:
+   - title: "Linkage Disequilibrium blocks from genotypes"
+
+authors:
+  Christophe Ambroise:
+    href: http://www.math-evry.cnrs.fr/members/cambroise/
+  Pierre Neuvial:
+    href: https://www.math.univ-toulouse.fr/~pneuvial/
+  Nathalie Villa-Vialaneix:
+    href: http://nathalievilla.org

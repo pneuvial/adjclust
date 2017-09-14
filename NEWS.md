@@ -1,6 +1,4 @@
-# Package: adjclust
-
-## Version 0.4.0 [2017-08-29]
+# Version 0.4.0 [2017-08-29]
 
 * Implemented interface to handle standard and sparse matrices in adjClust
 * Implemented interface to handle either kernel or dissimilarities
@@ -9,11 +7,13 @@
 * Added scripts to increase package coverage and test the equivalence with rioja for the small dimensional case
 * Cleaned up code to improve efficiency and removed unnecessary scripts and functions
 
-## Version 0.3.0 [2017-02-13]
+# Version 0.3.0 [2017-02-13]
 
 * Removed 'adjClustBand': main entry points are now 'HeapHop' and 'adjClustBand_heap'.
 * Updated test scripts and LD vignette accordingly.
 * Added Travis CI and Appveyor support.
+
+# Version 0.2.*
 
 ## Version 0.2.3 [2017-02-02]
 
@@ -36,7 +36,7 @@
 * 'adjClustBand' is now a wrapper to call either Alia's or Michel's
   implementation
 
-## Version 0.1.0 [2016-06-24]
+# Version 0.1.0 [2016-06-24]
 
 * Created from BALD
 * Added a test to check that we are reproducing the results of BALD::cWard

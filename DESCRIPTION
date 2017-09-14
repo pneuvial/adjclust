@@ -23,9 +23,12 @@ Imports:
     utils,
     HiTC,
 Suggests:
+    BiocStyle,
     knitr,
     testthat,
     rmarkdown,
     rioja
 VignetteBuilder: knitr
+URL: https://github.com/pneuvial/adjclust
+BugReports: https://github.com/pneuvial/adjclust/issues
 RoxygenNote: 6.0.1.9000
