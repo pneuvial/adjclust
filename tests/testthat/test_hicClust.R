@@ -1,9 +1,9 @@
 library("adjclust")
 library("HiTC")
 
-context("Checking the consistency of the results of hicclust function across various input formats")
+context("Consistency of the results of hicClust function across various input formats")
 
-test_that("hicClust function identical results for the same data in all three inputs formats", {
+test_that("hicClust gives identical results regardless of data input format", {
 
   #case1: Input as HiTC::HTCexp object
   data("hic_imr90_40_XX", package="adjclust")
