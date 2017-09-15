@@ -29,6 +29,7 @@ clustering in which each observation is associated to a position, and the cluste
 constrained so as to merge only adjacent clusters.
 }
 \examples{
+## a very small example
 library(snpStats)
 data(testdata)
 
@@ -41,5 +42,7 @@ fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), 3, "R.squared")
 #Input as Matrix::dgCMatrix
 ld <- ld(Autosomes[1:200, 1:5], depth=3, stats="R.squared")
 fit3 <- snpClust(ld, 3)
+
+## A less small example
 
 }

@@ -113,19 +113,19 @@ of genomic regions(loci)</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>x can be:
+      <td><p>either:
 1. A pxp contact map of class Matrix::dsCMatrix in which the entries are the number of counts of physical interactions observed between all pairs of loci
 2. An object of class HiTC::HTCexp. The corresponding Hi-C data is stored as a Matrix::dsCMatrix object in the intdata slot
 3. A text file with one line per pair of loci for which an interaction has been observed (in the format: locus1&lt;tab&gt;locus2&lt;tab&gt;signal).</p></td>
     </tr>
     <tr>
       <th>h</th>
-      <td><p>band width. If NULL `h` is set to default value `p-1`.It is assumed that the similarity between two items is 0 when these 
+      <td><p>band width. If not provided, `h` is set to default value `p-1`.It is assumed that the similarity between two items is 0 when these 
 items are at a distance of more than band width h</p></td>
     </tr>
     <tr>
       <th>&#8230;</th>
-      <td><p>further arguments to be passed to <code>read.table</code> function. If NULL the text file is supposed to be separated by tab with no header.</p></td>
+      <td><p>further arguments to be passed to <code>read.table</code> function. If not provided, the text file is supposed to be separated by tabulations, with no header.</p></td>
     </tr>
     </table>
     
@@ -144,13 +144,12 @@ genomic regions (loci) according to information provided by high-throughput conf
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#Input as HiTC::HTCexp object</span>
-<span class='fu'>library</span>(<span class='st'>"HiTC"</span>)
-<span class='fu'>data</span>(<span class='st'>"hic_imr90_40_XX"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"adjclust"</span>)</div><span class='co'># NOT RUN {</span>
-<span class='co'>#Input as HiTC::HTCexp object</span>
-<span class='no'>res1</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>hic_imr90_40_XX</span>)
+<span class='fu'>data</span>(<span class='st'>"hic_imr90_40_XX"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"adjclust"</span>)
 
+<span class='co'>#Input as HiTC::HTCexp object</span>
+<span class='no'>res1</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>hic_imr90_40_XX</span>)</div><span class='co'># NOT RUN {</span>
 <span class='co'>#Input as Matrix::dsCMatrix contact map</span>
-<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>intdata</a></span>(<span class='no'>hic_imr90_40_XX</span>)
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>HiTC</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>intdata</a></span>(<span class='no'>hic_imr90_40_XX</span>)
 <span class='no'>res2</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>mat</span>)
 <span class='co'># }</span><div class='input'>
 <span class='co'>#Input as text file</span>

@@ -21,7 +21,7 @@ library("adjclust")
 library("HiTC")
 ```
 
-# Loading a sample Hi-C contact map
+# Loading and displaying a sample Hi-C contact map
 
 The data set `hic_imr90_40_XX` is an object of class `HTCexp` which has been obtained from the `HiTC` package [3]. It is a contact map corresponding to chromosome X vs chromosome X. 
 
@@ -78,5 +78,5 @@ Contacts maps can also be stored as objects of class `Matrix::dsCMatrix`, or as 
 # Session information
 
 ```{r}
-session_info()
+sessionInfo()
 ```

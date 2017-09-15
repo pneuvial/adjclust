@@ -84,12 +84,12 @@
 <li>
 <code>adjClust</code> performs adjacency-constrained HAC for standard and sparse, similarity and dissimilarity matrices and dist objects. Matrix::dgCMatrix and Matrix::dsCMatrix are the supported sparse matrix classes. Let’s look at a basic example</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)
 
 sim &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.1</span>,<span class="dv">1</span>,<span class="fl">0.4</span>,<span class="fl">0.5</span>,<span class="fl">0.2</span>,<span class="fl">0.4</span>,<span class="dv">1</span>,<span class="fl">0.6</span>,<span class="fl">0.3</span>,<span class="fl">0.5</span>,<span class="fl">0.6</span>,<span class="dv">1</span>), <span class="dt">nrow=</span><span class="dv">4</span>)
 h &lt;-<span class="st"> </span><span class="dv">3</span>
 fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/adjClust.html">adjClust</a></span>(sim, <span class="st">"similarity"</span>, h, <span class="dv">1</span>, <span class="ot">FALSE</span>)
-<span class="kw">plot</span>(fit)</code></pre></div>
+<span class="kw">plot</span>(fit)</code></pre>
 <p>The result is of class <code>hclust</code>. Therefore, it can be plotted as a dendogram (as shown above). Successive merge and heights of clustering can be obtained by <code>fit$merge</code> and <code>fit$height</code> respectively.</p>
 <ul>
 <li><p><code>snpClust</code> performs adjacency-constrained HAC for specific application of Genome Wide Association Studies (GWAS). See <a href="vignettes/snpClust.Rmd">GWAS Vignette</a> for details.</p></li>
