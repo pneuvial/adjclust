@@ -58,7 +58,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/pneuvial/adjclust/issues">
+  <a href="https://github.com/pneuvial/adjclust">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -78,145 +78,135 @@
       <h1>Clustering of Hi-C contact maps</h1>
                         <h4 class="author">Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix</h4>
             
-            <h4 class="date">2017-09-14</h4>
+            <h4 class="date">2017-09-15</h4>
           </div>
 
     
     
 <div class="contents">
-<p>In this vignette we demonstrate the use of <code>hicClust</code> function in the <code>adjclust</code> package. <code>hicClust</code> performs adjacency-constrained hierarchical clustering of genomic regions or loci. <code>hicClust</code> is a specialized version of <code>adjClust</code> function designed specially to perform clustering of genomic regions or loci, where the similarity between any pair of regions quantifies the intensity of the physical interactions between these two regions at the DNA level. These similarities are measured by Chromosome conformation capture techniques such as Hi-C.</p>
-<p>This function implements the algorithm described in the third chapter of [2].</p>
+<div id="introduction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h1>
+<p>Hi-C is a sequencing-based molecular assay designed to measure intra and interchromosomal interactions between the DNA molecule. In particular, the identification of Topologically-Associated Domains (TADs), that is, regions of the genome in which physical interactions are frequent, provides insight into the three-dimensional organization of a genome [1].</p>
+<p>Hi-C data are in the form of two-dimensional <em>contact maps</em>, i.e. matrices whose <span class="math inline">\(i,j\)</span> entry quantifies the intensity of the physical interaction between two genome regions <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> at the DNA level. In this vignette, we demonstrate the use of <code><a href="http://www.rdocumentation.org/packages/adjclust/topics/hicClust">adjclust::hicClust</a></code> to perform adjacency-constrained hierarchical agglomerative clustering (HAC) of Hi-C contact maps. The output of this function is a dendrogram, which can be cut to identify TADs. The algorithm used for adjacency-constrained (HAC) is described in the third chapter of [2].</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)
 <span class="kw">library</span>(<span class="st">"HiTC"</span>)</code></pre></div>
-<div id="loading-genome-wide-contact-maps" class="section level1">
+</div>
+<div id="loading-a-sample-hi-c-contact-map" class="section level1">
 <h1 class="hasAnchor">
-<a href="#loading-genome-wide-contact-maps" class="anchor"></a>Loading genome wide contact maps</h1>
-<p><code>hic_imr90_40</code> is a list of objects of class <code>HTCexp</code>. Each of these objects corresponds to a Hi-C contact map between one chromosome and another. Below, <code>hic_imr90_40$chrXchrX</code> contains object <code>obj</code> which is the contact map corresponding to chromosome X vs chromosome X. The corresponding Hi-C data is stored as a Matrix::dsCMatrix in the slot named intdata.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"hic_chrXchrX"</span>, <span class="dt">package=</span><span class="st">"adjclust"</span>)</code></pre></div>
-<p>Remove all the rows and columns containing only zeros from the dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">selected &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class">intdata</a></span>(obj), <span class="dv">1</span>, sum) &gt;<span class="st"> </span><span class="dv">0</span>
-intd &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class">intdata</a></span>(obj)[selected,selected]
-x_int &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class">x_intervals</a></span>(obj)[selected,]
-y_int &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class">y_intervals</a></span>(obj)[selected,]
-obj &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"HTCexp"</span>, intd, x_int, y_int)</code></pre></div>
+<a href="#loading-a-sample-hi-c-contact-map" class="anchor"></a>Loading a sample Hi-C contact map</h1>
+<p>The data set <code>hic_imr90_40_XX</code> is an object of class <code>HTCexp</code> which has been obtained from the <code>HiTC</code> package [3]. It is a contact map corresponding to chromosome X vs chromosome X.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"hic_imr90_40_XX"</span>, <span class="dt">package=</span><span class="st">"adjclust"</span>)</code></pre></div>
 <p>Now we have a look at the data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mat &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class">intdata</a></span>(obj)
-<span class="kw">image</span>(mat, <span class="dt">lwd=</span><span class="dv">0</span>)</code></pre></div>
-<p><img src="hicClust_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HiTC::<span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/mapC">mapC</a></span>(hic_imr90_40_XX)</code></pre></div>
+<p><img src="hicClust_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 </div>
-<div id="using-hicclust-for-various-input-classes" class="section level1">
+<div id="using-hicclust" class="section level1">
 <h1 class="hasAnchor">
-<a href="#using-hicclust-for-various-input-classes" class="anchor"></a>Using <code>hicClust</code> for various input classes</h1>
-<div id="case-1-input-as-hitchtcexp-object" class="section level2">
-<h2 class="hasAnchor">
-<a href="#case-1-input-as-hitchtcexp-object" class="anchor"></a>Case 1: Input as HiTC::HTCexp object</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">class</span>(obj)</code></pre></div>
-<pre><code>## [1] "HTCexp"
-## attr(,"package")
-## [1] "HiTC"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  fit1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/hicClust.html">hicClust</a></span>(obj)</code></pre></div>
-</div>
-<div id="case-2-input-as-matrixdscmatrix-contact-map" class="section level2">
-<h2 class="hasAnchor">
-<a href="#case-2-input-as-matrixdscmatrix-contact-map" class="anchor"></a>Case 2: Input as Matrix::dsCMatrix contact map</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">class</span>(mat)</code></pre></div>
-<pre><code>## [1] "dsCMatrix"
-## attr(,"package")
-## [1] "Matrix"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  fit2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/hicClust.html">hicClust</a></span>(mat)</code></pre></div>
-</div>
-<div id="case-3-input-as-text-file" class="section level2">
-<h2 class="hasAnchor">
-<a href="#case-3-input-as-text-file" class="anchor"></a>Case 3: Input as text file</h2>
-<p>The input text file should have one line per pair of loci for which an interaction has been observed (in the format: locus1 <space> locus2 <space> signal).</space></space></p>
-<p>Here, we first create a sample text file with the above format using sparse matrix <code>mat</code> created above.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  V3 &lt;-<span class="st"> </span>mat@x
-  V1 &lt;-<span class="st"> </span>mat@Dimnames[[<span class="dv">1</span>]][mat@i<span class="dv">+1</span>]          <span class="co">#loci1names</span>
-  V2 &lt;-<span class="st"> </span><span class="kw">rep</span>(mat@Dimnames[[<span class="dv">2</span>]], <span class="kw">diff</span>(mat@p)) <span class="co">#loci2names</span>
-  
-  content &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.numeric</span>(V1), <span class="kw">as.numeric</span>(V2), <span class="kw">as.numeric</span>(V3))
-  
-  tf &lt;-<span class="st"> </span><span class="kw">tempfile</span>(<span class="dt">fileext =</span> <span class="st">".txt"</span>)
-  <span class="kw">write.table</span>(content, tf, <span class="dt">sep =</span> <span class="st">" "</span>, <span class="dt">col.names =</span> <span class="ot">FALSE</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p>Now that we have a text file <code>tf</code>, we are ready to pass it as input to the function <code>hicclust</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  fit3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/hicClust.html">hicClust</a></span>(tf, <span class="dt">sep =</span> <span class="st">" "</span>)  </code></pre></div>
-</div>
-</div>
-<div id="output" class="section level1">
-<h1 class="hasAnchor">
-<a href="#output" class="anchor"></a>Output</h1>
-<p>The output of the <code>snpClust</code> is of class “hclust”. In particular, it can be plotted as a dendrogram:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(fit1)</code></pre></div>
-<p><img src="hicClust_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
+<a href="#using-hicclust" class="anchor"></a>Using <code>hicClust</code>
+</h1>
+<p><code>hicClust</code> operates directly on objects of class <code>HTCexp</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/hicClust.html">hicClust</a></span>(hic_imr90_40_XX)</code></pre></div>
+<p>It is also possible to work on binned data. Below we choose a bin size of <span class="math inline">\(5 \times 10^5\)</span>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">binned &lt;-<span class="st"> </span>HiTC::<span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/binningC">binningC</a></span>(hic_imr90_40_XX, <span class="dt">binsize=</span><span class="fl">5e5</span>)
+HiTC::<span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/mapC">mapC</a></span>(binned)</code></pre></div>
+<p><img src="hicClust_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/hicClust.html">hicClust</a></span>(binned)</code></pre></div>
+<p>The output is of class <code>hclust</code>. In particular, it can be plotted as a dendrogram:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(fitB, <span class="dt">labels=</span><span class="ot">FALSE</span>, <span class="dt">hang=</span>-<span class="dv">1</span>, <span class="dt">ann=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="hicClust_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <p>Moreover, the output contains an element named <code>merge</code> which describes the successive merges of the clustering, and an element <code>gains</code> which gives the improvement in the criterion optimized by the clustering at each successive merge.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">cbind</span>(fit1$merge, fit1$gains))</code></pre></div>
-<pre><code>##       [,1]  [,2]      [,3]
-## [1,] -1619 -1620  2.000000
-## [2,] -1233 -1234  9.000000
-## [3,] -1232     2  9.666667
-## [4,] -1241 -1242 21.000000
-## [5,] -2382 -2383 22.000000
-## [6,] -1162 -1163 23.000000</code></pre>
-<p>For equivalent input in different classes, we get equivalent results.In this example, fit1, fit2 and fit3 are equivalent.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(fit1$merge, fit2$merge)</code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(fit1$gains, fit2$gains)</code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(fit2$merge, fit3$merge)</code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(fit2$gains, fit3$gains)</code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">cbind</span>(fitB$merge, fitB$gains))</code></pre></div>
+<pre><code>##      [,1] [,2]          [,3]
+## [1,] -117 -118  0.000000e+00
+## [2,] -115 -116  0.000000e+00
+## [3,] -114    2  0.000000e+00
+## [4,]    3    1 -6.258488e-08
+## [5,]   -1   -2  9.644000e+03
+## [6,] -100 -101  9.915000e+03</code></pre>
+</div>
+<div id="other-types-of-input" class="section level1">
+<h1 class="hasAnchor">
+<a href="#other-types-of-input" class="anchor"></a>Other types of input</h1>
+<p>Contacts maps can also be stored as objects of class <code>Matrix::dsCMatrix</code>, or as plain text files. These types of input are also accepted as first argument to <code>hicClust</code>.</p>
 </div>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
-<p>[1] Servant N., Lajoie B.R., Nora E.P., Giorgetti L., Chen C., Heard E., Dekker J., Barillot E. (2012) HiTC : Exploration of High-Throughput ‘C’ experiments. Bioinformatics</p>
+<p>[1] Dixon, Jesse R., <em>et al</em> (2012). “Topological domains in mammalian genomes identified by analysis of chromatin interactions.” Nature 485.7398 (2012): 376.</p>
 <p>[2] Dehman A. (2015). <a href="https://tel.archives-ouvertes.fr/tel-01288568/">Spatial clustering of linkage disequilibrium blocks for genome-wide association studies</a>. Phd Thesis, Université Paris Saclay.</p>
-<p>[3] Fotuhi Siahpirani A, Ay F, Roy S. (2016) A multi-task graph-clustering approach for chromosome conformation capture data sets identifies conserved modules of chromosomal interactions. Genome Biology. 17: 114. PMID 27233632 DOI: 10.1186/s13059-016-0962-8</p>
+<p>[3] Servant N., <em>et al</em> (2012). HiTC : Exploration of High-Throughput ‘C’ experiments. Bioinformatics</p>
 </div>
 <div id="session-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-information" class="anchor"></a>Session information</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
-<pre><code>## R version 3.4.1 (2017-06-30)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: OS X El Capitan 10.11.6
-## 
-## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
-## 
-## locale:
-## [1] en_US.UTF-8/fr_FR.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-## 
-## attached base packages:
-## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
-## [8] methods   base     
-## 
-## other attached packages:
-## [1] HiTC_1.20.0          GenomicRanges_1.28.4 GenomeInfoDb_1.12.2 
-## [4] IRanges_2.10.2       S4Vectors_0.14.3     BiocGenerics_0.22.0 
-## [7] adjclust_0.4.0      
-## 
-## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.12               compiler_3.4.1            
-##  [3] RColorBrewer_1.1-2         XVector_0.16.0            
-##  [5] bitops_1.0-6               tools_3.4.1               
-##  [7] zlibbioc_1.22.0            digest_0.6.12             
-##  [9] evaluate_0.10.1            lattice_0.20-35           
-## [11] Matrix_1.2-10              DelayedArray_0.2.7        
-## [13] yaml_2.1.14                GenomeInfoDbData_0.99.0   
-## [15] rtracklayer_1.36.4         stringr_1.2.0             
-## [17] knitr_1.16                 Biostrings_2.44.2         
-## [19] snpStats_1.26.0            rprojroot_1.2             
-## [21] grid_3.4.1                 Biobase_2.36.2            
-## [23] XML_3.98-1.9               survival_2.41-3           
-## [25] BiocParallel_1.10.1        rmarkdown_1.6             
-## [27] magrittr_1.5               backports_1.1.0           
-## [29] Rsamtools_1.28.0           htmltools_0.3.6           
-## [31] matrixStats_0.52.2         GenomicAlignments_1.12.1  
-## [33] splines_3.4.1              SummarizedExperiment_1.6.3
-## [35] stringi_1.1.5              RCurl_1.95-4.8</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">session_info</span>()</code></pre></div>
+<pre><code>## Session info -------------------------------------------------------------</code></pre>
+<pre><code>##  setting  value                       
+##  version  R version 3.4.1 (2017-06-30)
+##  system   x86_64, darwin15.6.0        
+##  ui       X11                         
+##  language (EN)                        
+##  collate  en_US.UTF-8                 
+##  tz       Europe/Paris                
+##  date     2017-09-15</code></pre>
+<pre><code>## Packages -----------------------------------------------------------------</code></pre>
+<pre><code>##  package              * version  date       source                      
+##  adjclust             * 0.4.0    2017-09-14 local (pneuvial/adjclust@NA)
+##  backports              1.1.0    2017-05-22 CRAN (R 3.4.0)              
+##  base                 * 3.4.1    2017-07-07 local                       
+##  Biobase                2.36.2   2017-05-04 Bioconductor                
+##  BiocGenerics         * 0.22.0   2017-04-25 Bioconductor                
+##  BiocParallel           1.10.1   2017-05-03 Bioconductor                
+##  Biostrings             2.44.2   2017-07-21 Bioconductor                
+##  bitops                 1.0-6    2013-08-17 CRAN (R 3.4.0)              
+##  compiler               3.4.1    2017-07-07 local                       
+##  datasets             * 3.4.1    2017-07-07 local                       
+##  DelayedArray           0.2.7    2017-06-03 Bioconductor                
+##  devtools               1.13.3   2017-08-02 CRAN (R 3.4.1)              
+##  digest                 0.6.12   2017-01-27 CRAN (R 3.4.0)              
+##  evaluate               0.10.1   2017-06-24 CRAN (R 3.4.1)              
+##  GenomeInfoDb         * 1.12.2   2017-06-09 Bioconductor                
+##  GenomeInfoDbData       0.99.0   2017-08-03 Bioconductor                
+##  GenomicAlignments      1.12.1   2017-05-12 Bioconductor                
+##  GenomicRanges        * 1.28.4   2017-07-14 Bioconductor                
+##  graphics             * 3.4.1    2017-07-07 local                       
+##  grDevices            * 3.4.1    2017-07-07 local                       
+##  grid                   3.4.1    2017-07-07 local                       
+##  HiTC                 * 1.20.0   2017-04-25 Bioconductor                
+##  htmltools              0.3.6    2017-04-28 CRAN (R 3.4.0)              
+##  IRanges              * 2.10.2   2017-05-25 Bioconductor                
+##  knitr                  1.16     2017-05-18 CRAN (R 3.4.0)              
+##  lattice                0.20-35  2017-03-25 CRAN (R 3.4.1)              
+##  magrittr               1.5      2014-11-22 CRAN (R 3.4.0)              
+##  Matrix                 1.2-10   2017-05-03 CRAN (R 3.4.1)              
+##  matrixStats            0.52.2   2017-04-14 CRAN (R 3.4.0)              
+##  memoise                1.1.0    2017-04-21 CRAN (R 3.4.0)              
+##  methods              * 3.4.1    2017-07-07 local                       
+##  parallel             * 3.4.1    2017-07-07 local                       
+##  RColorBrewer           1.1-2    2014-12-07 CRAN (R 3.4.0)              
+##  Rcpp                   0.12.12  2017-07-15 CRAN (R 3.4.1)              
+##  RCurl                  1.95-4.8 2016-03-01 CRAN (R 3.4.0)              
+##  rmarkdown              1.6      2017-06-15 CRAN (R 3.4.0)              
+##  rprojroot              1.2      2017-01-16 CRAN (R 3.4.0)              
+##  Rsamtools              1.28.0   2017-04-25 Bioconductor                
+##  rtracklayer            1.36.4   2017-07-13 Bioconductor                
+##  S4Vectors            * 0.14.3   2017-06-03 Bioconductor                
+##  snpStats               1.26.0   2017-04-25 Bioconductor                
+##  splines                3.4.1    2017-07-07 local                       
+##  stats                * 3.4.1    2017-07-07 local                       
+##  stats4               * 3.4.1    2017-07-07 local                       
+##  stringi                1.1.5    2017-04-07 CRAN (R 3.4.0)              
+##  stringr                1.2.0    2017-02-18 CRAN (R 3.4.0)              
+##  SummarizedExperiment   1.6.3    2017-05-29 Bioconductor                
+##  survival               2.41-3   2017-04-04 CRAN (R 3.4.1)              
+##  tools                  3.4.1    2017-07-07 local                       
+##  utils                * 3.4.1    2017-07-07 local                       
+##  withr                  2.0.0    2017-07-28 CRAN (R 3.4.1)              
+##  XML                    3.98-1.9 2017-06-19 CRAN (R 3.4.1)              
+##  XVector                0.16.0   2017-04-25 Bioconductor                
+##  yaml                   2.1.14   2016-11-12 CRAN (R 3.4.0)              
+##  zlibbioc               1.22.0   2017-04-25 Bioconductor</code></pre>
 </div>
 </div>
   </div>
@@ -226,15 +216,10 @@ obj &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#loading-genome-wide-contact-maps">Loading genome wide contact maps</a></li>
-      <li>
-<a href="#using-hicclust-for-various-input-classes">Using <code>hicClust</code> for various input classes</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#case-1-input-as-hitchtcexp-object">Case 1: Input as HiTC::HTCexp object</a></li>
-      <li><a href="#case-2-input-as-matrixdscmatrix-contact-map">Case 2: Input as Matrix::dsCMatrix contact map</a></li>
-      <li><a href="#case-3-input-as-text-file">Case 3: Input as text file</a></li>
-      </ul>
-</li>
-      <li><a href="#output">Output</a></li>
+<li><a href="#introduction">Introduction</a></li>
+      <li><a href="#loading-a-sample-hi-c-contact-map">Loading a sample Hi-C contact map</a></li>
+      <li><a href="#using-hicclust">Using <code>hicClust</code></a></li>
+      <li><a href="#other-types-of-input">Other types of input</a></li>
       <li><a href="#references">References</a></li>
       <li><a href="#session-information">Session information</a></li>
       </ul>
@@ -245,7 +230,7 @@ obj &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"
 
 
       <footer><div class="copyright">
-  <p>Developed by Christophe Ambroise, Shubham Chaturvedi, Alia Dehman, Michel Koskas, Pierre Neuvial, Guillem Rigaill, Nathalie Villa-Vialaneix.</p>
+  <p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, Michel Koskas, <a href="https://www.math.univ-toulouse.fr/~pneuvial/">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://nathalievilla.org">Nathalie Villa-Vialaneix</a>.</p>
 </div>
 
 <div class="pkgdown">

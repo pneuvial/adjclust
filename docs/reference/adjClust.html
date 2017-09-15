@@ -82,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/pneuvial/adjclust/issues">
+  <a href="https://github.com/pneuvial/adjclust">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -151,12 +151,12 @@ useful in various application fields, including ecology (Quaternary data) and bi
     <pre class="examples"><div class='input'><span class='no'>sim</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>0.1</span>,<span class='fl'>0.2</span>,<span class='fl'>0.3</span>,<span class='fl'>0.1</span>,<span class='fl'>1</span>,<span class='fl'>0.4</span>,<span class='fl'>0.5</span>,<span class='fl'>0.2</span>,<span class='fl'>0.4</span>,<span class='fl'>1</span>,<span class='fl'>0.6</span>,<span class='fl'>0.3</span>,<span class='fl'>0.5</span>,<span class='fl'>0.6</span>,<span class='fl'>1</span>), <span class='kw'>nrow</span><span class='kw'>=</span><span class='fl'>4</span>)
 <span class='no'>h</span> <span class='kw'>&lt;-</span> <span class='fl'>3</span>
 <span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>sim</span>, <span class='st'>"similarity"</span>, <span class='no'>h</span>, <span class='fl'>1</span>, <span class='fl'>FALSE</span>)
-<span class='fu'>plot</span>(<span class='no'>fit1</span>)</div><div class='img'><img src='adjClust-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>fit1</span>)</div><div class='img'><img src='adjClust-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='no'>dist</span> <span class='kw'>&lt;-</span> <span class='fu'>as.dist</span>(<span class='fu'>sqrt</span>(<span class='fl'>2</span>-(<span class='fl'>2</span>*<span class='no'>sim</span>)))
 
 <span class='co'>#Compatibility with dist objects</span>
 <span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>dist</span>, <span class='st'>"dissimilarity"</span>, <span class='no'>h</span>, <span class='fl'>1</span>, <span class='fl'>FALSE</span>)
-<span class='fu'>plot</span>(<span class='no'>fit2</span>)</div><div class='img'><img src='adjClust-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>fit2</span>)</div><div class='img'><img src='adjClust-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -176,7 +176,7 @@ useful in various application fields, including ecology (Quaternary data) and bi
 
       <footer>
       <div class="copyright">
-  <p>Developed by Christophe Ambroise, Shubham Chaturvedi, Alia Dehman, Michel Koskas, Pierre Neuvial, Guillem Rigaill, Nathalie Villa-Vialaneix.</p>
+  <p>Developed by <a href='http://www.math-evry.cnrs.fr/members/cambroise/'>Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, Michel Koskas, <a href='https://www.math.univ-toulouse.fr/~pneuvial/'>Pierre Neuvial</a>, Guillem Rigaill, <a href='http://nathalievilla.org'>Nathalie Villa-Vialaneix</a>.</p>
 </div>
 
 <div class="pkgdown">

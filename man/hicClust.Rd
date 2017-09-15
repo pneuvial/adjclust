@@ -7,15 +7,15 @@
 hicClust(x, h = NULL, ...)
 }
 \arguments{
-\item{x}{x can be:
+\item{x}{either:
 1. A pxp contact map of class Matrix::dsCMatrix in which the entries are the number of counts of physical interactions observed between all pairs of loci
 2. An object of class HiTC::HTCexp. The corresponding Hi-C data is stored as a Matrix::dsCMatrix object in the intdata slot
 3. A text file with one line per pair of loci for which an interaction has been observed (in the format: locus1<tab>locus2<tab>signal).}
 
-\item{h}{band width. If NULL `h` is set to default value `p-1`.It is assumed that the similarity between two items is 0 when these 
+\item{h}{band width. If not provided, `h` is set to default value `p-1`.It is assumed that the similarity between two items is 0 when these 
 items are at a distance of more than band width h}
 
-\item{\dots}{further arguments to be passed to \code{\link{read.table}} function. If NULL the text file is supposed to be separated by tab with no header.}
+\item{\dots}{further arguments to be passed to \code{\link{read.table}} function. If not provided, the text file is supposed to be separated by tabulations, with no header.}
 }
 \value{
 Function \code{hicClust} returns an object of class \code{\link[stats]{hclust}}.
@@ -33,22 +33,14 @@ genomic regions (loci) according to information provided by high-throughput conf
 }
 \examples{
 #Input as HiTC::HTCexp object
-library("HiTC")
-data("hic_chrXchrX", package="adjclust")
+data("hic_imr90_40_XX", package="adjclust")
 
-#Removing rows and columns containing only zeros
-selected <- apply(intdata(obj), 1, sum) > 0
-intd <- intdata(obj)[selected,selected]
-x_int <- x_intervals(obj)[selected,]
-y_int <- y_intervals(obj)[selected,]
-obj <- new("HTCexp", intd, x_int, y_int)
+#Input as HiTC::HTCexp object
+res1 <- hicClust(hic_imr90_40_XX)
 
 \dontrun{
-#Input as HiTC::HTCexp object
-res1 <- hicClust(obj)
-
 #Input as Matrix::dsCMatrix contact map
-mat <- intdata(obj) 
+mat <- HiTC::intdata(hic_imr90_40_XX) 
 res2 <- hicClust(mat)
 } 
 

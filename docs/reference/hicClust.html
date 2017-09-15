@@ -82,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/pneuvial/adjclust/issues">
+  <a href="https://github.com/pneuvial/adjclust">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -145,19 +145,12 @@ genomic regions (loci) according to information provided by high-throughput conf
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#Input as HiTC::HTCexp object</span>
 <span class='fu'>library</span>(<span class='st'>"HiTC"</span>)
-<span class='fu'>data</span>(<span class='st'>"hic_chrXchrX"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"adjclust"</span>)
-
-<span class='co'>#Removing rows and columns containing only zeros</span>
-<span class='no'>selected</span> <span class='kw'>&lt;-</span> <span class='fu'>apply</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>intdata</a></span>(<span class='no'>obj</span>), <span class='fl'>1</span>, <span class='no'>sum</span>) <span class='kw'>&gt;</span> <span class='fl'>0</span>
-<span class='no'>intd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>intdata</a></span>(<span class='no'>obj</span>)[<span class='no'>selected</span>,<span class='no'>selected</span>]
-<span class='no'>x_int</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>x_intervals</a></span>(<span class='no'>obj</span>)[<span class='no'>selected</span>,]
-<span class='no'>y_int</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>y_intervals</a></span>(<span class='no'>obj</span>)[<span class='no'>selected</span>,]
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"HTCexp"</span>, <span class='no'>intd</span>, <span class='no'>x_int</span>, <span class='no'>y_int</span>)</div><span class='co'># NOT RUN {</span>
+<span class='fu'>data</span>(<span class='st'>"hic_imr90_40_XX"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"adjclust"</span>)</div><span class='co'># NOT RUN {</span>
 <span class='co'>#Input as HiTC::HTCexp object</span>
-<span class='no'>res1</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>obj</span>)
+<span class='no'>res1</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>hic_imr90_40_XX</span>)
 
 <span class='co'>#Input as Matrix::dsCMatrix contact map</span>
-<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>intdata</a></span>(<span class='no'>obj</span>)
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>intdata</a></span>(<span class='no'>hic_imr90_40_XX</span>)
 <span class='no'>res2</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>mat</span>)
 <span class='co'># }</span><div class='input'>
 <span class='co'>#Input as text file</span>
@@ -180,7 +173,7 @@ genomic regions (loci) according to information provided by high-throughput conf
 
       <footer>
       <div class="copyright">
-  <p>Developed by Christophe Ambroise, Shubham Chaturvedi, Alia Dehman, Michel Koskas, Pierre Neuvial, Guillem Rigaill, Nathalie Villa-Vialaneix.</p>
+  <p>Developed by <a href='http://www.math-evry.cnrs.fr/members/cambroise/'>Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, Michel Koskas, <a href='https://www.math.univ-toulouse.fr/~pneuvial/'>Pierre Neuvial</a>, Guillem Rigaill, <a href='http://nathalievilla.org'>Nathalie Villa-Vialaneix</a>.</p>
 </div>
 
 <div class="pkgdown">
