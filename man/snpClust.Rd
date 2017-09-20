@@ -2,47 +2,52 @@
 % Please edit documentation in R/snpClust.R
 \name{snpClust}
 \alias{snpClust}
-\title{Constrained Hierarchical Agglomerative Clustering of Single Nucleotide Polymorphisms}
+\title{Constrained Hierarchical Agglomerative Clustering of Single Nucleotide 
+Polymorphisms}
 \usage{
-snpClust(x, h, stats)
+snpClust(x, h = NULL, stats = c("LLR", "OR", "Q", "Covar", "D.prime",
+  "R.squared", "R"))
 }
 \arguments{
-\item{x}{either a genotype matrix of class snpStats::SnpMatrix/base::matrix or a linkage disequlibrium matrix of 
-class Matrix::dgCMatrix}
+\item{x}{either a genotype matrix of class snpStats::SnpMatrix/base::matrix 
+or a linkage disequlibrium matrix of class Matrix::dgCMatrix}
 
-\item{h}{band width. It is assumed that the similarity between two items is 0 when these items are at a 
-distance of more than band width h}
+\item{h}{band width. If not provided, \code{h} is set to default value `p-1`.}
 
-\item{stats}{a character vector specifying the linkage disequilibrium measure to be calculated. This should contain one or 
-more of the strings: "LLR", "OR", "Q", "Covar", "D.prime", "R.squared" or "R"}
+\item{stats}{a character vector specifying the linkage disequilibrium measure
+to be calculated ("LLR", "OR", "Q", "Covar", "D.prime", "R.squared" or "R").}
 }
 \value{
-Function \code{snpClust} returns an object of class \code{\link[stats]{hclust}}.
+Function \code{snpClust} returns an object of class 
+\code{\link[stats]{hclust}}.
 }
 \description{
-Function to perform adjacency-constrained hierarchical agglomerative clustering of Single Nucleotide Polymorphisms
+Function to perform adjacency-constrained hierarchical agglomerative 
+clustering of Single Nucleotide Polymorphisms
 }
 \details{
-\code{snpClust} performs constrained hierarchichal agglomerative clustering of single nucleotide 
-polymorphisms. Constrained Hierarchical Agglomerative Clustering is hierarchical agglomerative
-clustering in which each observation is associated to a position, and the clustering is 
-constrained so as to merge only adjacent clusters.
+\code{snpClust} performs constrained hierarchichal agglomerative clustering 
+of single nucleotide polymorphisms. Constrained Hierarchical Agglomerative 
+Clustering is hierarchical agglomerative clustering in which each observation
+is associated to a position, and the clustering is constrained so as to 
+merge only adjacent clusters.
 }
 \examples{
 ## a very small example
 library(snpStats)
 data(testdata)
 
-#Input as snpStats::SnpMatrix
+# input as snpStats::SnpMatrix
 fit1 <- snpClust(Autosomes[1:200, 1:5], 3, "R.squared")
 
-#Input as base::matrix
+# input as base::matrix
 fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), 3, "R.squared")
 
-#Input as Matrix::dgCMatrix
+# input as Matrix::dgCMatrix
 ld <- ld(Autosomes[1:200, 1:5], depth=3, stats="R.squared")
 fit3 <- snpClust(ld, 3)
 
-## A less small example
-
+}
+\seealso{
+\code{\link{adjClust}} \code{\link[snpStats:ld]{ld}}
 }

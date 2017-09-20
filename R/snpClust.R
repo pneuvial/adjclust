@@ -1,45 +1,50 @@
-#' Constrained Hierarchical Agglomerative Clustering of Single Nucleotide Polymorphisms
+#' Constrained Hierarchical Agglomerative Clustering of Single Nucleotide 
+#' Polymorphisms
 #' 
-#' Function to perform adjacency-constrained hierarchical agglomerative clustering of Single Nucleotide Polymorphisms
+#' Function to perform adjacency-constrained hierarchical agglomerative 
+#' clustering of Single Nucleotide Polymorphisms
 #' 
-#' \code{snpClust} performs constrained hierarchichal agglomerative clustering of single nucleotide 
-#' polymorphisms. Constrained Hierarchical Agglomerative Clustering is hierarchical agglomerative
-#' clustering in which each observation is associated to a position, and the clustering is 
-#' constrained so as to merge only adjacent clusters.
+#' \code{snpClust} performs constrained hierarchichal agglomerative clustering 
+#' of single nucleotide polymorphisms. Constrained Hierarchical Agglomerative 
+#' Clustering is hierarchical agglomerative clustering in which each observation
+#' is associated to a position, and the clustering is constrained so as to 
+#' merge only adjacent clusters.
 #' 
-#' @param x either a genotype matrix of class snpStats::SnpMatrix/base::matrix or a linkage disequlibrium matrix of 
-#' class Matrix::dgCMatrix
-#' @param h band width. It is assumed that the similarity between two items is 0 when these items are at a 
-#' distance of more than band width h
-#' @param stats a character vector specifying the linkage disequilibrium measure to be calculated. This should contain one or 
-#' more of the strings: "LLR", "OR", "Q", "Covar", "D.prime", "R.squared" or "R"
+#' @param x either a genotype matrix of class snpStats::SnpMatrix/base::matrix 
+#' or a linkage disequlibrium matrix of class Matrix::dgCMatrix
+#' @param h band width. If not provided, \code{h} is set to default value `p-1`.
+#' @param stats a character vector specifying the linkage disequilibrium measure
+#' to be calculated ("LLR", "OR", "Q", "Covar", "D.prime", "R.squared" or "R").
 #' 
-#' @return Function \code{snpClust} returns an object of class \code{\link[stats]{hclust}}.  
+#' @return Function \code{snpClust} returns an object of class 
+#' \code{\link[stats]{hclust}}.  
+#' 
+#' @seealso \code{\link{adjClust}} \code{\link[snpStats:ld]{ld}}
 #' 
 #' @examples
 #' ## a very small example
 #' library(snpStats)
 #' data(testdata)
 #' 
-#' #Input as snpStats::SnpMatrix
+#' # input as snpStats::SnpMatrix
 #' fit1 <- snpClust(Autosomes[1:200, 1:5], 3, "R.squared")
 #' 
-#' #Input as base::matrix
+#' # input as base::matrix
 #' fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), 3, "R.squared")
 #' 
-#' #Input as Matrix::dgCMatrix
+#' # input as Matrix::dgCMatrix
 #' ld <- ld(Autosomes[1:200, 1:5], depth=3, stats="R.squared")
 #' fit3 <- snpClust(ld, 3)
-#' 
-#' ## A less small example
 #' 
 #' @export
 #' 
 #' @importFrom methods as
 #' @importFrom snpStats ld
-snpClust <- function(x ,h ,stats) {
+#' 
+snpClust <- function(x, h = NULL, 
+                     stats = c("LLR", "OR", "Q", "Covar", "D.prime", "R.squared", "R")) {
     
-    if (!is.numeric(h))
+    if (!is.null(h) && !is.numeric(h))
         stop("h should be numeric")
     
     CLASS <- c("dgCMatrix", "matrix", "SnpMatrix")
@@ -53,6 +58,7 @@ snpClust <- function(x ,h ,stats) {
     
     if(class != "dgCMatrix" ) {
         p <- ncol(x)
+        if (is.null(h)) h <- p - 1
         if (h >= p)
             stop("h should be strictly less than p")
         
@@ -65,14 +71,7 @@ snpClust <- function(x ,h ,stats) {
         if (missing(stats)) 
             stop("LD stats must be specified")
         
-        STATS <- c("LLR", "OR", "Q", "Covar", "D.prime", "R.squared", "R")
-        statscheck <- pmatch(stats, STATS)
-        
-        if(is.na(statscheck))
-            stop("Invalid stats")
-        if(statscheck == -1)
-            stop("Ambiguous stats")
-        stats <- STATS[statscheck] 
+        stats <- match.arg(stats)
         
         x <- ld(x, stats = stats, depth = h)
         x <- round(x, digits=10)
@@ -86,7 +85,8 @@ snpClust <- function(x ,h ,stats) {
         stop("Missing value(s) or NaN(s) not allowed in similarity matrix.")    
     }
     diag(x) <- 1
-    res <- adjClust(x, "similarity", h, 1, FALSE)
+    if (is.null(h)) h <- ncol(x) - 1
+    res <- adjClust(x, type = "similarity", h = h)
     
     return(res)
 }

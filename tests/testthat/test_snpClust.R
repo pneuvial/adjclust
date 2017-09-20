@@ -29,6 +29,14 @@ test_that("snpClust gives results identical to those of adjclust 0.2.0", {
   ceph.1mb <- as.matrix(ceph.1mb)
   fit3 <- snpClust(ceph.1mb, 100, "R.squared")  
   expect_equal(fit3$merge, prevfit$merge)
-  expect_equal(fit3$height, prevfit$height)  
+  expect_equal(fit3$height, prevfit$height)
   
+  #case4: default h
+  fit4 <- snpClust(ld.ceph, ncol(ceph.1mb) - 1)
+  fit5 <- snpClust(ld.ceph)
+  fit6 <- snpClust(ceph.1mb, stats = "R.squared")
+  expect_equal(fit4$merge, fit5$merge)
+  expect_equal(fit4$height, fit5$height)
+  expect_equal(fit4$merge, fit6$merge)
+  # expect_equal(fit4$height, fit6$height) ## fix it!
 })

@@ -55,7 +55,7 @@ NULL
 #' @importFrom matrixStats colCumsums
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
-                     h = ncol(mat) - 1, blMin=1, verbose=FALSE) {
+                     h = ncol(mat) - 1, blMin = 1, verbose = FALSE) {
     
     if (!is.numeric(h))
         stop("Input band width is not numeric")

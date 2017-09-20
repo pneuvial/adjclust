@@ -61,5 +61,5 @@ plot(fit2)
 \references{
 Dehman A. (2015) \emph{Spatial Clustering of Linkage 
 Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
-Université Paris Saclay.
+Universite Paris Saclay.
 }
