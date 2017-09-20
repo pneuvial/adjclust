@@ -4,33 +4,46 @@
 \alias{adjClust}
 \title{Constrained Hierarchical Agglomerative Clustering}
 \usage{
-adjClust(mat, type = "similarity", h, blMin = 1, verbose = FALSE)
+adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
+  blMin = 1, verbose = FALSE)
 }
 \arguments{
 \item{mat}{A similarity matrix or a dist object}
 
-\item{type}{Type of matrix : similarity or dissimilarity}
+\item{type}{Type of matrix : similarity or dissimilarity. Default to 
+\code{"similarity"}.}
 
 \item{h}{band width. It is assumed that the similarity between two items is 
-0 when these items are at a distance of more than band width h}
+0 when these items are at a distance of more than band width h. Default value
+is \code{ncol(mat)-1}.}
 
-\item{blMin}{depth of clustering. It is number of clusters at which the algorithm stops. Default value is 1.}
+\item{blMin}{depth of clustering. It is the number of clusters below which 
+the algorithm stops. Default value is 1.}
 
 \item{verbose}{Currently not used}
 }
 \value{
-Function \code{adjClust} returns an object of
-class \code{\link[stats]{hclust}}.
+Function \code{adjClust} returns an object of class 
+\code{\link[stats]{hclust}}.
 }
 \description{
-Function to perform adjacency-constrained hierarchical agglomerative clustering
+Function to perform adjacency-constrained hierarchical agglomerative
+clustering
 }
 \details{
-\code{adjClust} performes constrained hierarchichal agglomerative clustering which is   
-hierarchical agglomerative clustering in which each observation is associated to a position, 
-and the clustering is constrained so as only adjacent clusters are merged. These methods are  
-useful in various application fields, including ecology (Quaternary data) and bioinformatics 
-(e.g. in Genome-Wide Association Studies (GWAS))
+\code{adjClust} performs constrained hierarchichal agglomerative clustering 
+which is hierarchical agglomerative clustering in which each observation is 
+associated to a position, and the clustering is constrained so as only 
+adjacent clusters are merged. These methods are useful in various application
+fields, including ecology (Quaternary data) and bioinformatics (e.g., in 
+Genome-Wide Association Studies (GWAS)).
+
+The package proposes a fast implementation of the method that takes advantage
+of sparse similarity matrices (i.e., that have 0 entries outside of a 
+diagonal band of width \code{h}). The method is fully described in 
+(Dehman, 2015) and based on a kernel version of the algorithm. The different
+options for the implementation are avaiable in the package vignette entitled
+"Notes on CHAC implementation in adjclust".
 }
 \examples{
 sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
@@ -44,4 +57,9 @@ dist <- as.dist(sqrt(2-(2*sim)))
 fit2 <- adjClust(dist, "dissimilarity", h, 1, FALSE)
 plot(fit2)
 
+}
+\references{
+Dehman A. (2015) \emph{Spatial Clustering of Linkage 
+Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+Université Paris Saclay.
 }

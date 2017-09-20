@@ -3,23 +3,39 @@ NULL
 
 #' Constrained Hierarchical Agglomerative Clustering
 #' 
-#' Function to perform adjacency-constrained hierarchical agglomerative clustering
+#' Function to perform adjacency-constrained hierarchical agglomerative
+#' clustering
 #' 
-#' \code{adjClust} performes constrained hierarchichal agglomerative clustering which is   
-#' hierarchical agglomerative clustering in which each observation is associated to a position, 
-#' and the clustering is constrained so as only adjacent clusters are merged. These methods are  
-#' useful in various application fields, including ecology (Quaternary data) and bioinformatics 
-#' (e.g. in Genome-Wide Association Studies (GWAS))
+#' \code{adjClust} performs constrained hierarchichal agglomerative clustering 
+#' which is hierarchical agglomerative clustering in which each observation is 
+#' associated to a position, and the clustering is constrained so as only 
+#' adjacent clusters are merged. These methods are useful in various application
+#' fields, including ecology (Quaternary data) and bioinformatics (e.g., in 
+#' Genome-Wide Association Studies (GWAS)).
+#' 
+#' The package proposes a fast implementation of the method that takes advantage
+#' of sparse similarity matrices (i.e., that have 0 entries outside of a 
+#' diagonal band of width \code{h}). The method is fully described in 
+#' (Dehman, 2015) and based on a kernel version of the algorithm. The different
+#' options for the implementation are avaiable in the package vignette entitled
+#' "Notes on CHAC implementation in adjclust".
 #' 
 #' @param mat A similarity matrix or a dist object
-#' @param type Type of matrix : similarity or dissimilarity
+#' @param type Type of matrix : similarity or dissimilarity. Default to 
+#' \code{"similarity"}.
 #' @param h band width. It is assumed that the similarity between two items is 
-#' 0 when these items are at a distance of more than band width h
-#' @param blMin depth of clustering. It is number of clusters at which the algorithm stops. Default value is 1.
+#' 0 when these items are at a distance of more than band width h. Default value
+#' is \code{ncol(mat)-1}.
+#' @param blMin depth of clustering. It is the number of clusters below which 
+#' the algorithm stops. Default value is 1.
 #' @param verbose Currently not used
 #' 
-#' @return Function \code{adjClust} returns an object of
-#' class \code{\link[stats]{hclust}}.  
+#' @return Function \code{adjClust} returns an object of class 
+#' \code{\link[stats]{hclust}}.
+#' 
+#' @references Dehman A. (2015) \emph{Spatial Clustering of Linkage 
+#' Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+#' Universite Paris Saclay.
 #'
 #' @examples
 #' sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
@@ -38,34 +54,25 @@ NULL
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
 
-adjClust <- function(mat, type = "similarity", h, blMin=1, verbose=FALSE){
+adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
+                     h = ncol(mat) - 1, blMin=1, verbose=FALSE) {
     
     if (!is.numeric(h))
         stop("Input band width is not numeric")
     
     
-    CLASS <- c("matrix","dgCMatrix","dsCMatrix","dist")
+    CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist")
     classcheck <- pmatch(class(mat), CLASS)
     
-    if(is.na(classcheck))
+    if (is.na(classcheck))
         stop("Input matrix class not supported")
     if(classcheck == -1)
         stop("Ambiguous matrix class")
     class <- CLASS[classcheck]
     
+    type <- match.arg(type)
     
-    TYPES <- c("similarity", "dissimilarity")
-    typecheck <- pmatch(type, TYPES)
-    
-    if(is.na(typecheck))
-        stop("Invalid matrix type")
-    if(typecheck == -1)
-        stop("Ambiguous matrix type")
-    type <- TYPES[typecheck]
-    
-    
-    if (class == "matrix")  ## for standard matrices
-    {
+    if (class == "matrix")  {## for standard matrices
         if (!(nrow(mat) == ncol(mat)))
             stop("Input matrix is not a square matrix")
         if (!is.numeric(mat))
@@ -76,9 +83,8 @@ adjClust <- function(mat, type = "similarity", h, blMin=1, verbose=FALSE){
             stop("Missing values in the input")
         
         p <- nrow(mat)
-        if (h >= p) {
+        if (h >= p) 
             stop("Input band width should be strictly less than dimensions of matrix")
-        }
         
         
         if (type == "dissimilarity") {
@@ -140,7 +146,8 @@ adjClust <- function(mat, type = "similarity", h, blMin=1, verbose=FALSE){
     lHeap <- p-1
     ## each element contains a vector: c(cl1, cl2, label1, label2, posL, posR, valid)
     chainedL <- matrix(-1, nrow=12, ncol=3*p)
-    rownames(chainedL) <- c("minCl1", "maxCl1", "minCl2", "maxCl2", "lab1", "lab2", "posL", "posR", "Sii", "Sjj", "Sij", "valid")
+    rownames(chainedL) <- c("minCl1", "maxCl1", "minCl2", "maxCl2", "lab1", 
+                            "lab2", "posL", "posR", "Sii", "Sjj", "Sij", "valid")
     v <- 1:(p-1)
     w <- as.integer(v+1)
     chainedL[1,v] <- v
@@ -159,7 +166,9 @@ adjClust <- function(mat, type = "similarity", h, blMin=1, verbose=FALSE){
     chainedL[8,p-1] <- -1
     heap <- buildHeap(heap, D, lHeap)
     
-    res <- .Call("cWardHeaps", rcCumR, rcCumL, as.integer(h), as.integer(p), chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, as.integer(blMin), PACKAGE="adjclust")
+    res <- .Call("cWardHeaps", rcCumR, rcCumL, as.integer(h), as.integer(p), 
+                 chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
+                 as.integer(blMin), PACKAGE="adjclust")
     
     height <- cumsum(gains)
     tree <- list(traceW=traceW,
