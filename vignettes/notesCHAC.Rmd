@@ -3,8 +3,7 @@ title: "Notes on CHAC implementation in adjclust"
 author: "Pierre Neuvial, Nathalie Villa-Vialaneix"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
-    toc: true
+  BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Notes on CHAC implementation in adjclust}
   %\VignetteEngine{knitr::rmarkdown}
@@ -28,7 +27,7 @@ is supposed to be symmetric and positive (in the kernel sense) and to satisfy:
 If your data are under this format, then the constrained clustering can be 
 performed with 
 ```{r ex-sim, eval=FALSE}
-fit <- adjClust(k, type = "similarity", h = ncol(k) - 1)
+fit <- adjClust(k, type = "similarity")
 ```
 or with
 ```{r ex-sim2, eval=FALSE}
@@ -59,9 +58,9 @@ as above, we can find a $\lambda > 0$ such that the matrix $k_\lambda$ defined
 by
 \[
   \forall\,1,\ldots,n,\qquad k_\lambda(i,j) = s(i,j) + \lambda 
-  \mathbb{I}_{\{1=j\}}
+  \mathbb{I}_{\{i=j\}}
 \]
-is a kernel (*i.e.*, the matrix $k = s + \lambda \mathbb{I}$ is positive 
+is a kernel (*i.e.*, the matrix $k_\lambda = s + \lambda \mathbb{I}$ is positive 
 definite; hence, $\lambda$ has only to be any real number larger than the 
 opposite of the smallest negative eigenvalue of $s$). [2] show that the HAC 
 obtained from the distance induced by the kernel $k_\lambda$ in its feature 
@@ -144,7 +143,7 @@ provided matrix is not normalized (all diagonal entries equal to 1). For all the
 other case, the constrained clustering from $s$, including the proper matrix
 transformations, is available with:
 ```{r ex-notnormsim, eval=FALSE}
-fit <- adjClust(s, type = "similarity", h = ncol(s) - 1)
+fit <- adjClust(s, type = "similarity")
 ```
 
 
@@ -180,7 +179,7 @@ all $i=1,\ldots,n$ has been made.
 **Important remark**: The sparse implementation does not cover the case of
 dissimilarity matrices. The constrained clustering is thus performed with:
 ```{r ex-dissim, eval=FALSE}
-fit <- adjClust(d, type = "dissimilarity", h = ncol(d) - 1)
+fit <- adjClust(d, type = "dissimilarity")
 ```
 
 
