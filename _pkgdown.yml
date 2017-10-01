@@ -6,7 +6,6 @@ reference:
       - snpClust
   - title: "Data objects"
     contents:
-      - simmatrix
       - hic_imr90_40_XX
       - Dprime.100
       - R2.100

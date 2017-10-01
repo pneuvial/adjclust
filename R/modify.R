@@ -9,7 +9,7 @@ modify <- function(m, p, h) {
       l <- max(m1)  
       diag(m) <- diag(m) + l + (0.1*l)   #Taking epsilon = 0.1*l
     }
-  }  
+  }
   
   if(!(all(diag(m) == 1))) {
     if (h < p-1)

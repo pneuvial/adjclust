@@ -9,7 +9,7 @@ Authors@R: as.person(c(
     "Guillem Rigaill [aut]",
     "Nathalie Villa-Vialaneix [aut]"))
 Date: 2017-09-15
-Version: 0.4.1
+Version: 0.4.2
 License: GPL-3
 Title: Adjacency-constrained clustering of a block-diagonal similarity matrix
 Description: Adjacency-constrained clustering of a block-diagonal similarity

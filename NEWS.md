@@ -1,3 +1,7 @@
+# Version 0.4.2 [2017-10-01]
+
+* Dropped 'simmatrix' toy data set (now generated on the fly in tests).
+
 # Version 0.4.1 [2017-09-15]
 
 * Cleanups in Hi-C and LD vignettes and corresponding tests

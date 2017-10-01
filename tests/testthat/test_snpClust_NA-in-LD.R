@@ -35,7 +35,7 @@ test_that("Dropping a SNP yielding NA values in LD fixes the NA problem", {
 })
 
 ## Another way to correct this is to modify the genotype of a single sample
-test_that("Modifying one genotypes also fixes the NA problem", {
+test_that("Modifying one genotype also fixes the NA problem", {
     data("ld.example", package="snpStats")
     p <- ncol(ceph.1mb)
     h <- p-1
