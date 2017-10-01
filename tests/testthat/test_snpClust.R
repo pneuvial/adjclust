@@ -3,9 +3,10 @@ library("snpStats")
 
 context("Ascending compatibility of the adjclust algorithm")
 
-test_that("snpClust gives results identical to those of adjclust 0.2.0", {
+test_that("snpClust gives results identical to those of adjclust 0.3.0", {
 
-  data("prevfit", package="adjclust")
+  data("res_adjclust_0.3.0", package="adjclust")
+  prevfit <- res_adjclust_0.3.0
   
   data("ld.example", package="snpStats")
   p <- ncol(ceph.1mb)
