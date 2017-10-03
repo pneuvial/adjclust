@@ -51,45 +51,48 @@
 #' @importFrom HiTC intdata
 
 hicClust <- function(x, h = NULL, ...) {
-
-  if (!is.null(h)) {
-    if (!is.numeric(h))
-    stop("h should be numeric")
-  }
-  
-  class <- class(x)
-  if( (class != "dsCMatrix")&&(class !=  "HTCexp")&&(!file.exists(x)) )
-    stop("Invalid Input:x should be a text file or an object of class Matrix::dsCMatrix/HiTC::HTCexp")
-  
-  if(class == "dsCMatrix" || class  == "HTCexp") {
-  
-    if(class == "HTCexp")
-      x <- intdata(x)
     
-    p <- x@Dim[1]
-    if(is.null(h)) h <- p-1  
-    res <- adjClust(x, type = "similarity", h)
-    return(res)
-  
-  } else {
-  
-  inoptions <- list(...)
-  inoptions$file <- x
-  if (is.null(inoptions$sep)) inoptions$sep <- "\t"
-  if (is.null(inoptions$header)) inoptions$header <- FALSE  
-  df <- do.call("read.table", inoptions) 
+    if (!is.null(h)) {
+        if (!is.numeric(h))
+            stop("h should be numeric")
+    }
     
-  lis <- sort(unique(c(df[,1], df[,2])))
-  p <- length(lis)
-  rowindx <- match(df[,1], lis)
-  colindx <- match(df[,2], lis)
-  
-  m <- matrix(0, nrow = p, ncol = p)
-  m[cbind(rowindx,colindx)] <- m[cbind(colindx,rowindx)] <- df[,3]
-
-  if (is.null(h)) h <- p-1  
-  res <- adjClust(m, type = "similarity", h = h)
-  return(res)
-  
-  }
+    class <- class(x)
+    if( (class != "dsCMatrix") && (class !=  "HTCexp")&&(!file.exists(x)) )
+        stop("Invalid Input:x should be a text file or an object of class Matrix::dsCMatrix/HiTC::HTCexp")
+    
+    if(class == "dsCMatrix" || class  == "HTCexp") {
+        
+        if (class == "HTCexp") {
+            x <- intdata(x)
+        }
+        p <- x@Dim[1]
+        if(is.null(h)) h <- p-1  
+        res <- adjClust(x, type = "similarity", h)
+        return(res)
+        
+    } else {
+        
+        inoptions <- list(...)
+        inoptions$file <- x
+        if (is.null(inoptions$sep)) {
+            inoptions$sep <- "\t"
+        }
+        if (is.null(inoptions$header)) {
+            inoptions$header <- FALSE
+        }
+        df <- do.call("read.table", inoptions) 
+        
+        lis <- sort(unique(c(df[,1], df[,2])))
+        p <- length(lis)
+        rowindx <- match(df[,1], lis)
+        colindx <- match(df[,2], lis)
+        
+        m <- matrix(0, nrow = p, ncol = p)
+        m[cbind(rowindx,colindx)] <- m[cbind(colindx,rowindx)] <- df[,3]
+        
+        if (is.null(h)) h <- p-1  
+        res <- adjClust(m, type = "similarity", h = h)
+        return(res)
+    }
 }

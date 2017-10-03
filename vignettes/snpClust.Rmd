@@ -24,10 +24,10 @@ library("adjclust")
 
 The begining of this vignette closely follows the "LD vignette" of the SnpStats package [1]. First, we load genotype data.
 
-```{r, results="hide", message=FALSE}
+```{r, results = "hide", message = FALSE}
 library("matrixStats")
 library("snpStats")
-data("ld.example", package="snpStats")
+data("ld.example", package = "snpStats")
 ```
 
 
@@ -47,8 +47,8 @@ We can compute and display the LD between these SNPs.
 [^1]: We have dropped SNP `r colnames(ceph.1mb)[316]` because it produced a missing value due to the lack of genetic diversity in the considered sample.
 
 ```{r}
-ld.ceph <- ld(geno, stats="R.squared", depth=p-1)
-image(ld.ceph, lwd=0)
+ld.ceph <- ld(geno, stats = "R.squared", depth = p-1)
+image(ld.ceph, lwd = 0)
 ```
 
 # Adjacency-constrained Hierarchical Agglomerative Clustering
@@ -56,13 +56,13 @@ image(ld.ceph, lwd=0)
 The `snpClust` function can handle genotype data as an input:
 
 ```{r}
-fit <- snpClust(geno, h=p-1, stats="R.squared")
+fit <- snpClust(geno, h = p-1, stats = "R.squared")
 ```
 
 The above figure suggests that the LD signal is concentrated close to the diagonal. We can focus on a diagonal band with the bandwidth parameter `h`:
 
 ```{r}
-fitH <- snpClust(geno, h=100, stats="R.squared")
+fitH <- snpClust(geno, h = 100, stats = "R.squared")
 ```
 
 # Output
@@ -86,15 +86,15 @@ In this section we show how the `snpClust` function can also be applied directly
 
 ```{r}
 h <- 100
-ld.ceph <- ld(geno, stats="R.squared", depth=h)
-image(ld.ceph, lwd=0)
+ld.ceph <- ld(geno, stats = "R.squared", depth = h)
+image(ld.ceph, lwd = 0)
 ```
 
 Due to numerical errors in the LD estimation, some of the estimated values are slightly larger than 1, so we round the estimates to 1e-10:
 
 ```{r}
 max(ld.ceph-1)
-ld.ceph <- round(ld.ceph, digits=10)
+ld.ceph <- round(ld.ceph, digits = 10)
 ```
 
 Note that when `snpClust` is called directly, this sanity check is performed internally before applying the classification algorithm. 
@@ -109,7 +109,7 @@ fitL <- snpClust(ld.ceph, h)
 
 ```{r, warning = FALSE}
 gmat <- as(geno, "matrix")
-fitM <- snpClust(geno, h, "R.squared")
+fitM <- snpClust(geno, h, stats = "R.squared")
 ```
 
 # References

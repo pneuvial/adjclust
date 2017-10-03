@@ -13,7 +13,7 @@ NULL
 #' fields, including ecology (Quaternary data) and bioinformatics (e.g., in 
 #' Genome-Wide Association Studies (GWAS)).
 #' 
-#' The package proposes a fast implementation of the method that takes advantage
+#' This function is a fast implementation of the method that takes advantage
 #' of sparse similarity matrices (i.e., that have 0 entries outside of a 
 #' diagonal band of width \code{h}). The method is fully described in 
 #' (Dehman, 2015) and based on a kernel version of the algorithm. The different
@@ -42,14 +42,14 @@ NULL
 #' c(1.0, 0.1, 0.2, 0.3,
 #'   0.1, 1.0 ,0.4 ,0.5,
 #'   0.2, 0.4, 1.0, 0.6, 
-#'   0.3, 0.5, 0.6, 1.0), nrow=4)
+#'   0.3, 0.5, 0.6, 1.0), nrow = 4)
 #'
 #' ## similarity, full width
 #' fit1 <- adjClust(sim, "similarity")
 #' plot(fit1)
 #' 
 #' ## similarity, h < p-1
-#' fit2 <- adjClust(sim, "similarity", h=2)
+#' fit2 <- adjClust(sim, "similarity", h = 2)
 #' plot(fit2)
 #' 
 #' ## dissimilarity
@@ -60,7 +60,7 @@ NULL
 #' plot(fit3)
 #' 
 #' ## dissimilarity, h < p-1
-#' fit4 <- adjClust(dist, "dissimilarity", h=2)
+#' fit4 <- adjClust(dist, "dissimilarity", h = 2)
 #' plot(fit4)
 
 #' @export
@@ -74,15 +74,17 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
     CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist")
     classcheck <- pmatch(class(mat), CLASS)
     
-    if (is.na(classcheck))
+    if (is.na(classcheck)) {
         stop("Input matrix class not supported")
-    if(classcheck == -1)
+    }
+    if (classcheck == -1) {
         stop("Ambiguous matrix class")
+    }
     class <- CLASS[classcheck]
     
     type <- match.arg(type)
     
-    if (class == "matrix")  {## for standard matrices
+    if (class == "matrix") {
         if (!(nrow(mat) == ncol(mat)))
             stop("Input matrix is not a square matrix")
         if (!is.numeric(mat))
@@ -101,12 +103,15 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
             mat <- 1 - 0.5*(mat^2)
         }
         
-        mat <- modify(mat, as.integer(p), as.integer(h)) ## modifies, if required, input similarity matrix and returns a similiarity matrix with diagonal 1
+        ## modifiy (if required) input similarity matrix
+        ##  and return a similiarity matrix with diagonal 1
+        mat <- modify(mat, as.integer(p), as.integer(h)) 
         
         matL <- findMatL(mat, as.integer(p), as.integer(h))
         rotatedMatR <- findRMatR(mat, as.integer(p), as.integer(h))
         
-    } else if(class == "dgCMatrix" || class == "dsCMatrix") {   ## for dgC/dsC sparse matrices
+    } else if(class == "dgCMatrix" || class == "dsCMatrix") {   
+        ## dgC/dsC sparse matrices
         
         if (mat@Dim[1] != mat@Dim[2])
             stop("Input matrix is not a square matrix")
@@ -121,7 +126,8 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
         matL <- findSparseMatL(mat, as.integer(p), as.integer(h))
         rotatedMatR <- findSparseRMatR(mat, as.integer(p), as.integer(h))
         
-    } else { ## for dist objects 
+    } else if (class=="dist") { 
+        ## for dist objects 
         mat <- as.matrix(mat)
         p <- nrow(mat)
         if (length(h)==0) { 
@@ -137,41 +143,43 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
         
         matL <- findMatL(mat, p, h)
         rotatedMatR <- findRMatR(mat, p, h)        
+    } else {
+        stop("Input matrix class not supported")
     }
     
-    rCumL <- rowCumsums(matL)         ## p x h matrix
+    rCumL <- rowCumsums(matL)          ## p x h matrix
     rcCumL <- colCumsums(rCumL)        ## p x h matrix
     
-    rCumR <- rowCumsums(rotatedMatR)  ## p x h matrix
-    rcCumR <- colCumsums(rCumR)  ## p x h matrix
+    rCumR <- rowCumsums(rotatedMatR)   ## p x h matrix
+    rcCumR <- colCumsums(rCumR)        ## p x h matrix
     
     ## initialization
     gains <- rep(0, p-blMin)
-    merge <- matrix(0, nrow=p-blMin, ncol=2)  ## matrix of the merges
-    traceW <- matrix(0, nrow=p-blMin, ncol=2)  ## matrix of traceW
+    merge <- matrix(0, nrow = p-blMin, ncol = 2)   ## matrix of the merges
+    traceW <- matrix(0, nrow = p-blMin, ncol = 2)  ## matrix of traceW
     sd1 <- matL[1:(p-1),1]
     
     ## initialization of the heap
     heap <- as.integer(rep(-1, 3*p))
     lHeap <- length(heap)
-    heap[1:(p-1)] <- 1:(p-1)
+    v <- 1:(p - 1)
+    heap[v] <- v
     D <- rep(-1, 3*p)
-    D[1:(p-1)] <- 1-sd1
+    D[v] <- 1 - sd1
     ## initialization of the length of the Heap
-    lHeap <- p-1
+    lHeap <- p - 1
     ## each element contains a vector: c(cl1, cl2, label1, label2, posL, posR, valid)
-    chainedL <- matrix(-1, nrow=12, ncol=3*p)
+    chainedL <- matrix(-1, nrow = 12, ncol = 3*p)
     rownames(chainedL) <- c("minCl1", "maxCl1", "minCl2", "maxCl2", "lab1", 
                             "lab2", "posL", "posR", "Sii", "Sjj", "Sij", "valid")
-    v <- 1:(p-1)
-    w <- as.integer(v+1)
+    w <- as.integer(v + 1)
     chainedL[1,v] <- v
     chainedL[2,v] <- v
     chainedL[3,v] <- w
     chainedL[4,v] <- w
     chainedL[5,v] <- -v
     chainedL[6,v] <- -w
-    chainedL[7,v] <- v-1
+    chainedL[7,v] <- v - 1
     chainedL[8,v] <- w
     chainedL[9,v] <- 1
     chainedL[10,v] <- 1
@@ -183,11 +191,11 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
     
     res <- .Call("cWardHeaps", rcCumR, rcCumL, as.integer(h), as.integer(p), 
                  chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
-                 as.integer(blMin), PACKAGE="adjclust")
+                 as.integer(blMin), PACKAGE = "adjclust")
     
     height <- cumsum(gains)
-    tree <- list(traceW=traceW,
-                 gains=gains,
+    tree <- list(traceW = traceW,
+                 gains = gains,
                  merge = res,
                  height = height,
                  seqdist = height,

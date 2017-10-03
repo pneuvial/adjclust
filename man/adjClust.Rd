@@ -38,7 +38,7 @@ adjacent clusters are merged. These methods are useful in various application
 fields, including ecology (Quaternary data) and bioinformatics (e.g., in 
 Genome-Wide Association Studies (GWAS)).
 
-The package proposes a fast implementation of the method that takes advantage
+This function is a fast implementation of the method that takes advantage
 of sparse similarity matrices (i.e., that have 0 entries outside of a 
 diagonal band of width \code{h}). The method is fully described in 
 (Dehman, 2015) and based on a kernel version of the algorithm. The different
@@ -50,14 +50,14 @@ sim <- matrix(
 c(1.0, 0.1, 0.2, 0.3,
   0.1, 1.0 ,0.4 ,0.5,
   0.2, 0.4, 1.0, 0.6, 
-  0.3, 0.5, 0.6, 1.0), nrow=4)
+  0.3, 0.5, 0.6, 1.0), nrow = 4)
 
 ## similarity, full width
 fit1 <- adjClust(sim, "similarity")
 plot(fit1)
 
 ## similarity, h < p-1
-fit2 <- adjClust(sim, "similarity", h=2)
+fit2 <- adjClust(sim, "similarity", h = 2)
 plot(fit2)
 
 ## dissimilarity
@@ -68,7 +68,7 @@ fit3 <- adjClust(dist, "dissimilarity")
 plot(fit3)
 
 ## dissimilarity, h < p-1
-fit4 <- adjClust(dist, "dissimilarity", h=2)
+fit4 <- adjClust(dist, "dissimilarity", h = 2)
 plot(fit4)
 }
 \references{
