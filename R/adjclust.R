@@ -5,7 +5,7 @@ NULL
 #' 
 #' Adjacency-constrained hierarchical agglomerative clustering
 #' 
-#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is, HAC in
+#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
 #' which each observation is associated to a position, and the clustering is
 #' constrained so as only adjacent clusters are merged. These methods are useful
 #' in various application fields, including ecology (Quaternary data) and

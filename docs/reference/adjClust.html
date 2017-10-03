@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constrained Hierarchical Agglomerative Clustering — adjClust • adjclust</title>
+<title>Adjacency-constrained Clustering — adjClust • adjclust</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -101,12 +101,11 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Constrained Hierarchical Agglomerative Clustering</h1>
+    <h1>Adjacency-constrained Clustering</h1>
     </div>
 
     
-    <p>Function to perform adjacency-constrained hierarchical agglomerative
-clustering</p>
+    <p>Adjacency-constrained hierarchical agglomerative clustering</p>
     
 
     <pre class="usage"><span class='fu'>adjClust</span>(<span class='no'>mat</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"similarity"</span>, <span class='st'>"dissimilarity"</span>), <span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'>ncol</span>(<span class='no'>mat</span>) - <span class='fl'>1</span>,
@@ -121,19 +120,19 @@ clustering</p>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>Type of matrix : similarity or dissimilarity. Default to 
-<code>"similarity"</code>.</p></td>
+      <td><p>Type of matrix : similarity or dissimilarity. Defaults to 
+<code>"similarity"</code></p></td>
     </tr>
     <tr>
       <th>h</th>
-      <td><p>band width. It is assumed that the similarity between two items is 
-0 when these items are at a distance of more than band width h. Default value
-is <code>ncol(mat)-1</code>.</p></td>
+      <td><p>band width. It is assumed that the similarity between two items is 0
+when these items are at a distance of more than band width h. Default value
+is <code>ncol(mat)-1</code></p></td>
     </tr>
     <tr>
       <th>blMin</th>
       <td><p>depth of clustering. It is the number of clusters below which 
-the algorithm stops. Default value is 1.</p></td>
+the algorithm stops. Default value is 1</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -143,29 +142,32 @@ the algorithm stops. Default value is 1.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Function <code>adjClust</code> returns an object of class 
-<code><a href='http://www.rdocumentation.org/packages/stats/topics/hclust'>hclust</a></code>.</p>
+    <p>An object of class <code><a href='http://www.rdocumentation.org/packages/stats/topics/hclust'>hclust</a></code></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>adjClust</code> performs constrained hierarchichal agglomerative clustering 
-which is hierarchical agglomerative clustering in which each observation is 
-associated to a position, and the clustering is constrained so as only 
-adjacent clusters are merged. These methods are useful in various application
-fields, including ecology (Quaternary data) and bioinformatics (e.g., in 
-Genome-Wide Association Studies (GWAS)).</p>
-<p>This function is a fast implementation of the method that takes advantage
-of sparse similarity matrices (i.e., that have 0 entries outside of a 
-diagonal band of width <code>h</code>). The method is fully described in 
-(Dehman, 2015) and based on a kernel version of the algorithm. The different
-options for the implementation are avaiable in the package vignette entitled
-"Notes on CHAC implementation in adjclust".</p>
+    <p>Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+which each observation is associated to a position, and the clustering is
+constrained so as only adjacent clusters are merged. These methods are useful
+in various application fields, including ecology (Quaternary data) and
+bioinformatics (e.g., in Genome-Wide Association Studies (GWAS)).</p>
+<p>This function is a fast implementation of the method that takes advantage of 
+sparse similarity matrices (i.e., that have 0 entries outside of a diagonal 
+band of width <code>h</code>). The method is fully described in (Dehman, 2015) and 
+based on a kernel version of the algorithm. The different options for the 
+implementation are avaiable in the package vignette entitled "Notes on CHAC 
+implementation in adjclust".</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Dehman A. (2015) <em>Spatial Clustering of Linkage 
-Desequilibrium Blocks for Genome-Wide Association Studies</em>, PhD thesis, 
-Universite Paris Saclay.</p>
+  Desequilibrium Blocks for Genome-Wide Association Studies</em>, PhD thesis, 
+  Universite Paris Saclay.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><code><a href='snpClust.html'>snpClust</a></code> to cluster SNPs based on linkage disequilibrium
+    <code><a href='hicClust.html'>hicClust</a></code> to cluster Hi-C data</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -177,19 +179,19 @@ Universite Paris Saclay.</p>
 
 <span class='co'>## similarity, full width</span>
 <span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>sim</span>, <span class='st'>"similarity"</span>)
-<span class='fu'>plot</span>(<span class='no'>fit1</span>)</div><div class='img'><img src='adjClust-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>fit1</span>)</div><div class='img'><img src='adjClust-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'>## similarity, h &lt; p-1</span>
 <span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>sim</span>, <span class='st'>"similarity"</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'>plot</span>(<span class='no'>fit2</span>)</div><div class='img'><img src='adjClust-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>fit2</span>)</div><div class='img'><img src='adjClust-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'>## dissimilarity</span>
 <span class='no'>dist</span> <span class='kw'>&lt;-</span> <span class='fu'>as.dist</span>(<span class='fu'>sqrt</span>(<span class='fl'>2</span>-(<span class='fl'>2</span>*<span class='no'>sim</span>)))
 
 <span class='co'>## dissimilarity, full width</span>
 <span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>dist</span>, <span class='st'>"dissimilarity"</span>)
-<span class='fu'>plot</span>(<span class='no'>fit3</span>)</div><div class='img'><img src='adjClust-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>fit3</span>)</div><div class='img'><img src='adjClust-11.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'>## dissimilarity, h &lt; p-1</span>
 <span class='no'>fit4</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>dist</span>, <span class='st'>"dissimilarity"</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'>plot</span>(<span class='no'>fit4</span>)</div><div class='img'><img src='adjClust-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
+<span class='fu'>plot</span>(<span class='no'>fit4</span>)</div><div class='img'><img src='adjClust-12.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -201,6 +203,8 @@ Universite Paris Saclay.</p>
       <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

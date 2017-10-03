@@ -25,7 +25,7 @@ Adjacency-constrained hierarchical agglomerative clustering of Single
 Nucleotide Polymorphisms based on Linkage Disequilibrium
 }
 \details{
-Adjacency-constrained hierarchichal agglomerative clustering (HAC) is, HAC in
+Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
 which each observation is associated to a position, and the clustering is 
 constrained so as only adjacent clusters are merged. SNPs are clustered based
 on their similarity as measured by the linkage disequilibrium.

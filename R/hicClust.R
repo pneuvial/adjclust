@@ -3,7 +3,7 @@
 #' Adjacency-constrained hierarchical agglomerative clustering of Hi-C contact
 #' maps
 #' 
-#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is, HAC in
+#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
 #' which each observation is associated to a position, and the clustering is 
 #' constrained so as only adjacent clusters are merged. Genomic regions (loci)
 #' are clustered according to information provided by high-throughput
