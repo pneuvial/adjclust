@@ -1,49 +1,49 @@
 #' @useDynLib adjclust, .registration = TRUE
 NULL
 
-#' Constrained Hierarchical Agglomerative Clustering
+#' Adjacency-constrained Clustering
 #' 
-#' Function to perform adjacency-constrained hierarchical agglomerative
-#' clustering
+#' Adjacency-constrained hierarchical agglomerative clustering
 #' 
-#' \code{adjClust} performs constrained hierarchichal agglomerative clustering 
-#' which is hierarchical agglomerative clustering in which each observation is 
-#' associated to a position, and the clustering is constrained so as only 
-#' adjacent clusters are merged. These methods are useful in various application
-#' fields, including ecology (Quaternary data) and bioinformatics (e.g., in 
-#' Genome-Wide Association Studies (GWAS)).
+#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is, HAC in
+#' which each observation is associated to a position, and the clustering is
+#' constrained so as only adjacent clusters are merged. These methods are useful
+#' in various application fields, including ecology (Quaternary data) and
+#' bioinformatics (e.g., in Genome-Wide Association Studies (GWAS)).
 #' 
-#' This function is a fast implementation of the method that takes advantage
-#' of sparse similarity matrices (i.e., that have 0 entries outside of a 
-#' diagonal band of width \code{h}). The method is fully described in 
-#' (Dehman, 2015) and based on a kernel version of the algorithm. The different
-#' options for the implementation are avaiable in the package vignette entitled
-#' "Notes on CHAC implementation in adjclust".
+#' This function is a fast implementation of the method that takes advantage of 
+#' sparse similarity matrices (i.e., that have 0 entries outside of a diagonal 
+#' band of width \code{h}). The method is fully described in (Dehman, 2015) and 
+#' based on a kernel version of the algorithm. The different options for the 
+#' implementation are avaiable in the package vignette entitled "Notes on CHAC 
+#' implementation in adjclust".
 #' 
 #' @param mat A similarity matrix or a dist object
-#' @param type Type of matrix : similarity or dissimilarity. Default to 
-#' \code{"similarity"}.
-#' @param h band width. It is assumed that the similarity between two items is 
-#' 0 when these items are at a distance of more than band width h. Default value
-#' is \code{ncol(mat)-1}.
+#' @param type Type of matrix : similarity or dissimilarity. Defaults to 
+#'   \code{"similarity"}
+#' @param h band width. It is assumed that the similarity between two items is 0
+#'   when these items are at a distance of more than band width h. Default value
+#'   is \code{ncol(mat)-1}
 #' @param blMin depth of clustering. It is the number of clusters below which 
-#' the algorithm stops. Default value is 1.
+#'   the algorithm stops. Default value is 1
 #' @param verbose Currently not used
-#' 
-#' @return Function \code{adjClust} returns an object of class 
-#' \code{\link[stats]{hclust}}.
-#' 
+#'   
+#' @return An object of class \code{\link[stats]{hclust}}
+#'   
+#' @seealso \code{\link{snpClust}} to cluster SNPs based on linkage disequilibrium
+#' @seealso \code{\link{hicClust}} to cluster Hi-C data
+#'   
 #' @references Dehman A. (2015) \emph{Spatial Clustering of Linkage 
-#' Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
-#' Universite Paris Saclay.
-#'
+#'   Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+#'   Universite Paris Saclay.
+#'   
 #' @examples
 #' sim <- matrix(
 #' c(1.0, 0.1, 0.2, 0.3,
 #'   0.1, 1.0 ,0.4 ,0.5,
 #'   0.2, 0.4, 1.0, 0.6, 
 #'   0.3, 0.5, 0.6, 1.0), nrow = 4)
-#'
+#' 
 #' ## similarity, full width
 #' fit1 <- adjClust(sim, "similarity")
 #' plot(fit1)

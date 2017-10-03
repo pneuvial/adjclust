@@ -1,34 +1,39 @@
-#' Constrained Hierarchical Agglomerative Clustering of Genomic regions(loci)
+#' Adjacency-constrained Clustering of Hi-C contact maps
 #' 
-#' Function to perform adjacency-constrained hierarchical agglomerative 
-#' clustering of genomic regions(loci)
+#' Adjacency-constrained hierarchical agglomerative clustering of Hi-C contact
+#' maps
 #' 
-#' \code{hicClust} performs constrained hierarchichal agglomerative clustering 
-#' of genomic regions (loci) according to information provided by 
-#' high-throughput conformation capture data (Hi-C). Constrained Hierarchical 
-#' Agglomerative Clustering is hierarchical agglomerative clustering in which 
-#' each observation is associated to a position, and the clustering is 
-#' constrained so as only adjacent clusters are merged.
+#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is, HAC in
+#' which each observation is associated to a position, and the clustering is 
+#' constrained so as only adjacent clusters are merged. Genomic regions (loci)
+#' are clustered according to information provided by high-throughput
+#' conformation capture data (Hi-C).
 #' 
-#' @param x either:
-#' 1. A pxp contact map of class Matrix::dsCMatrix in which the entries are the 
-#' number of counts of physical interactions observed between all pairs of loci
-#' 2. An object of class HiTC::HTCexp. The corresponding Hi-C data is stored as 
-#' a Matrix::dsCMatrix object in the intdata slot
-#' 3. A text file with one line per pair of loci for which an interaction has 
-#' been observed (in the format: locus1<tab>locus2<tab>signal). 
-#' 
+#' @param x either: 1. A pxp contact map of class Matrix::dsCMatrix in which the
+#'   entries are the number of counts of physical interactions observed between 
+#'   all pairs of loci 2. An object of class HiTC::HTCexp. The corresponding 
+#'   Hi-C data is stored as a Matrix::dsCMatrix object in the intdata slot 3. A 
+#'   text file with one line per pair of loci for which an interaction has been 
+#'   observed (in the format: locus1<tab>locus2<tab>signal).
+#'   
 #' @param h band width. If not provided, \code{h} is set to default value `p-1`.
-#' 
+#'   
 #' @param \dots further arguments to be passed to \code{\link{read.table}} 
-#' function when \code{x} is a text file name. If not provided, the text file is
-#' supposed to be separated by tabulations, with no header.
-#'  
+#'   function when \code{x} is a text file name. If not provided, the text file 
+#'   is supposed to be separated by tabulations, with no header.
+#'   
 #' @return The function \code{hicClust} returns an object of class 
-#' \code{\link[stats]{hclust}}.
-#' 
+#'   \code{\link[stats]{hclust}}.
+#'   
 #' @seealso \code{\link{adjClust}} \code{\link[HiTC:HTCexp]{HTCexp}}
-#' 
+#'   
+#' @references Dehman A. (2015) \emph{Spatial Clustering of Linkage 
+#'   Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+#'   Universite Paris Saclay.
+#'   
+#' @references Servant N. \emph{et al} (2012). \emph{HiTC : Exploration of 
+#'   High-Throughput 'C' experiments. Bioinformatics}.
+#'   
 #' @examples
 #' # input as HiTC::HTCexp object
 #' data("hic_imr90_40_XX", package="adjclust")
@@ -41,11 +46,11 @@
 #' mat <- HiTC::intdata(hic_imr90_40_XX) 
 #' res2 <- hicClust(mat)
 #' } 
-#'
+#' 
 #' # input as text file
 #' res3 <- hicClust(system.file("extdata", "sample.txt", package = "adjclust"))
 #' 
-#' @export 
+#' @export
 #' 
 #' @importFrom utils read.table
 #' @importFrom HiTC intdata
