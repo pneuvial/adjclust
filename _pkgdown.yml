@@ -7,8 +7,6 @@ reference:
   - title: "Data objects"
     contents:
       - hic_imr90_40_XX
-      - Dprime.100
-      - R2.100
     exclude: 
       - prevfit
       

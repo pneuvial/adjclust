@@ -111,8 +111,7 @@ Polymorphisms</h1>
 clustering of Single Nucleotide Polymorphisms</p>
     
 
-    <pre class="usage"><span class='fu'>snpClust</span>(<span class='no'>x</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"LLR"</span>, <span class='st'>"OR"</span>, <span class='st'>"Q"</span>, <span class='st'>"Covar"</span>, <span class='st'>"D.prime"</span>,
-  <span class='st'>"R.squared"</span>, <span class='st'>"R"</span>))</pre>
+    <pre class="usage"><span class='fu'>snpClust</span>(<span class='no'>x</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'>ncol</span>(<span class='no'>x</span>) - <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -124,27 +123,28 @@ or a linkage disequlibrium matrix of class Matrix::dgCMatrix</p></td>
     </tr>
     <tr>
       <th>h</th>
-      <td><p>band width. If not provided, <code>h</code> is set to default value `p-1`.</p></td>
+      <td><p>band width. If not provided, <code>h</code> is set to default value `p-1`
+where `p` is the number of columns of `x`</p></td>
     </tr>
     <tr>
-      <th>stats</th>
-      <td><p>a character vector specifying the linkage disequilibrium measure
-to be calculated ("LLR", "OR", "Q", "Covar", "D.prime", "R.squared" or "R").</p></td>
+      <th>&#8230;</th>
+      <td><p>Further arguments to be passed to the <code><a href='http://www.rdocumentation.org/packages/snpStats/topics/ld'>snpStats::ld</a></code>
+function</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Function <code>snpClust</code> returns an object of class 
-<code><a href='http://www.rdocumentation.org/packages/stats/topics/hclust'>hclust</a></code>.</p>
+  <code><a href='http://www.rdocumentation.org/packages/stats/topics/hclust'>hclust</a></code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>snpClust</code> performs constrained hierarchichal agglomerative clustering 
 of single nucleotide polymorphisms. Constrained Hierarchical Agglomerative 
 Clustering is hierarchical agglomerative clustering in which each observation
-is associated to a position, and the clustering is constrained so as to 
-merge only adjacent clusters.</p>
+is associated to a position, and the clustering is constrained so as to merge
+only adjacent clusters.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -153,17 +153,16 @@ merge only adjacent clusters.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## a very small example</span>
-<span class='fu'>library</span>(<span class='no'>snpStats</span>)
-<span class='fu'>data</span>(<span class='no'>testdata</span>)
+<span class='fu'>data</span>(<span class='no'>testdata</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"snpStats"</span>)
 
 <span class='co'># input as snpStats::SnpMatrix</span>
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='fl'>3</span>, <span class='st'>"R.squared"</span>)
+<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
 
 <span class='co'># input as base::matrix</span>
-<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='fu'>as.matrix</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>]), <span class='fl'>3</span>, <span class='st'>"R.squared"</span>)
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='fu'>as.matrix</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>]), <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
 
 <span class='co'># input as Matrix::dgCMatrix</span>
-<span class='no'>ld</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/snpStats/topics/ld'>ld</a></span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>depth</span><span class='kw'>=</span><span class='fl'>3</span>, <span class='kw'>stats</span><span class='kw'>=</span><span class='st'>"R.squared"</span>)
+<span class='no'>ld</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>snpStats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/snpStats/topics/ld'>ld</a></span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>depth</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
 <span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>ld</span>, <span class='fl'>3</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

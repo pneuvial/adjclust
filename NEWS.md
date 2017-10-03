@@ -1,5 +1,7 @@
 # Version 0.4.2 [2017-10-03]
 
+* Removed objects "R2.100" and "Dprime.100" (can be obtained from the 
+  imported 'snpStats' package)
 * In 'snpClust': argument 'stat' is now passed to the 'snpStats::ld' function 
   through '...'
 * Some code cleanups
