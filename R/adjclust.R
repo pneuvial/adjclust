@@ -38,17 +38,31 @@ NULL
 #' Universite Paris Saclay.
 #'
 #' @examples
-#' sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
-#' h <- 3
-#' fit1 <- adjClust(sim, "similarity", h, 1, FALSE)
+#' sim <- matrix(
+#' c(1.0, 0.1, 0.2, 0.3,
+#'   0.1, 1.0 ,0.4 ,0.5,
+#'   0.2, 0.4, 1.0, 0.6, 
+#'   0.3, 0.5, 0.6, 1.0), nrow=4)
+#'
+#' ## similarity, full width
+#' fit1 <- adjClust(sim, "similarity")
 #' plot(fit1)
 #' 
-#' dist <- as.dist(sqrt(2-(2*sim)))
-#' 
-#' #Compatibility with dist objects
-#' fit2 <- adjClust(dist, "dissimilarity", h, 1, FALSE)
+#' ## similarity, h < p-1
+#' fit2 <- adjClust(sim, "similarity", h=2)
 #' plot(fit2)
 #' 
+#' ## dissimilarity
+#' dist <- as.dist(sqrt(2-(2*sim)))
+#' 
+#' ## dissimilarity, full width
+#' fit3 <- adjClust(dist, "dissimilarity")
+#' plot(fit3)
+#' 
+#' ## dissimilarity, h < p-1
+#' fit4 <- adjClust(dist, "dissimilarity", h=2)
+#' plot(fit4)
+
 #' @export
 #' 
 #' @importFrom matrixStats rowCumsums
@@ -56,10 +70,6 @@ NULL
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
                      h = ncol(mat) - 1, blMin = 1, verbose = FALSE) {
-    
-    if (!is.numeric(h))
-        stop("Input band width is not numeric")
-    
     
     CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist")
     classcheck <- pmatch(class(mat), CLASS)
@@ -112,9 +122,14 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
         rotatedMatR <- findSparseRMatR(mat, as.integer(p), as.integer(h))
         
     } else { ## for dist objects 
-        
         mat <- as.matrix(mat)
         p <- nrow(mat)
+        if (length(h)==0) { 
+            ## h defaults to 'ncol(mat)-1' which is 'numeric(0)'
+            ## if the *input* 'mat' is of type 'dist'
+            h <- ncol(mat)-1
+        }
+        
         if (h >= p)
             stop("Input band width should be strictly less than dimensions of matrix")
         
