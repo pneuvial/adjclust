@@ -73,15 +73,22 @@ diagonal. We can focus on a diagonal band with the bandwidth parameter `h`:
 
 ```{r snpClust-sparse}
 fitH <- snpClust(geno, h = 100, stats = "R.squared")
+fitH
 ```
 
 # Output
 
-The output of the `snpClust` is of class `hclust`. In particular, it can be 
-plotted as a dendrogram:
+The output of the `snpClust` is of class `chac`. In particular, it can be 
+plotted as a dendrogram silently relying on the function `plot.dendrogram`:
 
 ```{r dendro}
-plot(fitH)
+plot(fitH, type = "rectangle", leaflab = "perpendicular")
+```
+
+It can also be converted to an `hclust` object:
+```{r hclust}
+fitH.hc <- as.hclust(fitH)
+plot(fitH.hc)
 ```
 
 Moreover, the output contains an element named `merge` which describes the 

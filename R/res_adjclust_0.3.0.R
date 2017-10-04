@@ -1,6 +1,6 @@
 #' Results obtained from a primitive version of the package
 #'
-#' An 'hclust' object obtained from a primitve version of the package
+#' An 'hclust' object obtained from a primitive version of the package
 #'
 #' @format An object of class 'hclust'.
 #'

@@ -62,13 +62,20 @@ $5 \times 10^5$:
 binned <- HiTC::binningC(hic_imr90_40_XX, binsize = 5e5)
 HiTC::mapC(binned)
 fitB <- hicClust(binned)
+fitB
 ```
 
-The output is of class `hclust`. In particular, it can be plotted as a 
-dendrogram:
+The output is of class `chac`. In particular, it can be plotted as a dendrogram
+silently relying on the function `plot.dendrogram`:
 
 ```{r dendro}
-plot(fitB, labels = FALSE, hang = -1, ann = FALSE)
+plot(fitB)
+```
+
+
+```{r hclust}
+fitB.hclust <- as.hclust(fitB)
+plot(fitB.hclust, labels = FALSE, hang = -1, ann = FALSE)
 ```
 
 Moreover, the output contains an element named `merge` which describes the 

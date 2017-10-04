@@ -64,6 +64,7 @@ NULL
 #' plot(fit4)
 
 #' @export
+#' @exportClass chac
 #' 
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
@@ -110,7 +111,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
         matL <- findMatL(mat, as.integer(p), as.integer(h))
         rotatedMatR <- findRMatR(mat, as.integer(p), as.integer(h))
         
-    } else if(class == "dgCMatrix" || class == "dsCMatrix") {   
+    } else if (class == "dgCMatrix" || class == "dsCMatrix") {   
         ## dgC/dsC sparse matrices
         
         if (mat@Dim[1] != mat@Dim[2])
@@ -204,6 +205,48 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
                  method = "adjclust-heaps",
                  call = match.call(),
                  dist.method = attr(D, "method"))
-    class(tree) <- "hclust"
+    class(tree) <- c("chac")
     return(tree)
+}
+
+#' @rdname adjClust
+#' @aliases as.hclust.chac
+#' @param x an object of class chac
+#' @param ... for \code{\link{plot}}, arguments passed to the function 
+#' \code{\link[stats]{plot.dendrogram}}. Default values for \code{type} and
+#' \code{leaflab} are respectively set to \code{"triangle"} and \code{"none"}
+#' @export
+as.hclust.chac <- function(x, ...) {
+  res <- x
+  class(res) <- "hclust"
+  return(res)
+}
+
+#' @rdname adjClust
+#' @aliases print.chac
+#' @export
+print.chac <- function(x, ...) {
+  x <- as.hclust(x)
+  print(x)
+}
+
+#' @rdname adjClust
+#' @aliases summary.chac
+#' @param object an object of class chac
+#' @export
+summary.chac <- function(object, ...) {
+  print(object)
+}
+
+#' @rdname adjClust
+#' @aliases plot.chac
+#' @param x an object of class chac
+#' @param y not used
+#' @export
+plot.chac <- function(x, y, ...) {
+  args <- list(...)
+  args$x <- as.dendrogram(as.hclust(x))
+  if (is.null(args$type)) args$type <- "triangle"
+  if (is.null(args$leaflab)) args$leaflab <- "none"
+  do.call(plot, args)
 }
