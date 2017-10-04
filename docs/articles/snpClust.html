@@ -48,6 +48,9 @@
       <a href="../articles/hicClust.html">Clustering of Hi-C contact maps</a>
     </li>
     <li>
+      <a href="../articles/notesCHAC.html">Notes on CHAC implementation in adjclust</a>
+    </li>
+    <li>
       <a href="../articles/snpClust.html">Inferring Linkage Disequilibrium blocks from genotypes</a>
     </li>
   </ul>
@@ -78,7 +81,7 @@
       <h1>Inferring Linkage Disequilibrium blocks from genotypes</h1>
                         <h4 class="author">Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix</h4>
             
-            <h4 class="date">2017-09-15</h4>
+            <h4 class="date">2017-10-04</h4>
           </div>
 
     
@@ -97,7 +100,7 @@
 <p>The begining of this vignette closely follows the “LD vignette” of the SnpStats package [1]. First, we load genotype data.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"matrixStats"</span>)
 <span class="kw">library</span>(<span class="st">"snpStats"</span>)
-<span class="kw">data</span>(<span class="st">"ld.example"</span>, <span class="dt">package=</span><span class="st">"snpStats"</span>)</code></pre>
+<span class="kw">data</span>(<span class="st">"ld.example"</span>, <span class="dt">package =</span> <span class="st">"snpStats"</span>)</code></pre>
 <p>We focus on the <code>ceph.1mb</code> data.</p>
 <pre class="sourceCode r"><code class="sourceCode r">geno &lt;-<span class="st"> </span>ceph.1mb[, -<span class="dv">316</span>]  ## drop one SNP leading to one missing LD value
 p &lt;-<span class="st"> </span><span class="kw">ncol</span>(geno)
@@ -108,17 +111,17 @@ geno</code></pre>
 ## Col names:  rs5993821 ... rs5747302</code></pre>
 <p>These data are drawn from the International HapMap Project and concern 602 SNPs<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> over a 1Mb region of chromosome 22 in sample of 90 Europeans.</p>
 <p>We can compute and display the LD between these SNPs.</p>
-<pre class="sourceCode r"><code class="sourceCode r">ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats=</span><span class="st">"R.squared"</span>, <span class="dt">depth=</span>p<span class="dv">-1</span>)
-<span class="kw">image</span>(ld.ceph, <span class="dt">lwd=</span><span class="dv">0</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">depth =</span> p<span class="dv">-1</span>)
+<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre>
 <p><img src="snpClust_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
 </div>
 <div id="adjacency-constrained-hierarchical-agglomerative-clustering" class="section level1">
 <h1 class="hasAnchor">
 <a href="#adjacency-constrained-hierarchical-agglomerative-clustering" class="anchor"></a>Adjacency-constrained Hierarchical Agglomerative Clustering</h1>
 <p>The <code>snpClust</code> function can handle genotype data as an input:</p>
-<pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">h=</span>p<span class="dv">-1</span>, <span class="dt">stats=</span><span class="st">"R.squared"</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">h =</span> p<span class="dv">-1</span>, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)</code></pre>
 <p>The above figure suggests that the LD signal is concentrated close to the diagonal. We can focus on a diagonal band with the bandwidth parameter <code>h</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">fitH &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">h=</span><span class="dv">100</span>, <span class="dt">stats=</span><span class="st">"R.squared"</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">fitH &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">h =</span> <span class="dv">100</span>, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)</code></pre>
 </div>
 <div id="output" class="section level1">
 <h1 class="hasAnchor">
@@ -141,19 +144,19 @@ geno</code></pre>
 <a href="#other-types-of-input" class="anchor"></a>Other types of input</h1>
 <p>In this section we show how the <code>snpClust</code> function can also be applied directly to LD values.</p>
 <pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="dv">100</span>
-ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats=</span><span class="st">"R.squared"</span>, <span class="dt">depth=</span>h)
-<span class="kw">image</span>(ld.ceph, <span class="dt">lwd=</span><span class="dv">0</span>)</code></pre>
+ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">depth =</span> h)
+<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre>
 <p><img src="snpClust_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
 <p>Due to numerical errors in the LD estimation, some of the estimated values are slightly larger than 1, so we round the estimates to 1e-10:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(ld.ceph<span class="dv">-1</span>)</code></pre>
 <pre><code>## [1] 1.332268e-15</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">ld.ceph &lt;-<span class="st"> </span><span class="kw">round</span>(ld.ceph, <span class="dt">digits=</span><span class="dv">10</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">ld.ceph &lt;-<span class="st"> </span><span class="kw">round</span>(ld.ceph, <span class="dt">digits =</span> <span class="dv">10</span>)</code></pre>
 <p>Note that when <code>snpClust</code> is called directly, this sanity check is performed internally before applying the classification algorithm.</p>
 <p>We can now apply <code>snpClust</code> to this LD matrix (of class dgCMatrix ie Matrix::dgCMatrix):</p>
 <pre class="sourceCode r"><code class="sourceCode r">fitL &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(ld.ceph, h)</code></pre>
 <p><code>snpClust</code> also handles inputs of class base::matrix:</p>
 <pre class="sourceCode r"><code class="sourceCode r">gmat &lt;-<span class="st"> </span><span class="kw">as</span>(geno, <span class="st">"matrix"</span>)
-fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, h, <span class="st">"R.squared"</span>)</code></pre>
+fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, h, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)</code></pre>
 </div>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
@@ -182,7 +185,7 @@ fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClu
 ## 
 ## other attached packages:
 ## [1] snpStats_1.26.0    Matrix_1.2-11      survival_2.41-3   
-## [4] matrixStats_0.52.2 adjclust_0.4.0    
+## [4] matrixStats_0.52.2 adjclust_0.4.2    
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_0.12.12               compiler_3.4.1            
@@ -203,7 +206,7 @@ fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClu
 ## [31] backports_1.1.0            Rsamtools_1.28.0          
 ## [33] htmltools_0.3.6            BiocGenerics_0.22.0       
 ## [35] GenomicRanges_1.28.5       GenomicAlignments_1.12.2  
-## [37] splines_3.4.1              SummarizedExperiment_1.6.3
+## [37] splines_3.4.1              SummarizedExperiment_1.6.4
 ## [39] stringi_1.1.5              RCurl_1.95-4.8</code></pre>
 </div>
 <div class="footnotes">

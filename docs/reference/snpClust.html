@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constrained Hierarchical Agglomerative Clustering of Single Nucleotide Polymorphisms — snpClust • adjclust</title>
+<title>Adjacency-constrained Clustering of Single Nucleotide Polymorphisms — snpClust • adjclust</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -71,6 +71,9 @@
       <a href="../articles/hicClust.html">Clustering of Hi-C contact maps</a>
     </li>
     <li>
+      <a href="../articles/notesCHAC.html">Notes on CHAC implementation in adjclust</a>
+    </li>
+    <li>
       <a href="../articles/snpClust.html">Inferring Linkage Disequilibrium blocks from genotypes</a>
     </li>
   </ul>
@@ -98,63 +101,75 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Constrained Hierarchical Agglomerative Clustering of Single Nucleotide Polymorphisms</h1>
+    <h1>Adjacency-constrained Clustering of Single Nucleotide Polymorphisms</h1>
     </div>
 
     
-    <p>Function to perform adjacency-constrained hierarchical agglomerative clustering of Single Nucleotide Polymorphisms</p>
+    <p>Adjacency-constrained hierarchical agglomerative clustering of Single 
+Nucleotide Polymorphisms based on Linkage Disequilibrium</p>
     
 
-    <pre class="usage"><span class='fu'>snpClust</span>(<span class='no'>x</span>, <span class='no'>h</span>, <span class='no'>stats</span>)</pre>
+    <pre class="usage"><span class='fu'>snpClust</span>(<span class='no'>x</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'>ncol</span>(<span class='no'>x</span>) - <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>either a genotype matrix of class snpStats::SnpMatrix/base::matrix or a linkage disequlibrium matrix of 
-class Matrix::dgCMatrix</p></td>
+      <td><p>either a genotype matrix of class snpStats::SnpMatrix/base::matrix 
+or a linkage disequlibrium matrix of class Matrix::dgCMatrix</p></td>
     </tr>
     <tr>
       <th>h</th>
-      <td><p>band width. It is assumed that the similarity between two items is 0 when these items are at a 
-distance of more than band width h</p></td>
+      <td><p>band width. If not provided, <code>h</code> is set to default value `p-1` 
+where `p` is the number of columns of `x`</p></td>
     </tr>
     <tr>
-      <th>stats</th>
-      <td><p>a character vector specifying the linkage disequilibrium measure to be calculated. This should contain one or 
-more of the strings: "LLR", "OR", "Q", "Covar", "D.prime", "R.squared" or "R"</p></td>
+      <th>&#8230;</th>
+      <td><p>Further arguments to be passed to the <code><a href='http://www.rdocumentation.org/packages/snpStats/topics/ld'>snpStats::ld</a></code> 
+function</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Function <code>snpClust</code> returns an object of class <code><a href='http://www.rdocumentation.org/packages/stats/topics/hclust'>hclust</a></code>.</p>
+    <p>Function <code>snpClust</code> returns an object of class 
+  <code><a href='http://www.rdocumentation.org/packages/stats/topics/hclust'>hclust</a></code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>snpClust</code> performs constrained hierarchichal agglomerative clustering of single nucleotide 
-polymorphisms. Constrained Hierarchical Agglomerative Clustering is hierarchical agglomerative
-clustering in which each observation is associated to a position, and the clustering is 
-constrained so as to merge only adjacent clusters.</p>
+    <p>Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+which each observation is associated to a position, and the clustering is 
+constrained so as only adjacent clusters are merged. SNPs are clustered based
+on their similarity as measured by the linkage disequilibrium.</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Dehman A. (2015) <em>Spatial Clustering of Linkage 
+  Desequilibrium Blocks for Genome-Wide Association Studies</em>, PhD thesis, 
+  Universite Paris Saclay.</p>
+<p>Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a 
+  blockwise approach in variable selection using linkage disequilibrium 
+  information. *BMC Bioinformatics* 16:148.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><code><a href='adjClust.html'>adjClust</a></code> <code><a href='http://www.rdocumentation.org/packages/snpStats/topics/ld'>ld</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## a very small example</span>
-<span class='fu'>library</span>(<span class='no'>snpStats</span>)
-<span class='fu'>data</span>(<span class='no'>testdata</span>)
+<span class='fu'>data</span>(<span class='no'>testdata</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"snpStats"</span>)
 
-<span class='co'>#Input as snpStats::SnpMatrix</span>
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='fl'>3</span>, <span class='st'>"R.squared"</span>)
+<span class='co'># input as snpStats::SnpMatrix</span>
+<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
 
-<span class='co'>#Input as base::matrix</span>
-<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='fu'>as.matrix</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>]), <span class='fl'>3</span>, <span class='st'>"R.squared"</span>)
+<span class='co'># input as base::matrix</span>
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='fu'>as.matrix</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>]), <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
 
-<span class='co'>#Input as Matrix::dgCMatrix</span>
-<span class='no'>ld</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/snpStats/topics/ld'>ld</a></span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>depth</span><span class='kw'>=</span><span class='fl'>3</span>, <span class='kw'>stats</span><span class='kw'>=</span><span class='st'>"R.squared"</span>)
-<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>ld</span>, <span class='fl'>3</span>)
-
-<span class='co'>## A less small example</span></div></pre>
+<span class='co'># input as Matrix::dgCMatrix</span>
+<span class='no'>ld</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>snpStats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/snpStats/topics/ld'>ld</a></span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>depth</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
+<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>ld</span>, <span class='fl'>3</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -164,6 +179,10 @@ constrained so as to merge only adjacent clusters.</p>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

@@ -2,51 +2,57 @@
 % Please edit documentation in R/snpClust.R
 \name{snpClust}
 \alias{snpClust}
-\title{Constrained Hierarchical Agglomerative Clustering of Single Nucleotide 
-Polymorphisms}
+\title{Adjacency-constrained Clustering of Single Nucleotide Polymorphisms}
 \usage{
-snpClust(x, h = NULL, stats = c("LLR", "OR", "Q", "Covar", "D.prime",
-  "R.squared", "R"))
+snpClust(x, h = ncol(x) - 1, ...)
 }
 \arguments{
 \item{x}{either a genotype matrix of class snpStats::SnpMatrix/base::matrix 
 or a linkage disequlibrium matrix of class Matrix::dgCMatrix}
 
-\item{h}{band width. If not provided, \code{h} is set to default value `p-1`.}
+\item{h}{band width. If not provided, \code{h} is set to default value `p-1` 
+where `p` is the number of columns of `x`}
 
-\item{stats}{a character vector specifying the linkage disequilibrium measure
-to be calculated ("LLR", "OR", "Q", "Covar", "D.prime", "R.squared" or "R").}
+\item{\dots}{Further arguments to be passed to the \code{snpStats::ld} 
+function}
 }
 \value{
 Function \code{snpClust} returns an object of class 
-\code{\link[stats]{hclust}}.
+  \code{\link[stats]{hclust}}.
 }
 \description{
-Function to perform adjacency-constrained hierarchical agglomerative 
-clustering of Single Nucleotide Polymorphisms
+Adjacency-constrained hierarchical agglomerative clustering of Single 
+Nucleotide Polymorphisms based on Linkage Disequilibrium
 }
 \details{
-\code{snpClust} performs constrained hierarchichal agglomerative clustering 
-of single nucleotide polymorphisms. Constrained Hierarchical Agglomerative 
-Clustering is hierarchical agglomerative clustering in which each observation
-is associated to a position, and the clustering is constrained so as to 
-merge only adjacent clusters.
+Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+which each observation is associated to a position, and the clustering is 
+constrained so as only adjacent clusters are merged. SNPs are clustered based
+on their similarity as measured by the linkage disequilibrium.
 }
 \examples{
 ## a very small example
-library(snpStats)
-data(testdata)
+data(testdata, package = "snpStats")
 
 # input as snpStats::SnpMatrix
-fit1 <- snpClust(Autosomes[1:200, 1:5], 3, "R.squared")
+fit1 <- snpClust(Autosomes[1:200, 1:5], h = 3, stats = "R.squared")
 
 # input as base::matrix
-fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), 3, "R.squared")
+fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), h = 3, stats = "R.squared")
 
 # input as Matrix::dgCMatrix
-ld <- ld(Autosomes[1:200, 1:5], depth=3, stats="R.squared")
+ld <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared")
 fit3 <- snpClust(ld, 3)
 
+}
+\references{
+Dehman A. (2015) \emph{Spatial Clustering of Linkage 
+  Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+  Universite Paris Saclay.
+
+Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a 
+  blockwise approach in variable selection using linkage disequilibrium 
+  information. *BMC Bioinformatics* 16:148.
 }
 \seealso{
 \code{\link{adjClust}} \code{\link[snpStats:ld]{ld}}

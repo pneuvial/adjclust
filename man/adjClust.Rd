@@ -2,7 +2,7 @@
 % Please edit documentation in R/adjclust.R
 \name{adjClust}
 \alias{adjClust}
-\title{Constrained Hierarchical Agglomerative Clustering}
+\title{Adjacency-constrained Clustering}
 \usage{
 adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
   blMin = 1, verbose = FALSE)
@@ -10,56 +10,71 @@ adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
 \arguments{
 \item{mat}{A similarity matrix or a dist object}
 
-\item{type}{Type of matrix : similarity or dissimilarity. Default to 
-\code{"similarity"}.}
+\item{type}{Type of matrix : similarity or dissimilarity. Defaults to 
+\code{"similarity"}}
 
-\item{h}{band width. It is assumed that the similarity between two items is 
-0 when these items are at a distance of more than band width h. Default value
-is \code{ncol(mat)-1}.}
+\item{h}{band width. It is assumed that the similarity between two items is 0
+when these items are at a distance of more than band width h. Default value
+is \code{ncol(mat)-1}}
 
 \item{blMin}{depth of clustering. It is the number of clusters below which 
-the algorithm stops. Default value is 1.}
+the algorithm stops. Default value is 1}
 
 \item{verbose}{Currently not used}
 }
 \value{
-Function \code{adjClust} returns an object of class 
-\code{\link[stats]{hclust}}.
+An object of class \code{\link[stats]{hclust}}
 }
 \description{
-Function to perform adjacency-constrained hierarchical agglomerative
-clustering
+Adjacency-constrained hierarchical agglomerative clustering
 }
 \details{
-\code{adjClust} performs constrained hierarchichal agglomerative clustering 
-which is hierarchical agglomerative clustering in which each observation is 
-associated to a position, and the clustering is constrained so as only 
-adjacent clusters are merged. These methods are useful in various application
-fields, including ecology (Quaternary data) and bioinformatics (e.g., in 
-Genome-Wide Association Studies (GWAS)).
+Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+which each observation is associated to a position, and the clustering is
+constrained so as only adjacent clusters are merged. These methods are useful
+in various application fields, including ecology (Quaternary data) and
+bioinformatics (e.g., in Genome-Wide Association Studies (GWAS)).
 
-The package proposes a fast implementation of the method that takes advantage
-of sparse similarity matrices (i.e., that have 0 entries outside of a 
-diagonal band of width \code{h}). The method is fully described in 
-(Dehman, 2015) and based on a kernel version of the algorithm. The different
-options for the implementation are avaiable in the package vignette entitled
-"Notes on CHAC implementation in adjclust".
+This function is a fast implementation of the method that takes advantage of 
+sparse similarity matrices (i.e., that have 0 entries outside of a diagonal 
+band of width \code{h}). The method is fully described in (Dehman, 2015) and 
+based on a kernel version of the algorithm. The different options for the 
+implementation are avaiable in the package vignette entitled "Notes on CHAC 
+implementation in adjclust".
 }
 \examples{
-sim <- matrix(c(1,0.1,0.2,0.3,0.1,1,0.4,0.5,0.2,0.4,1,0.6,0.3,0.5,0.6,1), nrow=4)
-h <- 3
-fit1 <- adjClust(sim, "similarity", h, 1, FALSE)
+sim <- matrix(
+c(1.0, 0.1, 0.2, 0.3,
+  0.1, 1.0 ,0.4 ,0.5,
+  0.2, 0.4, 1.0, 0.6, 
+  0.3, 0.5, 0.6, 1.0), nrow = 4)
+
+## similarity, full width
+fit1 <- adjClust(sim, "similarity")
 plot(fit1)
 
-dist <- as.dist(sqrt(2-(2*sim)))
-
-#Compatibility with dist objects
-fit2 <- adjClust(dist, "dissimilarity", h, 1, FALSE)
+## similarity, h < p-1
+fit2 <- adjClust(sim, "similarity", h = 2)
 plot(fit2)
 
+## dissimilarity
+dist <- as.dist(sqrt(2-(2*sim)))
+
+## dissimilarity, full width
+fit3 <- adjClust(dist, "dissimilarity")
+plot(fit3)
+
+## dissimilarity, h < p-1
+fit4 <- adjClust(dist, "dissimilarity", h = 2)
+plot(fit4)
 }
 \references{
 Dehman A. (2015) \emph{Spatial Clustering of Linkage 
-Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
-Universite Paris Saclay.
+  Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+  Universite Paris Saclay.
+}
+\seealso{
+\code{\link{snpClust}} to cluster SNPs based on linkage disequilibrium
+
+\code{\link{hicClust}} to cluster Hi-C data
 }

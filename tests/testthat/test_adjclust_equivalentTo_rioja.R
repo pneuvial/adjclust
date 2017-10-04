@@ -8,12 +8,11 @@ check_rioja <- function() {
   }
 }
 
-test_that("rioja and adjClust with full band give idenctical results on simmatrix.rda", {
+test_that("rioja and adjClust with full band give identical results on toy data", {
   check_rioja()
   
-  data("simmatrix", package="adjclust")
-  sim <- simmatrix
-  rownames(sim) <- colnames(sim) #to avoid dissimilarity error  
+  data("iris")
+  sim <- cor(t(iris[, 1:4]))
   p <- nrow(sim)
       
   dis_sq <- 2 - (2*sim)
@@ -28,11 +27,11 @@ test_that("rioja and adjClust with full band give idenctical results on simmatri
   fit4 <- adjClust(sim, "similarity")
   
   expect_equal(fit1$merge, fit2$merge)
-  expect_equal(fit1$height, fit2$height, tolerance=0.000001)
+  expect_equal(fit1$height, fit2$height, tolerance=0.00001)
   
   expect_equal(fit3$merge, fit2$merge)
-  expect_equal(fit3$height, fit2$height, tolerance=0.000001)
+  expect_equal(fit3$height, fit2$height, tolerance=0.00001)
   
   expect_equal(fit4$merge, fit2$merge)
-  expect_equal(fit4$height, fit2$height, tolerance=0.000001)
+  expect_equal(fit4$height, fit2$height, tolerance=0.00001)
 })

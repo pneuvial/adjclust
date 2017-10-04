@@ -1,3 +1,15 @@
+# Version 0.4.2 [2017-10-03]
+
+* Documentation cleanups
+* Removed objects "R2.100" and "Dprime.100" (can be obtained from the 
+  imported 'snpStats' package)
+* In 'snpClust': argument 'stat' is now passed to the 'snpStats::ld' function 
+  through '...'
+* Some code cleanups
+* Improved handling of default value for 'h' in 'adjclust' for 'dist' objects
+* Renamed 'prevfit' into the more explicit 'res_adjclust_0.3.0'
+* Dropped 'simmatrix' toy data set (now generated on the fly in tests)
+
 # Version 0.4.1 [2017-09-15]
 
 * Cleanups in Hi-C and LD vignettes and corresponding tests
@@ -12,7 +24,8 @@
 * Implemented interface to handle either kernel or dissimilarities
 * Implemented wrapper for SNP and Hi-C data
 * Documented the package and created vignettes for the different use cases
-* Added scripts to increase package coverage and test the equivalence with rioja for the small dimensional case
+* Added scripts to increase package coverage and test the equivalence with 
+  rioja for the small dimensional case
 * Cleaned up code to improve efficiency and removed unnecessary scripts and functions
 
 # Version 0.3.0 [2017-02-13]
