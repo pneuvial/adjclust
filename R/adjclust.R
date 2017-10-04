@@ -215,6 +215,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
 #' @param ... for \code{\link{plot}}, arguments passed to the function 
 #' \code{\link[stats]{plot.dendrogram}}. Default values for \code{type} and
 #' \code{leaflab} are respectively set to \code{"triangle"} and \code{"none"}
+#' @importFrom stats as.hclust
 #' @export
 as.hclust.chac <- function(x, ...) {
   res <- x
@@ -243,6 +244,8 @@ summary.chac <- function(object, ...) {
 #' @param x an object of class chac
 #' @param y not used
 #' @export
+#' @importFrom graphics plot
+#' @importFrom stats as.dendrogram
 plot.chac <- function(x, y, ...) {
   args <- list(...)
   args$x <- as.dendrogram(as.hclust(x))
