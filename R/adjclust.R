@@ -241,7 +241,6 @@ summary.chac <- function(object, ...) {
 
 #' @rdname adjClust
 #' @aliases plot.chac
-#' @param x an object of class chac
 #' @param y not used
 #' @export
 #' @importFrom graphics plot

@@ -43,8 +43,6 @@ the algorithm stops. Default value is 1}
 \item{object}{an object of class chac}
 
 \item{y}{not used}
-
-\item{x}{an object of class chac}
 }
 \value{
 An object of class \code{\link[stats]{hclust}}
