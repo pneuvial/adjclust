@@ -16,7 +16,7 @@ adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
 
 \method{print}{chac}(x, ...)
 
-head.chac(x, ...)
+\method{head}{chac}(x, ...)
 
 \method{summary}{chac}(object, ...)
 
@@ -48,7 +48,7 @@ the algorithm stops. Default value is 1}
 \item{y}{not used}
 }
 \value{
-An object of class \code{\link[stats]{hclust}}
+An object of class \code{\link{chac}}.
 }
 \description{
 Adjacency-constrained hierarchical agglomerative clustering

@@ -133,15 +133,19 @@ function</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Function <code>snpClust</code> returns an object of class 
-  <code><a href='http://www.rdocumentation.org/packages/stats/topics/hclust'>hclust</a></code>.</p>
+    <p>An object of class <code>chac</code> (when no LD value is missing)</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+    <p>Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in 
 which each observation is associated to a position, and the clustering is 
 constrained so as only adjacent clusters are merged. SNPs are clustered based
 on their similarity as measured by the linkage disequilibrium.</p>
+<p>In the special case where genotypes are given as input and the corresponding
+LD matrix has missing entries, the clustering cannot be performed. This can
+typically happen when there is insufficient variability in the sample
+genotypes. In this special case, the indices of the SNP pairs which yield
+missing values are returned</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

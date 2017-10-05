@@ -29,10 +29,11 @@ which each observation is associated to a position, and the clustering is
 constrained so as only adjacent clusters are merged. SNPs are clustered based
 on their similarity as measured by the linkage disequilibrium.
 
-In the special case where genotypes are given as input and the
-  corresponding LD matrix has missing entries, the clustering cannot be
-  performed. In this special case, the indices of the SNP pairs which yield
-  missing values are returned.
+In the special case where genotypes are given as input and the corresponding
+LD matrix has missing entries, the clustering cannot be performed. This can
+typically happen when there is insufficient variability in the sample
+genotypes. In this special case, the indices of the SNP pairs which yield
+missing values are returned
 }
 \examples{
 ## a very small example

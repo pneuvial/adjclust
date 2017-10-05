@@ -21,8 +21,7 @@ function when \code{x} is a text file name. If not provided, the text file
 is supposed to be separated by tabulations, with no header.}
 }
 \value{
-The function \code{hicClust} returns an object of class 
-  \code{\link[stats]{hclust}}.
+An object of class \code{\link{chac}}.
 }
 \description{
 Adjacency-constrained hierarchical agglomerative clustering of Hi-C contact
