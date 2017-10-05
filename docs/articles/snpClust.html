@@ -127,7 +127,7 @@ fitH</code></pre></div>
 ## Call:
 ## adjClust(mat = x, type = "similarity", h = h)
 ## 
-## Cluster method   : adjclust-heaps 
+## Cluster method   : snpClust 
 ## Number of objects: 602</code></pre>
 </div>
 <div id="output" class="section level1">
@@ -135,27 +135,7 @@ fitH</code></pre></div>
 <a href="#output" class="anchor"></a>Output</h1>
 <p>The output of the <code>snpClust</code> is of class <code>chac</code>. In particular, it can be plotted as a dendrogram silently relying on the function <code>plot.dendrogram</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(fitH, <span class="dt">type =</span> <span class="st">"rectangle"</span>, <span class="dt">leaflab =</span> <span class="st">"perpendicular"</span>)</code></pre></div>
-<pre><code>## Warning in graphics:::plotHclust(n1, merge, height, order(x$order), hang, :
-## graphical parameter "type" is obsolete</code></pre>
-<pre><code>## Warning in graphics:::plotHclust(n1, merge, height, order(x$order), hang, :
-## "leaflab" is not a graphical parameter</code></pre>
-<pre><code>## Warning in graphics:::plotHclust(n1, merge, height, order(x$order), hang, :
-## graphical parameter "type" is obsolete</code></pre>
-<pre><code>## Warning in graphics:::plotHclust(n1, merge, height, order(x$order), hang, :
-## "leaflab" is not a graphical parameter</code></pre>
-<pre><code>## Warning in axis(2, at = pretty(range(height)), ...): graphical parameter
-## "type" is obsolete</code></pre>
-<pre><code>## Warning in axis(2, at = pretty(range(height)), ...): "leaflab" is not a
-## graphical parameter</code></pre>
-<pre><code>## Warning in title(main = main, sub = sub, xlab = xlab, ylab = ylab, ...):
-## graphical parameter "type" is obsolete</code></pre>
-<pre><code>## Warning in title(main = main, sub = sub, xlab = xlab, ylab = ylab, ...):
-## "leaflab" is not a graphical parameter</code></pre>
 <p><img src="snpClust_files/figure-html/dendro-1.png" width="672"></p>
-<p>It can also be converted to an <code>hclust</code> object:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitH.hc &lt;-<span class="st"> </span><span class="kw">as.hclust</span>(fitH)
-<span class="kw">plot</span>(fitH.hc)</code></pre></div>
-<p><img src="snpClust_files/figure-html/hclust-1.png" width="672"></p>
 <p>Moreover, the output contains an element named <code>merge</code> which describes the successive merges of the clustering, and an element <code>gains</code> which gives the improvement in the criterion optimized by the clustering at each successive merge.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">cbind</span>(fitH$merge, fitH$gains))</code></pre></div>
 <pre><code>##      [,1] [,2] [,3]

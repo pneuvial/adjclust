@@ -81,7 +81,6 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#adjclust-adjacency-constrained-clustering-of-a-block-diagonal-similarity-matrix" class="anchor"></a>adjclust: Adjacency-constrained clustering of a block-diagonal similarity matrix</h1></div>
 <p><code>adjclust</code> is a package that provides methods to perform adjacency-constrained hierarchical agglomerative clustering. Adjacency-constrained hierarchical agglomerative clustering is hierarchical agglomerative clustering (HAC) in which each observation is associated to a position, and the clustering is constrained so as only adjacent clusters are merged. It is a common method used widely in various application fields including ecology (Quaternary data) and bioinformatics (e.g. Genome Wide Association Studies or Hi-C data analysis).</p>
-<p><em>Version 0.4.0 of this package was completed as a part of the <a href="https://summerofcode.withgoogle.com/projects/#4961904920363008">Google Summer of Code 2017</a> program</em></p>
 <p><code>adjclust</code> provides three user level functions: <code>adjClust</code>, <code>snpClust</code> and <code>hicClust</code>:</p>
 <ul>
 <li>
@@ -93,11 +92,12 @@ sim &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw
 h &lt;-<span class="st"> </span><span class="dv">3</span>
 fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/adjClust.html">adjClust</a></span>(sim, <span class="st">"similarity"</span>, h, <span class="dv">1</span>, <span class="ot">FALSE</span>)
 <span class="kw">plot</span>(fit)</code></pre></div>
-<p>The result is of class <code>hclust</code>. Therefore, it can be plotted as a dendogram (as shown above). Successive merge and heights of clustering can be obtained by <code>fit$merge</code> and <code>fit$height</code> respectively.</p>
+<p>The result is of class <code>chac</code>. It can be plotted as a dendogram (as shown above). Successive merge and heights of clustering can be obtained by <code>fit$merge</code> and <code>fit$height</code> respectively.</p>
 <ul>
 <li><p><code>snpClust</code> performs adjacency-constrained HAC for specific application of Genome Wide Association Studies (GWAS). See <a href="vignettes/snpClust.Rmd">GWAS Vignette</a> for details.</p></li>
 <li><p><code>hicClust</code>function performs adjacency-constrained HAC for specific application of Hi-C data analysis. See <a href="vignettes/hicClust.Rmd">Hi-C Vignette</a> for details.</p></li>
 </ul>
+<p><em>Version 0.4.0 of this package was completed by Shubham Chaturvedi as a part of the <a href="https://summerofcode.withgoogle.com/projects/#4961904920363008">Google Summer of Code 2017</a> program</em></p>
 </div>
   </div>
 

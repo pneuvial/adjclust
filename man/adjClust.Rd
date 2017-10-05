@@ -2,25 +2,10 @@
 % Please edit documentation in R/adjclust.R
 \name{adjClust}
 \alias{adjClust}
-\alias{as.hclust.chac}
-\alias{print.chac}
-\alias{head.chac}
-\alias{summary.chac}
-\alias{plot.chac}
 \title{Adjacency-constrained Clustering}
 \usage{
 adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
   blMin = 1, verbose = FALSE)
-
-\method{as.hclust}{chac}(x, ...)
-
-\method{print}{chac}(x, ...)
-
-\method{head}{chac}(x, ...)
-
-\method{summary}{chac}(object, ...)
-
-\method{plot}{chac}(x, y, ...)
 }
 \arguments{
 \item{mat}{A similarity matrix or a dist object}
@@ -36,16 +21,6 @@ is \code{ncol(mat)-1}}
 the algorithm stops. Default value is 1}
 
 \item{verbose}{Currently not used}
-
-\item{x}{an object of class chac}
-
-\item{...}{for \code{\link{plot}}, arguments passed to the function 
-\code{\link[stats]{plot.dendrogram}}. Default values for \code{type} and
-\code{leaflab} are respectively set to \code{"triangle"} and \code{"none"}}
-
-\item{object}{an object of class chac}
-
-\item{y}{not used}
 }
 \value{
 An object of class \code{\link{chac}}.

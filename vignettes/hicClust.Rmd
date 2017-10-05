@@ -72,12 +72,6 @@ silently relying on the function `plot.dendrogram`:
 plot(fitB)
 ```
 
-
-```{r hclust}
-fitB.hclust <- as.hclust(fitB)
-plot(fitB.hclust, labels = FALSE, hang = -1, ann = FALSE)
-```
-
 Moreover, the output contains an element named `merge` which describes the 
 successive merges of the clustering, and an element `gains` which gives the 
 improvement in the criterion optimized by the clustering at each successive 

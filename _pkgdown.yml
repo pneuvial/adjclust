@@ -4,9 +4,13 @@ reference:
       - adjClust
       - hicClust
       - snpClust
+  - title: "Methods for class 'chac'"
+    contents:
+      - chac
   - title: "Data objects"
     contents:
       - hic_imr90_40_XX
+      - res_adjclust_0.3.0
     exclude: 
       - prevfit
       

@@ -85,11 +85,6 @@ plotted as a dendrogram silently relying on the function `plot.dendrogram`:
 plot(fitH, type = "rectangle", leaflab = "perpendicular")
 ```
 
-It can also be converted to an `hclust` object:
-```{r hclust}
-fitH.hc <- as.hclust(fitH)
-plot(fitH.hc)
-```
 
 Moreover, the output contains an element named `merge` which describes the 
 successive merges of the clustering, and an element `gains` which gives the 
