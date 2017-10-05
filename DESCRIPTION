@@ -1,5 +1,5 @@
 Package: adjclust
-Maintainer: Pierre Neuvial <pierre.neuvial@math.cnrs.fr>
+Maintainer: Pierre Neuvial <pierre.neuvial@math.univ-toulouse.fr>
 Authors@R: as.person(c(
     "Christophe Ambroise [aut]",
     "Shubham Chaturvedi [aut]",

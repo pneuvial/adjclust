@@ -33,7 +33,7 @@ fit <- adjClust(sim, "similarity", h)
 plot(fit)
 ```
 
-![](README-unnamed-chunk-2-1.png)
+![](README-adjClust-1.png)
 
 The result is of class `chac`. It can be plotted as a dendogram (as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
 

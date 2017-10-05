@@ -30,7 +30,7 @@ devtools::install_github("pneuvial/adjclust")
 
 `adjClust` performs adjacency-constrained HAC for standard and sparse, similarity and dissimilarity matrices and `dist` objects. `Matrix::dgCMatrix` and `Matrix::dsCMatrix` are the supported sparse matrix classes. Let's look at a basic example
 
-```{r}
+```{r adjClust}
 library("adjclust")
 
 sim <- matrix(c(1.0, 0.5, 0.2, 0.1,

@@ -5,7 +5,7 @@ NULL
 #' 
 #' Adjacency-constrained hierarchical agglomerative clustering
 #' 
-#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+#' Adjacency-constrained hierarchical agglomerative clustering (HAC) is HAC in
 #' which each observation is associated to a position, and the clustering is
 #' constrained so as only adjacent clusters are merged. These methods are useful
 #' in various application fields, including ecology (Quaternary data) and
@@ -15,7 +15,7 @@ NULL
 #' sparse similarity matrices (i.e., that have 0 entries outside of a diagonal 
 #' band of width \code{h}). The method is fully described in (Dehman, 2015) and 
 #' based on a kernel version of the algorithm. The different options for the 
-#' implementation are avaiable in the package vignette entitled "Notes on CHAC 
+#' implementation are available in the package vignette entitled "Notes on CHAC 
 #' implementation in adjclust".
 #' 
 #' @param mat A similarity matrix or a dist object
@@ -34,7 +34,7 @@ NULL
 #' @seealso \code{\link{hicClust}} to cluster Hi-C data
 #'   
 #' @references Dehman A. (2015) \emph{Spatial Clustering of Linkage 
-#'   Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+#'   Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
 #'   Universite Paris Saclay.
 #'   
 #' @examples

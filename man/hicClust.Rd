@@ -28,7 +28,7 @@ Adjacency-constrained hierarchical agglomerative clustering of Hi-C contact
 maps
 }
 \details{
-Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+Adjacency-constrained hierarchical agglomerative clustering (HAC) is HAC in
 which each observation is associated to a position, and the clustering is 
 constrained so as only adjacent clusters are merged. Genomic regions (loci)
 are clustered according to information provided by high-throughput
@@ -53,7 +53,7 @@ res3 <- hicClust(system.file("extdata", "sample.txt", package = "adjclust"))
 }
 \references{
 Dehman A. (2015) \emph{Spatial Clustering of Linkage 
-  Desequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+  Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
   Universite Paris Saclay.
 
 Servant N. \emph{et al} (2012). \emph{HiTC : Exploration of 
