@@ -13,7 +13,7 @@
 
 \method{print}{chac}(x, ...)
 
-head.chac(x, ...)
+\method{head}{chac}(x, ...)
 
 \method{summary}{chac}(object, ...)
 

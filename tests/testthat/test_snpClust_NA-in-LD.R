@@ -3,7 +3,7 @@ library("snpStats")
 
 context("Case of NA values in LD estimates")
 
-test_that("NA values in LD estimates gives an error in 'snpClust'", {
+test_that("NA values in LD estimates gives a warning/error in 'snpClust'", {
     data("ld.example", package = "snpStats")
     p <- ncol(ceph.1mb)
     h <- p-1
@@ -13,7 +13,7 @@ test_that("NA values in LD estimates gives an error in 'snpClust'", {
     ## that one of the LD estimates is NA due to the lack of genetic diversity in
     ## the sample:
     expect_true(any(is.na(ld.ceph)))
-    expect_error(snpClust(ceph.1mb, h = h, stats = "R.squared"))
+    expect_warning(snpClust(ceph.1mb, h = h, stats = "R.squared"))
     expect_error(snpClust(ld.ceph, h = h))
 })
 

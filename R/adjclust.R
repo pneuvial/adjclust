@@ -204,7 +204,8 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
                  labels = paste("",1:p),
                  method = "adjClust",
                  call = match.call(),
-                 dist.method = attr(D, "method"))
+                 dist.method = attr(D, "method"),
+                 data = mat)
     class(tree) <- c("chac")
     return(tree)
 }

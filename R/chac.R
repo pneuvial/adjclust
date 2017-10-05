@@ -28,6 +28,7 @@ print.chac <- function(x, ...) {
 
 #' @rdname chac
 #' @aliases head.chac
+#' @importFrom utils head
 #' @export
 head.chac <- function(x, ...) {
     sapply(x, head)
