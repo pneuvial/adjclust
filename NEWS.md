@@ -1,4 +1,4 @@
-# Version 0.4.2 [2017-10-05fit]
+# Version 0.4.2 [2017-10-05]
 
 * Added 'chac' S3 class and corresponding 'plot' and 'summary' methods
 * Documentation cleanups
