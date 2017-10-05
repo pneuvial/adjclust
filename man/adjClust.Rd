@@ -4,6 +4,7 @@
 \alias{adjClust}
 \alias{as.hclust.chac}
 \alias{print.chac}
+\alias{head.chac}
 \alias{summary.chac}
 \alias{plot.chac}
 \title{Adjacency-constrained Clustering}
@@ -14,6 +15,8 @@ adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
 \method{as.hclust}{chac}(x, ...)
 
 \method{print}{chac}(x, ...)
+
+head.chac(x, ...)
 
 \method{summary}{chac}(object, ...)
 

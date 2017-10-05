@@ -28,7 +28,7 @@ NULL
 #'   the algorithm stops. Default value is 1
 #' @param verbose Currently not used
 #'   
-#' @return An object of class \code{\link[stats]{hclust}}
+#' @return An object of class \code{\link{chac}}.
 #'   
 #' @seealso \code{\link{snpClust}} to cluster SNPs based on linkage disequilibrium
 #' @seealso \code{\link{hicClust}} to cluster Hi-C data
@@ -202,7 +202,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
                  seqdist = height,
                  order = 1:p,
                  labels = paste("",1:p),
-                 method = "adjclust-heaps",
+                 method = "adjClust",
                  call = match.call(),
                  dist.method = attr(D, "method"))
     class(tree) <- c("chac")
@@ -232,11 +232,18 @@ print.chac <- function(x, ...) {
 }
 
 #' @rdname adjClust
+#' @aliases head.chac
+#' @export
+head.chac <- function(x, ...) {
+    sapply(x, head)
+}
+
+#' @rdname adjClust
 #' @aliases summary.chac
 #' @param object an object of class chac
 #' @export
 summary.chac <- function(object, ...) {
-  print(object)
+  summary.default(object)
 }
 
 #' @rdname adjClust

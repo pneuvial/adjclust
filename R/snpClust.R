@@ -3,11 +3,18 @@
 #' Adjacency-constrained hierarchical agglomerative clustering of Single 
 #' Nucleotide Polymorphisms based on Linkage Disequilibrium
 #' 
-#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+#' Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in 
 #' which each observation is associated to a position, and the clustering is 
 #' constrained so as only adjacent clusters are merged. SNPs are clustered based
 #' on their similarity as measured by the linkage disequilibrium.
 #' 
+#' In the special case where genotypes are given as input and the corresponding
+#' LD matrix has missing entries, the clustering cannot be performed. This can
+#' typically happen when there is insufficient variability in the sample
+#' genotypes. In this special case, the indices of the SNP pairs which yield
+#' missing values are returned
+#' 
+
 #' @param x either a genotype matrix of class snpStats::SnpMatrix/base::matrix 
 #'   or a linkage disequlibrium matrix of class Matrix::dgCMatrix
 #'   
@@ -17,8 +24,7 @@
 #' @param \dots Further arguments to be passed to the \code{snpStats::ld} 
 #'   function
 #'   
-#' @return Function \code{snpClust} returns an object of class 
-#'   \code{\link[stats]{hclust}}.
+#' @return An object of class \code{\link{chac}} (when no LD value is missing)
 #'   
 #' @seealso \code{\link{adjClust}} \code{\link[snpStats:ld]{ld}}
 #'   
@@ -81,8 +87,8 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
         x <- round(x, digits = 10)
         if (any(is.na(x))) {
             ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)
-            print(utils::str(ww))
-            stop("Missing value(s) or NaN(s) in LD estimates (indices are printed above)")
+            warning(" Clustering could not be performed due to missing value(s) or NaN(s) in LD estimates. Returning these indices")
+            return(ww)
         }
     }
     if (any(is.na(x))) {
@@ -90,6 +96,9 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
     }
     diag(x) <- 1
     res <- adjClust(x, type = "similarity", h = h)
+    res$method <- "snpClust"
     
     return(res)
 }
+
+    

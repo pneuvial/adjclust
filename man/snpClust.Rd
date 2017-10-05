@@ -17,18 +17,22 @@ where `p` is the number of columns of `x`}
 function}
 }
 \value{
-Function \code{snpClust} returns an object of class 
-  \code{\link[stats]{hclust}}.
+An object of class \code{\link{chac}} (when no LD value is missing)
 }
 \description{
 Adjacency-constrained hierarchical agglomerative clustering of Single 
 Nucleotide Polymorphisms based on Linkage Disequilibrium
 }
 \details{
-Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in
+Adjacency-constrained hierarchichal agglomerative clustering (HAC) is HAC in 
 which each observation is associated to a position, and the clustering is 
 constrained so as only adjacent clusters are merged. SNPs are clustered based
 on their similarity as measured by the linkage disequilibrium.
+
+In the special case where genotypes are given as input and the
+  corresponding LD matrix has missing entries, the clustering cannot be
+  performed. In this special case, the indices of the SNP pairs which yield
+  missing values are returned.
 }
 \examples{
 ## a very small example

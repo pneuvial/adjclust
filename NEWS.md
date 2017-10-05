@@ -1,5 +1,6 @@
-# Version 0.4.2 [2017-10-03]
+# Version 0.4.2 [2017-10-05fit]
 
+* Added 'chac' S3 class and corresponding 'plot' and 'summary' methods
 * Documentation cleanups
 * Removed objects "R2.100" and "Dprime.100" (can be obtained from the 
   imported 'snpStats' package)

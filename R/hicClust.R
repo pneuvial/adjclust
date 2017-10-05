@@ -22,8 +22,7 @@
 #'   function when \code{x} is a text file name. If not provided, the text file 
 #'   is supposed to be separated by tabulations, with no header.
 #'   
-#' @return The function \code{hicClust} returns an object of class 
-#'   \code{\link[stats]{hclust}}.
+#' @return An object of class \code{\link{chac}}.
 #'   
 #' @seealso \code{\link{adjClust}} \code{\link[HiTC:HTCexp]{HTCexp}}
 #'   
@@ -98,6 +97,8 @@ hicClust <- function(x, h = NULL, ...) {
         
         if (is.null(h)) h <- p-1  
         res <- adjClust(m, type = "similarity", h = h)
+        res$method <- "hicClust"
+        
         return(res)
     }
 }
