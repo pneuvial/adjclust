@@ -46,3 +46,6 @@ vignettes/*.pdf
 
 src/*.o
 src/*.so
+
+fig
+localTests

@@ -8,7 +8,7 @@ snpClust(x, h = ncol(x) - 1, ...)
 }
 \arguments{
 \item{x}{either a genotype matrix of class snpStats::SnpMatrix/base::matrix 
-or a linkage disequlibrium matrix of class Matrix::dgCMatrix}
+or a linkage disequilibrium matrix of class Matrix::dgCMatrix}
 
 \item{h}{band width. If not provided, \code{h} is set to default value `p-1` 
 where `p` is the number of columns of `x`}

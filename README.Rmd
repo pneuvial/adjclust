@@ -1,5 +1,8 @@
 ---
-output: github_document
+output: 
+  github_document: default
+  html_document:
+    self_contained: no
 ---
 
 ```{r, echo = FALSE}
