@@ -8,8 +8,8 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
                  email="pierre.neuvial@math.univ-toulouse.fr"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Villa-Vialaneix", role="aut"))
-Date: 2017-10-05
-Version: 0.4.2
+Date: 2017-10-13
+Version: 0.5.0
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Adjacency-constrained clustering of a block-diagonal similarity
