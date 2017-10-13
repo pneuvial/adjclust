@@ -38,7 +38,7 @@ head.chac <- function(x, ...) {
 #' @aliases summary.chac
 #' @export
 summary.chac <- function(object, ...) {
-    summary.default(object)
+    print(object)
 }
 
 #' @rdname chac
