@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adjacency-constrained clustering of a block-diagonal similarity matrix • adjclust</title>
+<title>Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix • adjclust</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
@@ -91,15 +91,15 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install adjclust from github with:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools::<span class="kw">install_github</span>(<span class="st">"pneuvial/adjclust"</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
+devtools::<span class="kw">install_github</span>(<span class="st">"pneuvial/adjclust"</span>)</code></pre></div>
 </div>
 <div id="adjclust" class="section level2">
 <h2 class="hasAnchor">
 <a href="#adjclust" class="anchor"></a><code>adjClust</code>
 </h2>
 <p><code>adjClust</code> performs adjacency-constrained HAC for standard and sparse, similarity and dissimilarity matrices and <code>dist</code> objects. <code>Matrix::dgCMatrix</code> and <code>Matrix::dsCMatrix</code> are the supported sparse matrix classes. Let’s look at a basic example</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)
 
 sim &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>,
                 <span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>,
@@ -107,7 +107,7 @@ sim &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw
                 <span class="fl">0.1</span>, <span class="fl">0.2</span> ,<span class="fl">0.6</span> ,<span class="fl">1.0</span>), <span class="dt">nrow=</span><span class="dv">4</span>)
 h &lt;-<span class="st"> </span><span class="dv">3</span>
 fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/adjClust.html">adjClust</a></span>(sim, <span class="st">"similarity"</span>, h)
-<span class="kw">plot</span>(fit)</code></pre>
+<span class="kw">plot</span>(fit)</code></pre></div>
 <p><img src="README-adjClust-1.png" width="672"></p>
 <p>The result is of class <code>chac</code>. It can be plotted as a dendogram (as shown above). Successive merge and heights of clustering can be obtained by <code>fit$merge</code> and <code>fit$height</code> respectively.</p>
 </div>
@@ -116,18 +116,18 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/adjClust.h
 <a href="#snpclust" class="anchor"></a><code>snpClust</code>
 </h2>
 <p><code>snpClust</code> performs adjacency-constrained HAC for specific application of Genome Wide Association Studies (GWAS). A minimal example is given below. See <a href="vignettes/snpClust.Rmd">GWAS Vignette</a> for details.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"snpStats"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"snpStats"</span>)
 <span class="co">#&gt; Loading required package: survival</span>
 <span class="co">#&gt; Loading required package: Matrix</span>
 <span class="kw">data</span>(<span class="st">"ld.example"</span>, <span class="dt">package =</span> <span class="st">"snpStats"</span>)
 geno &lt;-<span class="st"> </span>ceph.1mb[, -<span class="dv">316</span>]  ## drop one SNP leading to one missing LD value
 h &lt;-<span class="st"> </span><span class="dv">100</span>
 ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">depth =</span> h)
-<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre>
+<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre></div>
 <p><img src="README-snpClust-1.png" width="672"></p>
-<pre class="sourceCode r"><code class="sourceCode r">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">h =</span> h)
-<span class="kw">plot</span>(fit)</code></pre>
+<span class="kw">plot</span>(fit)</code></pre></div>
 <p><img src="README-snpClust-2.png" width="672"></p>
 </div>
 <div id="hicclust" class="section level2">
@@ -135,17 +135,17 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/snpClust.h
 <a href="#hicclust" class="anchor"></a><code>hicClust</code>
 </h2>
 <p><code>hicClust</code> performs adjacency-constrained HAC for specific application of Hi-C data analysis. A minimal example is given below. See <a href="vignettes/hicClust.Rmd">Hi-C Vignette</a> for details.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"HiTC"</span>)</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"hic_imr90_40_XX"</span>, <span class="dt">package =</span> <span class="st">"adjclust"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"HiTC"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"hic_imr90_40_XX"</span>, <span class="dt">package =</span> <span class="st">"adjclust"</span>)
 binned &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/binningC">binningC</a></span>(hic_imr90_40_XX, <span class="dt">binsize =</span> <span class="fl">5e5</span>)
 <span class="co">#&gt; Bin size 'xgi' =501579 [1x501579]</span>
 <span class="co">#&gt; Bin size 'ygi' =501579 [1x501579]</span>
 <span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/mapC">mapC</a></span>(binned)
-<span class="co">#&gt; minrange= 12  - maxrange= 1022</span></code></pre>
+<span class="co">#&gt; minrange= 12  - maxrange= 1022</span></code></pre></div>
 <p><img src="README-hicClust-1.png" width="672"></p>
-<pre class="sourceCode r"><code class="sourceCode r">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 fitB &lt;-<span class="st"> </span><span class="kw"><a href="reference/hicClust.html">hicClust</a></span>(binned)
-<span class="kw">plot</span>(fitB)</code></pre>
+<span class="kw">plot</span>(fitB)</code></pre></div>
 <p><img src="README-hicClust-2.png" width="672"></p>
 </div>
 <div id="credits" class="section level2">

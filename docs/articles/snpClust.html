@@ -81,7 +81,7 @@
       <h1>Inferring Linkage Disequilibrium blocks from genotypes</h1>
                         <h4 class="author">Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix</h4>
             
-            <h4 class="date">2017-10-06</h4>
+            <h4 class="date">2017-10-13</h4>
           </div>
 
     
@@ -91,38 +91,38 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>In this vignette we demonstrate the use of <code>snpClust</code> function in the <code>adjclust</code> package. <code>snpClust</code> performs adjacency-constrained hierarchical clustering of single nucleotide polymorphisms (SNPs), where the similarity between SNPs is defined by linkage disequilibrium (LD).</p>
-<p>This function implements the algorithm described in the third chapter of [2]. It is an extension of the algorithm described in [3]. Denoting by <span class="math">\(p\)</span> the number of SNPs to cluster and assuming that the similarity between SNPs whose indices are more distant than <span class="math">\(h\)</span>, its time complexity is <span class="math">\(O(p (\log(p) + h))\)</span>, and its space complexity is <span class="math">\(O(hp)\)</span>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)</code></pre>
+<p>This function implements the algorithm described in the third chapter of [2]. It is an extension of the algorithm described in [3]. Denoting by <span class="math inline">\(p\)</span> the number of SNPs to cluster and assuming that the similarity between SNPs whose indices are more distant than <span class="math inline">\(h\)</span>, its time complexity is <span class="math inline">\(O(p (\log(p) + h))\)</span>, and its space complexity is <span class="math inline">\(O(hp)\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)</code></pre></div>
 </div>
 <div id="loading-and-displaying-genotype-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#loading-and-displaying-genotype-data" class="anchor"></a>Loading and displaying genotype data</h1>
 <p>The begining of this vignette closely follows the “LD vignette” of the SnpStats package [1]. First, we load genotype data.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"matrixStats"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"matrixStats"</span>)
 <span class="kw">library</span>(<span class="st">"snpStats"</span>)
-<span class="kw">data</span>(<span class="st">"ld.example"</span>, <span class="dt">package =</span> <span class="st">"snpStats"</span>)</code></pre>
+<span class="kw">data</span>(<span class="st">"ld.example"</span>, <span class="dt">package =</span> <span class="st">"snpStats"</span>)</code></pre></div>
 <p>We focus on the <code>ceph.1mb</code> data.</p>
-<pre class="sourceCode r"><code class="sourceCode r">geno &lt;-<span class="st"> </span>ceph.1mb[, -<span class="dv">316</span>]  ## drop one SNP leading to one missing LD value
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno &lt;-<span class="st"> </span>ceph.1mb[, -<span class="dv">316</span>]  ## drop one SNP leading to one missing LD value
 p &lt;-<span class="st"> </span><span class="kw">ncol</span>(geno)
 nSamples &lt;-<span class="st"> </span><span class="kw">nrow</span>(geno)
-geno</code></pre>
+geno</code></pre></div>
 <pre><code>## A SnpMatrix with  90 rows and  602 columns
 ## Row names:  NA06985 ... NA12892 
 ## Col names:  rs5993821 ... rs5747302</code></pre>
 <p>These data are drawn from the International HapMap Project and concern 602 SNPs<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> over a 1Mb region of chromosome 22 in sample of 90 Europeans.</p>
 <p>We can compute and display the LD between these SNPs.</p>
-<pre class="sourceCode r"><code class="sourceCode r">ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">depth =</span> p<span class="dv">-1</span>)
-<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">depth =</span> p<span class="dv">-1</span>)
+<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre></div>
 <p><img src="snpClust_files/figure-html/LD-1.png" width="672"></p>
 </div>
 <div id="adjacency-constrained-hierarchical-agglomerative-clustering" class="section level1">
 <h1 class="hasAnchor">
 <a href="#adjacency-constrained-hierarchical-agglomerative-clustering" class="anchor"></a>Adjacency-constrained Hierarchical Agglomerative Clustering</h1>
 <p>The <code>snpClust</code> function can handle genotype data as an input:</p>
-<pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)</code></pre></div>
 <p>The above figure suggests that the LD signal is concentrated close to the diagonal. We can focus on a diagonal band with the bandwidth parameter <code>h</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">fitH &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">h =</span> <span class="dv">100</span>, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)
-fitH</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitH &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">h =</span> <span class="dv">100</span>, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)
+fitH</code></pre></div>
 <pre><code>## 
 ## Call:
 ## adjClust(mat = x, type = "similarity", h = h)
@@ -134,10 +134,10 @@ fitH</code></pre>
 <h1 class="hasAnchor">
 <a href="#output" class="anchor"></a>Output</h1>
 <p>The output of the <code>snpClust</code> is of class <code>chac</code>. In particular, it can be plotted as a dendrogram silently relying on the function <code>plot.dendrogram</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(fitH, <span class="dt">type =</span> <span class="st">"rectangle"</span>, <span class="dt">leaflab =</span> <span class="st">"perpendicular"</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(fitH, <span class="dt">type =</span> <span class="st">"rectangle"</span>, <span class="dt">leaflab =</span> <span class="st">"perpendicular"</span>)</code></pre></div>
 <p><img src="snpClust_files/figure-html/dendro-1.png" width="672"></p>
 <p>Moreover, the output contains an element named <code>merge</code> which describes the successive merges of the clustering, and an element <code>gains</code> which gives the improvement in the criterion optimized by the clustering at each successive merge.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">cbind</span>(fitH$merge, fitH$gains))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">cbind</span>(fitH$merge, fitH$gains))</code></pre></div>
 <pre><code>##      [,1] [,2] [,3]
 ## [1,]   -1   -2    0
 ## [2,] -255 -256    0
@@ -150,20 +150,20 @@ fitH</code></pre>
 <h1 class="hasAnchor">
 <a href="#other-types-of-input" class="anchor"></a>Other types of input</h1>
 <p>In this section we show how the <code>snpClust</code> function can also be applied directly to LD values.</p>
-<pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="dv">100</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="dv">100</span>
 ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">depth =</span> h)
-<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre>
+<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre></div>
 <p><img src="snpClust_files/figure-html/snpClust-LD-1.png" width="672"></p>
 <p>Due to numerical errors in the LD estimation, some of the estimated values are slightly larger than 1, so we round the estimates to 1e-10:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(ld.ceph -<span class="st"> </span><span class="dv">1</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(ld.ceph -<span class="st"> </span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## [1] 1.332268e-15</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">ld.ceph &lt;-<span class="st"> </span><span class="kw">round</span>(ld.ceph, <span class="dt">digits =</span> <span class="dv">10</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ld.ceph &lt;-<span class="st"> </span><span class="kw">round</span>(ld.ceph, <span class="dt">digits =</span> <span class="dv">10</span>)</code></pre></div>
 <p>Note that when <code>snpClust</code> is called directly, this sanity check is performed internally before applying the classification algorithm.</p>
 <p>We can now apply <code>snpClust</code> to this LD matrix (of class dgCMatrix, <em>i.e.</em>, <code>Matrix::dgCMatrix</code>):</p>
-<pre class="sourceCode r"><code class="sourceCode r">fitL &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(ld.ceph, h)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitL &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(ld.ceph, h)</code></pre></div>
 <p><code>snpClust</code> also handles inputs of class <code><a href="http://www.rdocumentation.org/packages/base/topics/matrix">base::matrix</a></code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">gmat &lt;-<span class="st"> </span><span class="kw">as</span>(geno, <span class="st">"matrix"</span>)
-fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, h, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gmat &lt;-<span class="st"> </span><span class="kw">as</span>(geno, <span class="st">"matrix"</span>)
+fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClust.html">snpClust</a></span>(geno, h, <span class="dt">stats =</span> <span class="st">"R.squared"</span>)</code></pre></div>
 </div>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
@@ -175,7 +175,7 @@ fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClu
 <div id="session-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-information" class="anchor"></a>Session information</h1>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
 <pre><code>## R version 3.4.1 (2017-06-30)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
 ## Running under: OS X El Capitan 10.11.6
@@ -185,7 +185,7 @@ fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClu
 ## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] en_US.UTF-8/fr_FR.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -195,7 +195,7 @@ fitM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snpClu
 ## [4] matrixStats_0.52.2 adjclust_0.4.2    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.12               compiler_3.4.1            
+##  [1] Rcpp_0.12.13               compiler_3.4.1            
 ##  [3] RColorBrewer_1.1-2         GenomeInfoDb_1.12.2       
 ##  [5] XVector_0.16.0             bitops_1.0-6              
 ##  [7] tools_3.4.1                zlibbioc_1.22.0           

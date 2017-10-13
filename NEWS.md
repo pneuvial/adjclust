@@ -1,3 +1,7 @@
+# Version 0.5.0 [2017-10-13]
+
+* Bump version number for CRAN submission
+
 # Version 0.4.2 [2017-10-05]
 
 * Added 'chac' S3 class and corresponding 'plot' and 'summary' methods
