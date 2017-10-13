@@ -26,18 +26,20 @@ test_that("snpClust gives results identical to those of adjclust 0.3.0", {
   expect_equal(fit2$merge, prevfit$merge)
   expect_equal(fit2$height, prevfit$height)  
   
-  #case3:Input belongs class base::matrix
+  #case3: Input belongs class base::matrix
   ceph.1mb <- as.matrix(ceph.1mb)
   fit3 <- snpClust(ceph.1mb, h = 100, stats = "R.squared")  
   expect_equal(fit3$merge, prevfit$merge)
   expect_equal(fit3$height, prevfit$height)
   
   #case4: default h
-  fit4 <- snpClust(ld.ceph, ncol(ceph.1mb) - 1)
-  fit5 <- snpClust(ld.ceph)
+  ld.ceph.2 <- ld(ceph.1mb, depth = ncol(ceph.1mb) - 1, stats = "R.squared")
+  ld.ceph.2 <- round(ld.ceph.2, digits = 10)
+  fit4 <- snpClust(ld.ceph.2, ncol(ceph.1mb) - 1)
+  fit5 <- snpClust(ld.ceph.2)
   fit6 <- snpClust(ceph.1mb, stats = "R.squared")
   expect_equal(fit4$merge, fit5$merge)
   expect_equal(fit4$height, fit5$height)
   expect_equal(fit4$merge, fit6$merge)
-  # expect_equal(fit4$height, fit6$height) ## fix it!
+  expect_equal(fit4$height, fit6$height)
 })
