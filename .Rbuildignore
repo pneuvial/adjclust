@@ -4,12 +4,9 @@
 ^cran-comments\.md$ # Comments for CRAN submission
 ^\.travis\.yml$
 ^appveyor\.yml$
-appveyor.yml
 
-fig
-localTests
+^fig$
+^localTests$
 ^docs$
 ^_pkgdown\.yml$
-^README\.Rmd$
-^README-.*\.png$
 ^cran-comments\.md$

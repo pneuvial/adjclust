@@ -33,7 +33,7 @@ fit <- adjClust(sim, "similarity", h)
 plot(fit)
 ```
 
-![](README-adjClust-1.png)
+![](man/figures/README-adjClust-1.png)
 
 The result is of class `chac`. It can be plotted as a dendogram (as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
 
@@ -53,7 +53,7 @@ ld.ceph <- ld(geno, stats = "R.squared", depth = h)
 image(ld.ceph, lwd = 0)
 ```
 
-![](README-snpClust-1.png)
+![](man/figures/README-snpClust-1.png)
 
 ``` r
 
@@ -61,7 +61,7 @@ fit <- snpClust(geno, stats = "R.squared", h = h)
 plot(fit)
 ```
 
-![](README-snpClust-2.png)
+![](man/figures/README-snpClust-2.png)
 
 `hicClust`
 ----------
@@ -81,7 +81,7 @@ mapC(binned)
 #> minrange= 12  - maxrange= 1022
 ```
 
-![](README-hicClust-1.png)
+![](man/figures/README-hicClust-1.png)
 
 ``` r
 
@@ -89,7 +89,7 @@ fitB <- hicClust(binned)
 plot(fitB)
 ```
 
-![](README-hicClust-2.png)
+![](man/figures/README-hicClust-2.png)
 
 Credits
 -------
