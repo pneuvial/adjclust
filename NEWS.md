@@ -1,5 +1,6 @@
 # Version 0.5.1 [2017-10-16]
 
+* More informative 'Description' of the method in DESCRIPTION
 * Updates to test scripts to pass R CMD check on all windows platforms
 * Moved README-*.png files to man/figures
 

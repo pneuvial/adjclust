@@ -12,8 +12,14 @@ Date: 2017-10-16
 Version: 0.5.1
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
-Description: Adjacency-constrained clustering of a block-diagonal similarity
-    matrix.
+Description: Adjacency-constrained hierarchical agglomerative clustering is 
+    hierarchical agglomerative clustering (HAC) in which each observation is 
+    associated to a position, with the additional constraint that only 
+    adjacent clusters can be merged. Typical application fields in 
+    bioinformatics include Genome-Wide Association Studies or Hi-C data 
+    analysis, where the similarity between items is a decreasing function of 
+    their genomic distance. Taking advantage of this feature, the implemented 
+    algorithm is time and memory efficient.
 Depends: R(>= 2.10.0)
 Imports:
     Matrix,
