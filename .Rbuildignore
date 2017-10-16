@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$     # used for temporary files.
-^README\.Rmd$       # An Rmarkdown file used to generate README.md
+^README\.Rmd$
 ^cran-comments\.md$ # Comments for CRAN submission
 ^\.travis\.yml$
 ^appveyor\.yml$
@@ -10,3 +10,4 @@
 ^docs$
 ^_pkgdown\.yml$
 ^cran-comments\.md$
+

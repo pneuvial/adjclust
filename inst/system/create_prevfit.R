@@ -14,5 +14,4 @@ ld.ceph <- ld(ceph.1mb, stats="R.squared", depth=h)
 ld.ceph <- round(ld.ceph, digits=10)
 
 res_adjclust_0.3.0 <- adjclust:::adjClustBand_heap(ld.ceph@x, p, h, blMin=1)
-
 save(res_adjclust_0.3.0, file="data/res_adjclust_0.3.0.rda", compress="xz")

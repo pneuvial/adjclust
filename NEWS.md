@@ -1,3 +1,8 @@
+# Version 0.5.1 [2017-10-16]
+
+* Updates to test scripts to pass R CMD check on all windows platforms
+* Moved README-*.png files to man/figures
+
 # Version 0.5.0 [2017-10-13]
 
 * Bump version number for CRAN submission
