@@ -48,4 +48,5 @@ src/*.o
 src/*.so
 
 fig
-localTests
+inst/localTests/
+inst/doc/

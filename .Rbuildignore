@@ -6,7 +6,7 @@
 ^appveyor\.yml$
 
 ^fig$
-^localTests$
+^inst/localTests$
 ^docs$
 ^_pkgdown\.yml$
 
