@@ -1,7 +1,7 @@
 ^.*\.Rproj$
-^\.Rproj\.user$     # used for temporary files.
+^\.Rproj\.user$
 ^README\.Rmd$
-^cran-comments\.md$ # Comments for CRAN submission
+^cran-comments\.md$
 ^\.travis\.yml$
 ^appveyor\.yml$
 
@@ -9,5 +9,4 @@
 ^localTests$
 ^docs$
 ^_pkgdown\.yml$
-^cran-comments\.md$
 
