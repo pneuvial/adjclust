@@ -1,3 +1,7 @@
+# Version 0.5.2 [2017-10-17]
+
+* Added citation to Alia Dehman's PhD thesis to DESCRIPTION.
+
 # Version 0.5.1 [2017-10-16]
 
 * Added citation to Alia Dehman's PhD thesis to DESCRIPTION.

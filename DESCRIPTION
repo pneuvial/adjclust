@@ -9,7 +9,7 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Villa-Vialaneix", role="aut"))
 Date: 2017-10-16
-Version: 0.5.1
+Version: 0.5.2
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 
