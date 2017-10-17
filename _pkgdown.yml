@@ -14,9 +14,6 @@ reference:
     exclude: 
       - prevfit
       
-articles:
-   - title: "Linkage Disequilibrium blocks from genotypes"
-
 authors:
   Christophe Ambroise:
     href: http://www.math-evry.cnrs.fr/members/cambroise/
