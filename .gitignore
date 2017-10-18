@@ -40,9 +40,6 @@ vignettes/*.pdf
 .RData
 .Ruserdata
 
-inst/doc
-fig/
-
 ## OS X
 .DS_Store
 *~
@@ -50,3 +47,7 @@ fig/
 ## compiled C/C++ files
 src/*.o
 src/*.so
+
+fig
+inst/localTests/
+inst/doc/

@@ -1,0 +1,23 @@
+reference:
+  - title: "Main functions"
+    contents: 
+      - adjClust
+      - hicClust
+      - snpClust
+  - title: "Methods for class 'chac'"
+    contents:
+      - chac
+  - title: "Data objects"
+    contents:
+      - hic_imr90_40_XX
+      - res_adjclust_0.3.0
+    exclude: 
+      - prevfit
+      
+authors:
+  Christophe Ambroise:
+    href: http://www.math-evry.cnrs.fr/members/cambroise/
+  Pierre Neuvial:
+    href: https://www.math.univ-toulouse.fr/~pneuvial/
+  Nathalie Villa-Vialaneix:
+    href: http://nathalievilla.org

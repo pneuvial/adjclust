@@ -38,7 +38,7 @@ install:
 build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_r Matrix matrixStats Rcpp knitr rmarkdown testthat
-  - travis-tool.sh install_bioc snpStats
+  - travis-tool.sh install_bioc_deps
 
 test_script:
   - travis-tool.sh run_tests

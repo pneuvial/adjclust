@@ -1,0 +1,151 @@
+---
+title: "Inferring Linkage Disequilibrium blocks from genotypes"
+author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix"
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Inferring Linkage Disequilibrium blocks from genotypes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+In this vignette we demonstrate the use of `snpClust` function in the `adjclust`
+package. `snpClust` performs adjacency-constrained hierarchical clustering of 
+single nucleotide polymorphisms (SNPs), where the similarity between SNPs is 
+defined by linkage disequilibrium (LD).
+
+This function implements the algorithm described in the third chapter of [2]. It
+is an extension of the algorithm described in [3]. Denoting by $p$ the number of
+SNPs to cluster and assuming that the similarity between SNPs whose indices are 
+more distant than $h$, its time complexity is $O(p (\log(p) + h))$, and its 
+space complexity is $O(hp)$.
+
+```{r loadLib, message=FALSE}
+library("adjclust")
+```
+
+# Loading and displaying genotype data
+
+The begining of this vignette closely follows the "LD vignette" of the SnpStats 
+package [1]. First, we load genotype data.
+
+```{r loadData, results="hide", message=FALSE}
+library("matrixStats")
+library("snpStats")
+data("ld.example", package = "snpStats")
+```
+
+We focus on the `ceph.1mb` data. 
+
+```{r preData}
+geno <- ceph.1mb[, -316]  ## drop one SNP leading to one missing LD value
+p <- ncol(geno)
+nSamples <- nrow(geno)
+geno
+```
+
+These data are drawn from the International HapMap Project and concern `r p` 
+SNPs[^1] over a 1Mb region of chromosome 22 in sample of `r nSamples` Europeans.
+
+We can compute and display the LD between these SNPs.
+
+[^1]: We have dropped SNP `r colnames(ceph.1mb)[316]` because it produced a 
+missing value due to the lack of genetic diversity in the considered sample.
+
+```{r LD}
+ld.ceph <- ld(geno, stats = "R.squared", depth = p-1)
+image(ld.ceph, lwd = 0)
+```
+
+# Adjacency-constrained Hierarchical Agglomerative Clustering
+
+The `snpClust` function can handle genotype data as an input:
+
+```{r snpClust}
+fit <- snpClust(geno, stats = "R.squared")
+```
+
+The above figure suggests that the LD signal is concentrated close to the 
+diagonal. We can focus on a diagonal band with the bandwidth parameter `h`:
+
+```{r snpClust-sparse}
+fitH <- snpClust(geno, h = 100, stats = "R.squared")
+fitH
+```
+
+# Output
+
+The output of the `snpClust` is of class `chac`. In particular, it can be 
+plotted as a dendrogram silently relying on the function `plot.dendrogram`:
+
+```{r dendro}
+plot(fitH, type = "rectangle", leaflab = "perpendicular")
+```
+
+
+Moreover, the output contains an element named `merge` which describes the 
+successive merges of the clustering, and an element `gains` which gives the 
+improvement in the criterion optimized by the clustering at each successive 
+merge.
+
+```{r objectDesc}
+head(cbind(fitH$merge, fitH$gains))
+```
+
+# Other types of input
+
+In this section we show how the `snpClust` function can also be applied directly
+to LD values.
+
+```{r snpClust-LD}
+h <- 100
+ld.ceph <- ld(geno, stats = "R.squared", depth = h)
+image(ld.ceph, lwd = 0)
+```
+
+Due to numerical errors in the LD estimation, some of the estimated values are 
+slightly larger than 1, so we round the estimates to 1e-10:
+
+```{r correctRound}
+max(ld.ceph - 1)
+ld.ceph <- round(ld.ceph, digits = 10)
+```
+
+Note that when `snpClust` is called directly, this sanity check is performed
+internally before applying the classification algorithm. 
+
+We can now apply `snpClust` to this LD matrix (of class `r class(ld.ceph)`, 
+*i.e.*, `Matrix::dgCMatrix`):
+
+```{r snpClust-sMatrix}
+fitL <- snpClust(ld.ceph, h)
+```
+
+`snpClust` also handles inputs of class `base::matrix`:
+
+```{r snpClust-matrix, warning=FALSE}
+gmat <- as(geno, "matrix")
+fitM <- snpClust(geno, h, stats = "R.squared")
+```
+
+# References
+
+[1] Clayton D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods.
+R package version 1.20.0
+
+[2] Dehman A. (2015). 
+[Spatial clustering of linkage disequilibrium blocks for genome-wide association studies](https://tel.archives-ouvertes.fr/tel-01288568/). 
+Phd Thesis, Université Paris Saclay.
+
+[3] Dehman A., Ambroise C., Neuvial P. (2015). Performance of a blockwise 
+approach in variable selection using linkage disequilibrium information. *BMC 
+Bioinformatics*, **16**, 148.
+
+# Session information
+
+```{r session}
+sessionInfo()
+```

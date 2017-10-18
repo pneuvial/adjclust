@@ -1,0 +1,106 @@
+---
+title: "Clustering of Hi-C contact maps"
+author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix"
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Clustering of Hi-C contact maps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+Hi-C is a sequencing-based molecular assay designed to measure intra and 
+interchromosomal interactions between the DNA molecule.  In particular, the 
+identification of Topologically-Associated Domains (TADs), that is, of regions 
+of the genome in which physical interactions are frequent, provides insight 
+into the three-dimensional organization of a genome [1]. 
+
+Hi-C data are in the form of two-dimensional *contact maps*, *i.e.*, matrices 
+whose $i,j$ entry quantifies the intensity of the physical interaction between 
+two genome regions $i$ and $j$ at the DNA level. In this vignette, we 
+demonstrate the use of `adjclust::hicClust` to perform adjacency-constrained 
+hierarchical agglomerative clustering (HAC) of Hi-C contact maps. The output of 
+this function is a dendrogram, which can be cut to identify TADs. The algorithm 
+used for adjacency-constrained (HAC) is described in the third chapter of [2].
+
+```{r loadLib, message = FALSE}
+library("adjclust")
+library("HiTC")
+```
+
+# Loading and displaying a sample Hi-C contact map
+
+The data set `hic_imr90_40_XX` is an object of class `HTCexp` which has been 
+obtained from the `HiTC` package [3]. It is a contact map corresponding to 
+chromosome X vs chromosome X. 
+
+```{r loadData}
+data("hic_imr90_40_XX", package = "adjclust")
+```
+
+Now we have a look at the data.
+
+```{r mapHiC, message=FALSE}
+HiTC::mapC(hic_imr90_40_XX)
+```
+
+# Using `hicClust`
+
+`hicClust` operates directly on objects of class `HTCexp`
+
+```{r hicClust-HTCexp}
+fit <- hicClust(hic_imr90_40_XX)
+```
+
+It is also possible to work on binned data. Below we choose a bin size of 
+$5 \times 10^5$:
+
+```{r binning, message=FALSE}
+binned <- HiTC::binningC(hic_imr90_40_XX, binsize = 5e5)
+HiTC::mapC(binned)
+fitB <- hicClust(binned)
+fitB
+```
+
+The output is of class `chac`. In particular, it can be plotted as a dendrogram
+silently relying on the function `plot.dendrogram`:
+
+```{r dendro}
+plot(fitB)
+```
+
+Moreover, the output contains an element named `merge` which describes the 
+successive merges of the clustering, and an element `gains` which gives the 
+improvement in the criterion optimized by the clustering at each successive 
+merge.
+
+```{r objectDesc}
+head(cbind(fitB$merge, fitB$gains))
+```
+
+# Other types of input     
+
+Contacts maps can also be stored as objects of class `Matrix::dsCMatrix`, or as
+plain text files. These types of input are also accepted as first argument to 
+`hicClust`. 
+
+# References
+
+[1] Dixon J.R., *et al* (2012). Topological domains in mammalian genomes 
+identified by analysis of chromatin interactions. *Nature*, **485**(7398), 376.
+
+[2] Dehman A. (2015). 
+[Spatial clustering of linkage disequilibrium blocks for genome-wide association studies](https://tel.archives-ouvertes.fr/tel-01288568/). 
+Phd Thesis, Université Paris Saclay.
+
+[3] Servant N., *et al* (2012). HiTC: Exploration of High-Throughput 'C' 
+experiments. *Bioinformatics*, **28**(21), 2843-2844.
+
+# Session information
+
+```{r session}
+sessionInfo()
+```
