@@ -17,8 +17,6 @@ latex: false
 matrix:
   include:
     - os: linux
-      r: oldrel
-    - os: linux
       r: release
       r_github_packages:
       - jimhester/covr
@@ -28,13 +26,10 @@ matrix:
     - os: linux
       r: devel
     - os: osx
-      r: oldrel
-    - os: osx
       r: release
 
 bioc_packages:
   - snpStats
-  - GenomeInfoDbData
 
 notifications:
   email:
