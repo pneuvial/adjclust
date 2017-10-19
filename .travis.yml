@@ -34,6 +34,7 @@ matrix:
 
 bioc_packages:
   - snpStats
+  - GenomeInfoDbData
 
 notifications:
   email:
