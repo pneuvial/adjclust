@@ -194,9 +194,8 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
                  chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
                  as.integer(blMin), PACKAGE = "adjclust")
     
-    height <- cumsum(gains)
+    height <- gains
     tree <- list(traceW = traceW,
-                 gains = gains,
                  merge = res,
                  height = height,
                  seqdist = height,
