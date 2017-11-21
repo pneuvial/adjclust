@@ -48,6 +48,7 @@ summary.chac <- function(object, ...) {
 #' @importFrom stats as.dendrogram
 plot.chac <- function(x, y, ...) {
     args <- list(...)
+    if (is.null(args$ylim)) args$ylim <- range(x$height)
     args$x <- as.dendrogram(as.hclust(x))
     if (is.null(args$type)) args$type <- "triangle"
     if (is.null(args$leaflab)) args$leaflab <- "none"
