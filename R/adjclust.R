@@ -207,6 +207,11 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
                  dist.method = attr(D, "method"),
                  data = mat)
     class(tree) <- c("chac")
+    
+    if (any(diff(tree$height) < 0)) 
+      message(paste("Note:", sum(diff(tree$height) < 0),
+                    "merges with non increasing heights."))
+    
     return(tree)
 }
 
