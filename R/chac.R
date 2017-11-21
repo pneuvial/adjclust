@@ -54,3 +54,59 @@ plot.chac <- function(x, y, ...) {
     if (is.null(args$leaflab)) args$leaflab <- "none"
     do.call(plot, args)
 }
+
+
+#' @rdname chac
+#' @aliases diagnose
+#' @export
+diagnose <- function(x) {
+  UseMethod("diagnose")
+}
+
+#' @rdname chac
+#' @aliases diagnose.chac
+#' @param graph (logical) whether the diagnostic plot has to be displayed or 
+#' not. Default to \code{TRUE}
+#' @details \code{\link{diagnose}} invisibly exports a data frame with the 
+#' numbers of non increasing merges described by the labels of the clusters 
+#' being merged at this step and at the previous one, as well as the 
+#' corresponding merge heights.
+#' @export
+diagnose.chac <- function(x, graph = TRUE) {
+  diff_heights <- diff(x$height)
+  if (any(diff_heights < 0)) {
+    cat(sum(diff_heights < 0), "merges with non increasing heights:", "\n")
+    
+    # extract non increasing merges with the previous merge
+    where_decrease <- which(diff_heights < 0)
+    res <- sapply(where_decrease, function(adec) {
+      out <- c(adec+1, x$merge[adec+1, ], x$height[adec+1], x$merge[adec, ],
+               x$height[adec])
+      names(out) <- c("number", "x1", "x2", "height", "px1", "px2", "pheight")
+      return(out)
+    })
+    res <- data.frame(t(res))
+    print(head(res))
+    if (nrow(res) > 6) cat("...", nrow(res) - 6, "remaining rows...", "\n")
+    
+    # if requested, plot
+    if (graph) {
+      plot(x$height, type = "b", pch = "+", axes = FALSE, xlab = "Merge number",
+           ylab = "height of merge")
+      
+      axis(1, at = where_decrease + 1, cex = 0.7)
+                            
+      axis(2, tick = FALSE)
+      axis(2, at = x$height[where_decrease + 1], labels = FALSE, 
+           col.ticks = "red")
+      
+      points(where_decrease + 1, x$height[where_decrease + 1], col = "red",
+             pch = "+")
+    }
+    
+    invisible(res)
+  } else {
+    print("All merges have increasing weights.")
+    return(NULL)
+  }
+}

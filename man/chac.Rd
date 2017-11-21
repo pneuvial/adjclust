@@ -7,6 +7,8 @@
 \alias{head.chac}
 \alias{summary.chac}
 \alias{plot.chac}
+\alias{diagnose}
+\alias{diagnose.chac}
 \title{Methods for class 'chac'}
 \usage{
 \method{as.hclust}{chac}(x, ...)
@@ -18,6 +20,10 @@
 \method{summary}{chac}(object, ...)
 
 \method{plot}{chac}(x, y, ...)
+
+diagnose(x)
+
+\method{diagnose}{chac}(x, graph = TRUE)
 }
 \arguments{
 \item{x, object}{an object of class 'chac'}
@@ -27,7 +33,16 @@
 \code{leaflab} are respectively set to \code{"triangle"} and \code{"none"}}
 
 \item{y}{not used}
+
+\item{graph}{(logical) whether the diagnostic plot has to be displayed or 
+not. Default to \code{TRUE}}
 }
 \description{
 Methods for class 'chac'
+}
+\details{
+\code{\link{diagnose}} invisibly exports a data frame with the 
+numbers of non increasing merges described by the labels of the clusters 
+being merged at this step and at the previous one, as well as the 
+corresponding merge heights.
 }
