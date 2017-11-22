@@ -59,7 +59,7 @@ plot.chac <- function(x, y, ...) {
 #' @rdname chac
 #' @aliases diagnose
 #' @export
-diagnose <- function(x) {
+diagnose <- function(x, ...) {
   UseMethod("diagnose")
 }
 

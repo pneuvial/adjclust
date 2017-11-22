@@ -7,7 +7,6 @@
 \alias{head.chac}
 \alias{summary.chac}
 \alias{plot.chac}
-\alias{diagnose}
 \alias{diagnose.chac}
 \title{Methods for class 'chac'}
 \usage{
@@ -20,8 +19,6 @@
 \method{summary}{chac}(object, ...)
 
 \method{plot}{chac}(x, y, ...)
-
-diagnose(x)
 
 \method{diagnose}{chac}(x, graph = TRUE)
 }
