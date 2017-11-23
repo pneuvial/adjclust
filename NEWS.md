@@ -1,3 +1,8 @@
+# Version 0.5.3 [2017-11-23]
+
+* Using BiocStyle::html_document2 as a temporary fix for vignette 
+  compilation errors.
+
 # Version 0.5.2 [2017-10-17]
 
 * Added citation to Alia Dehman's PhD thesis to DESCRIPTION.
