@@ -7,6 +7,7 @@
 \alias{head.chac}
 \alias{summary.chac}
 \alias{plot.chac}
+\alias{diagnose}
 \alias{diagnose.chac}
 \title{Methods for class 'chac'}
 \usage{
@@ -18,9 +19,11 @@
 
 \method{summary}{chac}(object, ...)
 
-\method{plot}{chac}(x, y, ...)
+\method{plot}{chac}(x, y, ..., mode = c("standard", "corrected"))
 
-\method{diagnose}{chac}(x, graph = TRUE)
+diagnose(x, ...)
+
+\method{diagnose}{chac}(x, graph = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{x, object}{an object of class 'chac'}
@@ -31,13 +34,27 @@
 
 \item{y}{not used}
 
+\item{mode}{type of dendrogram to plot (see Details). Default to 
+\code{"standard"}}
+
 \item{graph}{(logical) whether the diagnostic plot has to be displayed or 
 not. Default to \code{TRUE}}
+
+\item{verbose}{(logical) whether to print a summary of the result or not.
+Default to \code{TRUE}}
 }
 \description{
 Methods for class 'chac'
 }
 \details{
+When \code{\link{plot.chac}} is called with 
+\code{mode = "standard"}, the standard dendrogram is plotted, even though,
+due to contingency constrains, some branches are reversed (decreasing
+merges). When \code{\link{plot.chac}} is called with 
+\code{mode = "corrected"}, a correction is applied to original height so as
+to have only non decreasing merges). It does not change the result of the 
+clustering, only the look of the dendrogram for easier interpretation.
+
 \code{\link{diagnose}} invisibly exports a data frame with the 
 numbers of non increasing merges described by the labels of the clusters 
 being merged at this step and at the previous one, as well as the 

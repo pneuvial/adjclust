@@ -43,19 +43,59 @@ summary.chac <- function(object, ...) {
 
 #' @rdname chac
 #' @aliases plot.chac
+#' @param mode type of dendrogram to plot (see Details). Default to 
+#' \code{"standard"}
+#' @details When \code{\link{plot.chac}} is called with 
+#' \code{mode = "standard"}, the standard dendrogram is plotted, even though,
+#' due to contingency constrains, some branches are reversed (decreasing
+#' merges). When \code{\link{plot.chac}} is called with 
+#' \code{mode = "corrected"}, a correction is applied to original height so as
+#' to have only non decreasing merges). It does not change the result of the 
+#' clustering, only the look of the dendrogram for easier interpretation.
 #' @export
 #' @importFrom graphics plot
 #' @importFrom stats as.dendrogram
-plot.chac <- function(x, y, ...) {
-    args <- list(...)
+plot.chac <- function(x, y, ..., mode = c("standard", "corrected")) {
+  mode <- match.arg(mode)
+  args <- list(...)
+  if (is.null(args$type)) args$type <- "triangle"
+  if (is.null(args$leaflab)) args$leaflab <- "none"
+  
+  if (mode == "standard") {
+    if (any(diff(x$height) < 0)) 
+      warning(paste0("\nNon increasing merges: ",
+                     "'mode = 'corrected' might be more relevant."))
     if (is.null(args$ylim)) args$ylim <- range(x$height)
     args$x <- as.dendrogram(as.hclust(x))
-    if (is.null(args$type)) args$type <- "triangle"
-    if (is.null(args$leaflab)) args$leaflab <- "none"
-    do.call(plot, args)
+  } else if (mode == "corrected") {
+    res_diagnose <- diagnose(x, graph = FALSE, verbose = FALSE)
+    to_add <- data.frame(res_diagnose$number,
+                         add = res_diagnose$pheight - res_diagnose$height)
+    to_add <- apply(to_add, 1, function(acol) {
+      c(rep(0, acol[1] - 1), rep(acol[2], length(x$height) - acol[1] + 1))
+    })
+    to_add <- rowSums(to_add)
+    x$height <- x$height + to_add
+    args$x <- as.dendrogram(as.hclust(x))
+    ## note: remaining non increasing gains due to numerical approximations
+  } 
+  
+  do.call(plot, args)
+  
+  # for "mode='corrected'", show the corrections
+  if (mode == "corrected") {
+    x0 <- rep(0, nrow(res_diagnose))
+    x1 <- rep(0, nrow(res_diagnose))
+    y1 <- x$height[res_diagnose$number]
+    y0 <- y1 - (res_diagnose$pheight - res_diagnose$height)
+    segments(x0, y0, x1, y1, col = "darkred", lwd = 2)
+    segments(rep(-0.25, length(x0)), y0, rep(0.25, length(x0)), col = "darkred")
+    segments(rep(-0.25, length(x0)), y1, rep(0.25, length(x0)), col = "darkred")
+  }
+  invisible(NULL)
 }
 
-
+## TODO: how to have diagnose not present in help files while being documented as a method for chac?
 #' @rdname chac
 #' @aliases diagnose
 #' @export
@@ -67,15 +107,18 @@ diagnose <- function(x, ...) {
 #' @aliases diagnose.chac
 #' @param graph (logical) whether the diagnostic plot has to be displayed or 
 #' not. Default to \code{TRUE}
+#' @param verbose (logical) whether to print a summary of the result or not.
+#' Default to \code{TRUE}
 #' @details \code{\link{diagnose}} invisibly exports a data frame with the 
 #' numbers of non increasing merges described by the labels of the clusters 
 #' being merged at this step and at the previous one, as well as the 
 #' corresponding merge heights.
 #' @export
-diagnose.chac <- function(x, graph = TRUE) {
+diagnose.chac <- function(x, graph = TRUE, verbose = TRUE) {
   diff_heights <- diff(x$height)
   if (any(diff_heights < 0)) {
-    cat(sum(diff_heights < 0), "merges with non increasing heights:", "\n")
+    if (verbose)
+      cat(sum(diff_heights < 0), "merges with non increasing heights:", "\n")
     
     # extract non increasing merges with the previous merge
     where_decrease <- which(diff_heights < 0)
@@ -86,8 +129,10 @@ diagnose.chac <- function(x, graph = TRUE) {
       return(out)
     })
     res <- data.frame(t(res))
-    print(head(res))
-    if (nrow(res) > 6) cat("...", nrow(res) - 6, "remaining rows...", "\n")
+    if (verbose) {
+      print(head(res))
+      if (nrow(res) > 6) cat("...", nrow(res) - 6, "remaining rows...", "\n")
+    }
     
     # if requested, plot
     if (graph) {
