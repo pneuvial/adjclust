@@ -19,7 +19,7 @@
 
 \method{summary}{chac}(object, ...)
 
-\method{plot}{chac}(x, y, ..., mode = c("standard", "corrected"))
+\method{plot}{chac}(x, y, ..., mode = c("standard", "corrected", "inertia"))
 
 diagnose(x, ...)
 
@@ -51,9 +51,12 @@ When \code{\link{plot.chac}} is called with
 \code{mode = "standard"}, the standard dendrogram is plotted, even though,
 due to contingency constrains, some branches are reversed (decreasing
 merges). When \code{\link{plot.chac}} is called with 
-\code{mode = "corrected"}, a correction is applied to original height so as
+\code{mode = "corrected"}, a correction is applied to original heights so as
 to have only non decreasing merges). It does not change the result of the 
-clustering, only the look of the dendrogram for easier interpretation.
+clustering, only the look of the dendrogram for easier interpretation. When
+\code{\link{plot.chac}} is called with \code{mode = "inertia"}, heights of
+the dendrogram correspond to the cluster inertia instead of the cluster
+linkage value. This also ensures non decreasing merges.
 
 \code{\link{diagnose}} invisibly exports a data frame with the 
 numbers of non increasing merges described by the labels of the clusters 

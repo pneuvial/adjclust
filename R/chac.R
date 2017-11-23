@@ -49,13 +49,16 @@ summary.chac <- function(object, ...) {
 #' \code{mode = "standard"}, the standard dendrogram is plotted, even though,
 #' due to contingency constrains, some branches are reversed (decreasing
 #' merges). When \code{\link{plot.chac}} is called with 
-#' \code{mode = "corrected"}, a correction is applied to original height so as
+#' \code{mode = "corrected"}, a correction is applied to original heights so as
 #' to have only non decreasing merges). It does not change the result of the 
-#' clustering, only the look of the dendrogram for easier interpretation.
+#' clustering, only the look of the dendrogram for easier interpretation. When
+#' \code{\link{plot.chac}} is called with \code{mode = "inertia"}, heights of
+#' the dendrogram correspond to the cluster inertia instead of the cluster
+#' linkage value. This also ensures non decreasing merges.
 #' @export
 #' @importFrom graphics plot
 #' @importFrom stats as.dendrogram
-plot.chac <- function(x, y, ..., mode = c("standard", "corrected")) {
+plot.chac <- function(x, y, ..., mode = c("standard", "corrected", "inertia")) {
   mode <- match.arg(mode)
   args <- list(...)
   if (is.null(args$type)) args$type <- "triangle"
@@ -64,9 +67,8 @@ plot.chac <- function(x, y, ..., mode = c("standard", "corrected")) {
   if (mode == "standard") {
     if (any(diff(x$height) < 0)) 
       warning(paste0("\nNon increasing merges: ",
-                     "'mode = 'corrected' might be more relevant."))
+                     "'mode = 'corrected' or 'inertia' might be more relevant."))
     if (is.null(args$ylim)) args$ylim <- range(x$height)
-    args$x <- as.dendrogram(as.hclust(x))
   } else if (mode == "corrected") {
     res_diagnose <- diagnose(x, graph = FALSE, verbose = FALSE)
     to_add <- data.frame(res_diagnose$number,
@@ -76,10 +78,18 @@ plot.chac <- function(x, y, ..., mode = c("standard", "corrected")) {
     })
     to_add <- rowSums(to_add)
     x$height <- x$height + to_add
-    args$x <- as.dendrogram(as.hclust(x))
     ## note: remaining non increasing gains due to numerical approximations
-  } 
+  } else if (mode == "inertia") {
+    to_correct <- which((x$merge[ ,1] > 0) | (x$merge[ ,2] > 0))
+    for (ind in to_correct) {
+      clusters <- x$merge[ind, ]
+      clusters <- clusters[clusters > 0]
+      x$height[ind] <- x$height[ind] + sum(x$height[clusters])
+    }
+    args$ylab <- "cluster inertia"
+  }
   
+  args$x <- as.dendrogram(as.hclust(x))
   do.call(plot, args)
   
   # for "mode='corrected'", show the corrections
