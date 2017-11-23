@@ -162,6 +162,6 @@ diagnose.chac <- function(x, graph = TRUE, verbose = TRUE) {
     invisible(res)
   } else {
     print("All merges have non decreasing weights.")
-    return(NULL)
+    invisible(NULL)
   }
 }
