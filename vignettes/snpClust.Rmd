@@ -3,7 +3,7 @@ title: "Inferring Linkage Disequilibrium blocks from genotypes"
 author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix"
 date: "`r Sys.Date()`"
 output: 
-  BiocStyle::html_document
+  BiocStyle::html_document2
 vignette: >
   %\VignetteIndexEntry{Inferring Linkage Disequilibrium blocks from genotypes}
   %\VignetteEngine{knitr::rmarkdown}

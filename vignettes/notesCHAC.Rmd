@@ -3,7 +3,7 @@ title: "Notes on CHAC implementation in adjclust"
 author: "Pierre Neuvial, Nathalie Villa-Vialaneix"
 date: "`r Sys.Date()`"
 output: 
-  BiocStyle::html_document
+  BiocStyle::html_document2
 vignette: >
   %\VignetteIndexEntry{Notes on CHAC implementation in adjclust}
   %\VignetteEngine{knitr::rmarkdown}
