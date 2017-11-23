@@ -105,9 +105,6 @@ plot.chac <- function(x, y, ..., mode = c("standard", "corrected", "inertia")) {
   invisible(NULL)
 }
 
-## TODO: how to have diagnose not present in help files while being documented as a method for chac?
-#' @rdname chac
-#' @aliases diagnose
 #' @export
 diagnose <- function(x, ...) {
   UseMethod("diagnose")
@@ -115,6 +112,7 @@ diagnose <- function(x, ...) {
 
 #' @rdname chac
 #' @aliases diagnose.chac
+#' @aliases diagnose
 #' @param graph (logical) whether the diagnostic plot has to be displayed or 
 #' not. Default to \code{TRUE}
 #' @param verbose (logical) whether to print a summary of the result or not.
