@@ -59,7 +59,7 @@ the dendrogram correspond to the cluster inertia instead of the cluster
 linkage value. This also ensures non decreasing merges.
 
 \code{\link{diagnose}} invisibly exports a data frame with the 
-numbers of non increasing merges described by the labels of the clusters 
-being merged at this step and at the previous one, as well as the 
-corresponding merge heights.
+numbers of decreasing merges described by the labels of the clusters being
+merged at this step and at the previous one, as well as the corresponding
+merge heights.
 }

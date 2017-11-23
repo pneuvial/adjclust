@@ -66,7 +66,7 @@ plot.chac <- function(x, y, ..., mode = c("standard", "corrected", "inertia")) {
   
   if (mode == "standard") {
     if (any(diff(x$height) < 0)) 
-      warning(paste0("\nNon increasing merges: ",
+      warning(paste0("\nDecreasing merges: ",
                      "'mode = 'corrected' or 'inertia' might be more relevant."))
     if (is.null(args$ylim)) args$ylim <- range(x$height)
   } else if (mode == "corrected") {
@@ -78,7 +78,7 @@ plot.chac <- function(x, y, ..., mode = c("standard", "corrected", "inertia")) {
     })
     to_add <- rowSums(to_add)
     x$height <- x$height + to_add
-    ## note: remaining non increasing gains due to numerical approximations
+    ## note: remaining decreasing gains due to numerical approximations
   } else if (mode == "inertia") {
     to_correct <- which((x$merge[ ,1] > 0) | (x$merge[ ,2] > 0))
     for (ind in to_correct) {
@@ -120,17 +120,17 @@ diagnose <- function(x, ...) {
 #' @param verbose (logical) whether to print a summary of the result or not.
 #' Default to \code{TRUE}
 #' @details \code{\link{diagnose}} invisibly exports a data frame with the 
-#' numbers of non increasing merges described by the labels of the clusters 
-#' being merged at this step and at the previous one, as well as the 
-#' corresponding merge heights.
+#' numbers of decreasing merges described by the labels of the clusters being
+#' merged at this step and at the previous one, as well as the corresponding
+#' merge heights.
 #' @export
 diagnose.chac <- function(x, graph = TRUE, verbose = TRUE) {
   diff_heights <- diff(x$height)
   if (any(diff_heights < 0)) {
     if (verbose)
-      cat(sum(diff_heights < 0), "merges with non increasing heights:", "\n")
+      cat(sum(diff_heights < 0), "merges with decreasing heights:", "\n")
     
-    # extract non increasing merges with the previous merge
+    # extract decreasing merges with the previous merge
     where_decrease <- which(diff_heights < 0)
     res <- sapply(where_decrease, function(adec) {
       out <- c(adec+1, x$merge[adec+1, ], x$height[adec+1], x$merge[adec, ],
@@ -161,7 +161,7 @@ diagnose.chac <- function(x, graph = TRUE, verbose = TRUE) {
     
     invisible(res)
   } else {
-    print("All merges have increasing weights.")
+    print("All merges have non decreasing weights.")
     return(NULL)
   }
 }
