@@ -83,7 +83,8 @@ representation.
 Grimm (1987) indicates that heights as provided by 
 \code{mode = "within-disp"} are highly dependant on cluster sizes and that 
 the most advisable representation is the one provided by 
-\code{mode = "total-disp"}.
+\code{mode = "total-disp"}. Further details are provided in the vignette 
+"Notes on CHAC implementation in adjclust".
 }
 \references{
 { Grimm, E.C. (1987) CONISS: a fortran 77 program for

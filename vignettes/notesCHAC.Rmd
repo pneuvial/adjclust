@@ -10,14 +10,22 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This document aims at clarifying relations between dissimilarity and similarity
-methods for hierarchical agglomerative clustering (HAC) and at explaining
-implementation choices in `adjclust`. In this document, we suppose given $n$
-objects, $\{1, \ldots, n\}$ that have to be clustered using 
-adjacency-constrained HAC, that is, in such a way that only adjacent
-objects/clusters can be merged.
+This document has two parts:
 
-# Basic implementation of CHAC in `adjclust`
+* the first part aims at clarifying relations between dissimilarity and 
+similarity methods for hierarchical agglomerative clustering (HAC) and at
+explaining implementation choices in `adjclust`;
+
+* the second part describes the different types of dendrograms that are 
+implemented in `plot.chac`.
+
+In this document, we suppose given $n$ objects, $\{1, \ldots, n\}$ that have to
+be clustered using adjacency-constrained HAC, that is, in such a way that only
+adjacent objects/clusters can be merged.
+
+# Notes on relations between similarity and dissimilarity implementation
+
+## Basic implementation of CHAC in `adjclust`
 
 The basic implementation of `adjclust` takes, as an input, a kernel $k$ which
 is supposed to be symmetric and positive (in the kernel sense) and to satisfy:
@@ -39,9 +47,9 @@ of a diagonal of size `h`.
 
 The implementation is the one described in [1].
 
-# More advanced used for kernel or similarity matrices
+## More advanced used for kernel or similarity matrices
 
-## Non positive but normalized similarities
+### Non positive but normalized similarities
 
 In this section, the available data set is a matrix $s$ that can either have 
 only positive entries (in this case it is called a similarity) or both positive 
@@ -62,7 +70,7 @@ by
 \]
 is a kernel (*i.e.*, the matrix $k = s + \lambda I$ is positive 
 definite; indeed, it is the case for any $\lambda$ larger than the opposite of 
-the smallest negative eigenvalue of $s$. [2] shows that the HAC obtained from 
+the smallest negative eigenvalue of $s$. [3] shows that the HAC obtained from 
 the distance induced by the kernel $k_\lambda$ in its feature space and the HAC
 obtained from the *ad hoc* dissimilarity defined by
 \[
@@ -74,7 +82,7 @@ are identical, except that all the merging levels are shifted by $\lambda$.
 In conclusion, to address this case, the command lines that have to be used are
 the ones described in section 1.
 
-## Non normalized similarities
+### Non normalized similarities
 
 Suppose now that the data set is described by a matrix $s$ as in the previous
 section except that which does not satisfy one of the two following conditions:
@@ -138,7 +146,7 @@ transformations, is available with the full matrix, i.e.:
 fit <- adjClust(s, type = "similarity")
 ```
 
-## Case of dissimilarity data
+### Case of dissimilarity data
 
 The original implementation of (unconstrained) HAC in `stats::hclust` takes as 
 input a dissimilarity matrix. However, the implementation of `adjclust` is based
@@ -180,13 +188,106 @@ fit <- adjClust(d, type = "dissimilarity", h = h)
 ```
 
 
+# Options for displaying the dendrogram
+
+In this section, we suppose given an Euclidean distance $d$ between objects 
+(even though the results described in this section are not specific to this 
+case, they are described more easily using this framework). Ward's criterion, 
+that is implemented in `adjclust` aims at minimizing the Error Sum of Squares 
+(ESS) which is equal to:
+\[
+  \mbox{ESS}(\mathcal{C}) = \sum_{C \in \mathcal{C}} \sum_{i \in C} d^2(i, g_C)
+\]
+where $\mathcal{C}$ is the clustering and $g_C = \frac{1}{\mu_C} \sum_{i \in C}
+i$ is the center of gravity of the cluster $C$ with $\mu_C$ elements [5]. In the
+sequel, we will denote:
+
+* *within-cluster dispersion* which, for a given cluster $C$, is equal to 
+\[
+  I(C) = \sum_{i \in C} d^2(i, g_C).
+\]
+We can prove that $I(C) = \frac{1}{2\mu_C} \sum_{i,j \in C} d^2(i,j)$ (see [4] 
+for instance);
+
+* *average within-cluster dispersion* which is equal to $\frac{I(C)}{\mu_C}$ and
+corresponds to the cluster variance.
+
+Usually, the results of standard HAC are displayed under the form of a 
+dendrogram for which the heights of the different merges correspond to the 
+linkage criterion
+\[
+  \delta(A,B) = I(A \cup B) - I(A) - I(B)
+\]
+of that merge. This criterion corresponds to the increase in total dispersion
+(ESS) that occurs by merging the two clusters $A$ and $B$. However, for 
+constrained HAC, there is no guaranty that this criterion is non decreasing (see
+[2] for instance) and thus, the dendrogram build using this method can contain
+reversals in its branches. This is the default option in `plot.chac` (that 
+corresponds to `mode = "standard"`). To provide dendrograms that are easier to
+interpret, alternative options have been implemented in the package: the first
+one is a simple correction of the standard method, and the three others are 
+suggested by [3].
+
+In the sequel, we denote by $(m_t)_{t=1,\ldots,n-1}$ the series of linkage
+criterion values obtained during the clustering.
+
+## `mode = "corrected"`
+
+This option simply corrects the heights by adding the minimal value making them
+non decreasing. More precisely, if at a given step $t \in \{2,\ldots,n-1\}$ of
+the clustering, we have that $m_t < m_{t-1}$ then, we define the corrected 
+weights as:
+\[
+  \tilde{m}_{t'} = \left\{ \begin{array}{ll}
+    m_{t'} & \textrm{if } t' < t\\
+    m_{t'} + (m_{t-1} - m_t) & \textrm{otherwise}
+  \end{array} \right..
+\]
+This correction is iteratively performed for all decreasing merges, ensuring a
+visually increasing dendrogram.
+
+## `mode = "total-disp"`
+
+This option represents the dendrogram using the total dispersion (that is the
+objective function) at every level of the clustering. It can easily be proved
+that the total dispersion is equal to ESS$_t = \sum_{t' \leq t} m_{t'}$ and that
+this quantity is always non decreasing. This is the quantity recommanded by [2]
+to display the dendrogram.
+
+## `mode = "within-disp"`
+
+This option represents a cluster specific criterion by using the within cluster
+dispersion of the two clusters being merged at every given step of the 
+algorithm. It can be proved that this quantity is also non decreasing but it is
+also very dependant of the cluster size, leading to flattened dendrogram in
+most cases.
+
+## `mode = "average-disp"`
+
+This last option addresses the problem of the dependency to cluster sizes posed
+by the previous method (`"within-disp"`) by using the average within-cluster
+dispersion of the two clusters being merged at avery given step of the 
+algorithm. This criterion is also a cluster specific one but does not guaranty
+the absence of reversals in heights.
+
 # References
 
 [1] Dehman A. (2015). 
 [Spatial clustering of linkage disequilibrium blocks for genome-wide association studies](https://tel.archives-ouvertes.fr/tel-01288568/). 
 Phd Thesis, Université Paris Saclay.
 
-[2] Miyamoto S., Abe R., Endo Y., Takeshita J. (2015) Ward method of 
+[2] Grimm, E.C. (1987) CONISS: a fortran 77 program for stratigraphically 
+constrained cluster analysis by the method of incremental sum of squares. 
+*Computers & Geosciences*, **13**(1), 13-35.
+
+[3] Miyamoto S., Abe R., Endo Y., Takeshita J. (2015) Ward method of 
 hierarchical clustering for non-Eclidean similarity measures. In: *Proceedings
 of the VIIth International Conference of Soft Computing and Pattern 
 Recognition* (SoCPaR 2015).
+
+[4] Murtagh, F. and Legendre, P. (2014) Ward's hierarchical agglomerative 
+clustering method: which algorithms implement Ward's criterion? *Journal of
+Classification*, **31**, 274-295.
+
+[5] Ward, J.H. (1963) Hierarchical grouping to optimize an objective function.
+*Journal of the American Statistical Association*, **58**(301), 236-244.
