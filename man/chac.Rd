@@ -18,7 +18,8 @@
 
 \method{summary}{chac}(object, ...)
 
-\method{plot}{chac}(x, y, ..., mode = c("standard", "corrected", "inertia"))
+\method{plot}{chac}(x, y, ..., mode = c("standard", "corrected", "total-disp",
+  "within-disp", "average-disp"))
 
 \method{diagnose}{chac}(x, graph = TRUE, verbose = TRUE)
 }
@@ -40,6 +41,17 @@ not. Default to \code{TRUE}}
 \item{verbose}{(logical) whether to print a summary of the result or not.
 Default to \code{TRUE}}
 }
+\value{
+The function \code{plot.chac} displays the dendrogram and 
+additionally invisibly returns an object of class 
+\code{\link[stats]{dendrogram}} with heights as specified by the user through
+the option \code{mode}.
+
+\code{\link{diagnose}} invisibly exports a data frame with the 
+numbers of decreasing merges described by the labels of the clusters being
+merged at this step and at the previous one, as well as the corresponding
+merge heights.
+}
 \description{
 Methods for class 'chac'
 }
@@ -50,13 +62,31 @@ due to contingency constrains, some branches are reversed (decreasing
 merges). When \code{\link{plot.chac}} is called with 
 \code{mode = "corrected"}, a correction is applied to original heights so as
 to have only non decreasing merges). It does not change the result of the 
-clustering, only the look of the dendrogram for easier interpretation. When
-\code{\link{plot.chac}} is called with \code{mode = "inertia"}, heights of
-the dendrogram correspond to the cluster inertia instead of the cluster
-linkage value. This also ensures non decreasing merges.
-
-\code{\link{diagnose}} invisibly exports a data frame with the 
-numbers of decreasing merges described by the labels of the clusters being
-merged at this step and at the previous one, as well as the corresponding
-merge heights.
+clustering, only the look of the dendrogram for easier interpretation.\cr\cr
+Other modes are provided that correspond to different alternatives
+described in Grimm (1987): \itemize{
+\item in \code{mode = "within-disp"}, heights correspond to whithin-cluster
+dispersion, \emph{i.e.}, for a corresponding cluster, its height is 
+\deqn{I(C) = \sum_{i \in C} d(i,g_C)} where \eqn{d} is the dissimilarity 
+used to cluster objects and \eqn{g_C} is the center of gravity of cluster
+\eqn{C}. In this case, heights are always non decreasing;
+\item in \code{mode = "total-disp"}, heights correspond to the sum of all
+whithin-cluster dispersions. It is obtained from \code{mode = "standard"} by
+the cumulartive sum of its heights. In this case, heights are always
+non decreasing;
+\item in \code{mode = "average-disp"}, heights correspond to the 
+whithin-cluster dispersion divided by the cluster size. In this case, there 
+is no guaranty that the heights are non decreasing. When reversals are 
+detected, a warning is printed to advice the user to change the mode of the
+representation.
+}\cr
+Grimm (1987) indicates that heights as provided by 
+\code{mode = "within-disp"} are highly dependant on cluster sizes and that 
+the most advisable representation is the one provided by 
+\code{mode = "total-disp"}.
+}
+\references{
+{ Grimm, E.C. (1987) CONISS: a fortran 77 program for
+stratigraphically constrained analysis by the method of incremental sum of
+squares. \emph{Computer & Geosciences}, \strong{13}(1), 13-35. }
 }
