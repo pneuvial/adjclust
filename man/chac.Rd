@@ -7,7 +7,7 @@
 \alias{head.chac}
 \alias{summary.chac}
 \alias{plot.chac}
-\alias{diagnose.chac}
+\alias{diagnose}
 \title{Methods for class 'chac'}
 \usage{
 \method{as.hclust}{chac}(x, ...)
@@ -21,7 +21,7 @@
 \method{plot}{chac}(x, y, ..., mode = c("standard", "corrected", "total-disp",
   "within-disp", "average-disp"))
 
-\method{diagnose}{chac}(x, graph = TRUE, verbose = TRUE)
+diagnose(x, graph = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{x, object}{an object of class 'chac'}

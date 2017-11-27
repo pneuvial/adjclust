@@ -152,14 +152,9 @@ plot.chac <- function(x, y, ...,
   invisible(as.dendrogram(as.hclust(x)))
 }
 
-#' @export
-diagnose <- function(x, ...) {
-  UseMethod("diagnose")
-}
-
 #' @rdname chac
-#' @aliases diagnose.chac
 #' @aliases diagnose
+#' @aliases diagnose.chac
 #' @param graph (logical) whether the diagnostic plot has to be displayed or 
 #' not. Default to \code{TRUE}
 #' @param verbose (logical) whether to print a summary of the result or not.
@@ -170,6 +165,10 @@ diagnose <- function(x, ...) {
 #' merge heights.
 #' @importFrom graphics axis points
 #' @export
+diagnose <- function(x, graph = TRUE, verbose = TRUE) {
+  UseMethod("diagnose")
+}
+
 diagnose.chac <- function(x, graph = TRUE, verbose = TRUE) {
   diff_heights <- diff(x$height)
   if (any(diff_heights < 0)) {
