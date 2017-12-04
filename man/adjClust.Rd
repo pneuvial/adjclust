@@ -23,7 +23,7 @@ the algorithm stops. Default value is 1}
 \item{verbose}{Currently not used}
 }
 \value{
-An object of class \code{\link{chac}}.
+An object of class \code{\link{chac}} which describes the tree produced by the clustering process. The object a list with the same elements as an object of class \code{\link{chac}} (\code{merge}, \code{height}, \code{order}, \code{labels}, \code{call}, \code{method}, \code{dist.method}), and an extra element \code{mat}: the data on which the clustering is performed, possibly after pre-transformations described in the vignette entitled "Notes on CHAC implementation in adjclust".
 }
 \description{
 Adjacency-constrained hierarchical agglomerative clustering

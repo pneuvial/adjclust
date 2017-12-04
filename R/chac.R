@@ -1,7 +1,15 @@
+#' Class chac
+#' 
+#' S3 class for constrained hierarchical agglomerative clustering results
+#' 
+#' 
+#' 
+#' @exportClass chac
+#
 #' Methods for class 'chac'
 #'
 #' @name chac
-#' @param x,object an object of class 'chac'
+#' @param x,object,tree an object of class 'chac'
 #' @param y not used
 #' @param ... for \code{\link{plot}}, arguments passed to the function 
 #' \code{\link[stats]{plot.dendrogram}}. Default values for \code{type} and
@@ -257,7 +265,7 @@ cutree.chac <- function(tree, k = NULL, h = NULL) {
   if (class(tree) != "chac")
     stop("'tree' must be of class 'chac'")
   
-  if (any(diff(x$height) < 0)) {
+  if (any(diff(tree$height) < 0)) {
     if (is.null(k)) {
       stop("With decreasing heights, 'k' must be provided.")
     } else {

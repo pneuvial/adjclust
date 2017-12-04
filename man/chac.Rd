@@ -9,7 +9,9 @@
 \alias{plot.chac}
 \alias{diagnose}
 \alias{correct}
-\title{Methods for class 'chac'}
+\alias{cutree.chac}
+\alias{cuttree.chac}
+\title{Class chac}
 \usage{
 \method{as.hclust}{chac}(x, ...)
 
@@ -25,9 +27,11 @@
 diagnose(x, graph = TRUE, verbose = TRUE)
 
 correct(x)
+
+cutree.chac(tree, k = NULL, h = NULL)
 }
 \arguments{
-\item{x, object}{an object of class 'chac'}
+\item{x, object, tree}{an object of class 'chac'}
 
 \item{...}{for \code{\link{plot}}, arguments passed to the function 
 \code{\link[stats]{plot.dendrogram}}. Default values for \code{type} and
@@ -43,6 +47,11 @@ not. Default to \code{TRUE}}
 
 \item{verbose}{(logical) whether to print a summary of the result or not.
 Default to \code{TRUE}}
+
+\item{k}{an integer scalar or vector with the desired number of groups}
+
+\item{h}{numeric scalar or vector with heights where the tree should be cut.
+Only available when the heights are increasing}
 }
 \value{
 The function \code{plot.chac} displays the dendrogram and 
@@ -56,14 +65,19 @@ merged at this step and at the previous one, as well as the corresponding
 merge heights.
 
 The function \code{\link{correct}} returns a \code{chac} objects with
-modified heights so as they are strictly increasing. The new heights are 
-calculated in an identical way to the option \code{mode = "corrected"} of
-the function \code{plot.chac} (see Details). In addition, the \code{chac} 
-object has its field \code{method} modified from \code{adjClust} to 
+modified heights so as they are increasing. The new heights are calculated in
+an way identical to the option \code{mode = "corrected"} of the function
+\code{plot.chac} (see Details). In addition, the \code{chac} object has its
+field \code{method} modified from \code{adjClust} to 
 \code{adjClust-modified}.
+
+The function \code{\link{cutree.chac}} returns the clustering with 
+\code{k} groups or with the groups obtained by cutting the tree at height
+\code{h}. If the heights are not increasing, the cutting of the tree is based
+on the corrected heights as provided by the function \code{correct}.
 }
 \description{
-Methods for class 'chac'
+S3 class for constrained hierarchical agglomerative clustering results
 }
 \details{
 When \code{\link{plot.chac}} is called with 

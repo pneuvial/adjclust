@@ -9,4 +9,4 @@
 ^inst/localTests$
 ^docs$
 ^_pkgdown\.yml$
-
+^notes-*.md$

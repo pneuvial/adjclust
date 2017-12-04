@@ -1,5 +1,8 @@
-# Version 0.5.3 [2017-11-23]
+# Version 0.5.3 [2017-12-04]
 
+* Fixed #13 (man).
+* Fixed #15 (Cutree with decreasing merges).
+* Fixed #3 (Non-positive 'gains').
 * Using BiocStyle::html_document2 as a temporary fix for vignette 
   compilation errors.
 
