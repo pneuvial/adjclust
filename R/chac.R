@@ -92,6 +92,10 @@ plot.chac <- function(x, y, ...,
   if (is.null(args$type)) args$type <- "triangle"
   if (is.null(args$leaflab)) args$leaflab <- "none"
   
+  if ((x$method == "adjClust-corrected") & (mode != "standard")) {
+    stop("Already corrected 'chac' object. 'mode' must be set to 'standard'")
+  }
+  
   if (mode == "standard") {
     if (any(diff(x$height) < 0)) 
       warning(paste0("\nDetected reversals in dendrogram: ",
@@ -99,14 +103,7 @@ plot.chac <- function(x, y, ...,
     if (is.null(args$ylim)) args$ylim <- range(x$height)
   } else if (mode == "corrected") {
     res_diagnose <- diagnose(x, graph = FALSE, verbose = FALSE)
-    to_add <- data.frame(res_diagnose$number,
-                         add = res_diagnose$pheight - res_diagnose$height)
-    to_add <- apply(to_add, 1, function(acol) {
-      c(rep(0, acol[1] - 1), rep(acol[2], length(x$height) - acol[1] + 1))
-    })
-    to_add <- rowSums(to_add)
-    x$height <- x$height + to_add
-    ## note: remaining decreasing gains due to numerical approximations
+    x <- correct(x)
   } else if (mode == "total-disp") {
     x$height <- cumsum(x$height)
   } else if (mode == "within-disp" | mode == "average-disp") {
@@ -144,7 +141,7 @@ plot.chac <- function(x, y, ...,
     x0 <- rep(0, nrow(res_diagnose))
     x1 <- rep(0, nrow(res_diagnose))
     y1 <- x$height[res_diagnose$number]
-    y0 <- y1 - (res_diagnose$pheight - res_diagnose$height)
+    y0 <- y1 - (res_diagnose$pheight - res_diagnose$height) * 1.0001
     segments(x0, y0, x1, y1, col = "darkred", lwd = 2)
     segments(rep(-0.25, length(x0)), y0, rep(0.25, length(x0)), col = "darkred")
     segments(rep(-0.25, length(x0)), y1, rep(0.25, length(x0)), col = "darkred")
@@ -210,4 +207,64 @@ diagnose.chac <- function(x, graph = TRUE, verbose = TRUE) {
     print("All merges have non decreasing heights.")
     invisible(NULL)
   }
+}
+
+#' @rdname chac
+#' @aliases correct
+#' @aliases correct.chac
+#' @return The function \code{\link{correct}} returns a \code{chac} objects with
+#' modified heights so as they are increasing. The new heights are calculated in
+#' an way identical to the option \code{mode = "corrected"} of the function
+#' \code{plot.chac} (see Details). In addition, the \code{chac} object has its
+#' field \code{method} modified from \code{adjClust} to 
+#' \code{adjClust-modified}.
+#' @export
+correct <- function(x) {
+  UseMethod("correct")
+}
+
+correct.chac <- function(x) {
+  if (any(diff(x$height) < 0)) {
+    res_diagnose <- diagnose(x, graph = FALSE, verbose = FALSE)
+    to_add <- data.frame(res_diagnose$number,
+                         add = res_diagnose$pheight - res_diagnose$height)
+    to_add$add <- 1.0001 * to_add$add
+    to_add <- apply(to_add, 1, function(acol) {
+      c(rep(0, acol[1] - 1), rep(acol[2], length(x$height) - acol[1] + 1))
+    })
+    to_add <- rowSums(to_add)
+    x$height <- x$height + to_add
+    
+    x$method <- "adjClust-corrected"
+    return(x) } else {
+      warning("No reversal. Returned nothing.")
+      invisible(NULL)
+    }
+}
+
+#' @rdname chac
+#' @aliases cuttree.chac
+#' @param k an integer scalar or vector with the desired number of groups
+#' @param h numeric scalar or vector with heights where the tree should be cut.
+#' Only available when the heights are increasing
+#' @return The function \code{\link{cutree.chac}} returns the clustering with 
+#' \code{k} groups or with the groups obtained by cutting the tree at height
+#' \code{h}. If the heights are not increasing, the cutting of the tree is based
+#' on the corrected heights as provided by the function \code{correct}.
+#' @export
+#' 
+cutree.chac <- function(tree, k = NULL, h = NULL) {
+  if (class(tree) != "chac")
+    stop("'tree' must be of class 'chac'")
+  
+  if (any(diff(x$height) < 0)) {
+    if (is.null(k)) {
+      stop("With decreasing heights, 'k' must be provided.")
+    } else {
+      tree <- correct(tree)
+    }
+  }
+  tree <- as.hclust(tree)
+  res <- cutree(tree, k = k, h = h)
+  return(res)
 }

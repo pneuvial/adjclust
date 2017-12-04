@@ -8,6 +8,7 @@
 \alias{summary.chac}
 \alias{plot.chac}
 \alias{diagnose}
+\alias{correct}
 \title{Methods for class 'chac'}
 \usage{
 \method{as.hclust}{chac}(x, ...)
@@ -22,6 +23,8 @@
   "within-disp", "average-disp"))
 
 diagnose(x, graph = TRUE, verbose = TRUE)
+
+correct(x)
 }
 \arguments{
 \item{x, object}{an object of class 'chac'}
@@ -51,6 +54,13 @@ the option \code{mode}.
 numbers of decreasing merges described by the labels of the clusters being
 merged at this step and at the previous one, as well as the corresponding
 merge heights.
+
+The function \code{\link{correct}} returns a \code{chac} objects with
+modified heights so as they are strictly increasing. The new heights are 
+calculated in an identical way to the option \code{mode = "corrected"} of
+the function \code{plot.chac} (see Details). In addition, the \code{chac} 
+object has its field \code{method} modified from \code{adjClust} to 
+\code{adjClust-modified}.
 }
 \description{
 Methods for class 'chac'
