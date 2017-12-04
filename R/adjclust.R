@@ -195,7 +195,11 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
                  as.integer(blMin), PACKAGE = "adjclust")
     
     height <- gains
-    labels <- ifelse(is.null(rownames(mat)), as.character(1:p), rownames(mat))
+    if (is.null(rownames(mat))) {
+      labels <- as.character(1:p)
+    } else {
+      labels <- rownames(mat)
+    }
     tree <- list(traceW = traceW,
                  merge = res,
                  height = height,
