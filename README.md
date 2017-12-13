@@ -2,7 +2,7 @@
 adjclust: Adjacency-constrained clustering
 ==========================================
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/adjclust)](https://cran.r-project.org/package=adjclust) [![Travis Build Status](https://travis-ci.org/pneuvial/adjclust.svg?branch=master)](https://travis-ci.org/pneuvial/adjclust) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=master&svg=true)](https://ci.appveyor.com/project/pneuvial/adjclust) [![Coverage Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/master.svg)](https://codecov.io/github/pneuvial/adjclust?branch=master)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/adjclust)](https://cran.r-project.org/package=adjclust) [![Travis Build Status](https://travis-ci.org/pneuvial/adjclust.svg?branch=master)](https://travis-ci.org/pneuvial/adjclust) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=master&svg=true)](https://ci.appveyor.com/project/pneuvial/adjclust) [![Coverage Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/master.svg)](https://codecov.io/github/pneuvial/adjclust/branch/master)
 
 `adjclust` is a package that provides methods to perform adjacency-constrained hierarchical agglomerative clustering. Adjacency-constrained hierarchical agglomerative clustering is hierarchical agglomerative clustering (HAC) in which each observation is associated to a position, and the clustering is constrained so as only adjacent clusters are merged. It is useful in bioinformatics (e.g. Genome Wide Association Studies or Hi-C data analysis).
 
@@ -48,6 +48,7 @@ The result is of class `chac`. It can be plotted as a dendogram (as shown above)
 library("snpStats")
 #> Loading required package: survival
 #> Loading required package: Matrix
+#> Warning: package 'Matrix' was built under R version 3.4.2
 data("ld.example", package = "snpStats")
 geno <- ceph.1mb[, -316]  ## drop one SNP leading to one missing LD value
 h <- 100
@@ -60,7 +61,10 @@ image(ld.ceph, lwd = 0)
 ``` r
 
 fit <- snpClust(geno, stats = "R.squared", h = h)
+#> Note: 125 merges with non increasing heights.
 plot(fit)
+#> Warning in plot.chac(fit): 
+#> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
 ```
 
 ![](man/figures/README-snpClust-2.png)
@@ -88,7 +92,10 @@ mapC(binned)
 ``` r
 
 fitB <- hicClust(binned)
+#> Note: 32 merges with non increasing heights.
 plot(fitB)
+#> Warning in plot.chac(fitB): 
+#> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
 ```
 
 ![](man/figures/README-hicClust-2.png)
