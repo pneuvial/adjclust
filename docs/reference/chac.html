@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Methods for class 'chac' — chac • adjclust</title>
+<title>Class chac — chac • adjclust</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -101,11 +101,11 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Methods for class 'chac'</h1>
+    <h1>Class chac</h1>
     </div>
 
     
-    <p>Methods for class 'chac'</p>
+    <p>S3 class for constrained hierarchical agglomerative clustering results</p>
     
 
     <pre class="usage"><span class='co'># S3 method for chac</span>
@@ -121,13 +121,20 @@
 <span class='fu'>summary</span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for chac</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>mode</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"standard"</span>, <span class='st'>"corrected"</span>, <span class='st'>"total-disp"</span>,
+  <span class='st'>"within-disp"</span>, <span class='st'>"average-disp"</span>))
+
+<span class='fu'>diagnose</span>(<span class='no'>x</span>, <span class='kw'>graph</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>correct</span>(<span class='no'>x</span>)
+
+<span class='fu'>cutree.chac</span>(<span class='no'>tree</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x, object</th>
+      <th>x, object, tree</th>
       <td><p>an object of class 'chac'</p></td>
     </tr>
     <tr>
@@ -140,7 +147,90 @@
       <th>y</th>
       <td><p>not used</p></td>
     </tr>
+    <tr>
+      <th>mode</th>
+      <td><p>type of dendrogram to plot (see Details). Default to 
+<code>"standard"</code></p></td>
+    </tr>
+    <tr>
+      <th>graph</th>
+      <td><p>(logical) whether the diagnostic plot has to be displayed or 
+not. Default to <code>TRUE</code></p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>(logical) whether to print a summary of the result or not.
+Default to <code>TRUE</code></p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>an integer scalar or vector with the desired number of groups</p></td>
+    </tr>
+    <tr>
+      <th>h</th>
+      <td><p>numeric scalar or vector with heights where the tree should be cut.
+Only available when the heights are increasing</p></td>
+    </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The function <code>plot.chac</code> displays the dendrogram and 
+additionally invisibly returns an object of class 
+<code><a href='http://www.rdocumentation.org/packages/stats/topics/dendrogram'>dendrogram</a></code> with heights as specified by the user through
+the option <code>mode</code>.
+
+<code>diagnose</code> invisibly exports a data frame with the 
+numbers of decreasing merges described by the labels of the clusters being
+merged at this step and at the previous one, as well as the corresponding
+merge heights.</p>
+<p>The function <code>correct</code> returns a <code>chac</code> objects with
+modified heights so as they are increasing. The new heights are calculated in
+an way identical to the option <code>mode = "corrected"</code> of the function
+<code>plot.chac</code> (see Details). In addition, the <code>chac</code> object has its
+field <code>method</code> modified from <code>adjClust</code> to 
+<code>adjClust-modified</code>.</p>
+<p>The function <code>cutree.chac</code> returns the clustering with 
+<code>k</code> groups or with the groups obtained by cutting the tree at height
+<code>h</code>. If the heights are not increasing, the cutting of the tree is based
+on the corrected heights as provided by the function <code>correct</code>.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>When <code>plot.chac</code> is called with 
+<code>mode = "standard"</code>, the standard dendrogram is plotted, even though,
+due to contingency constrains, some branches are reversed (decreasing
+merges). When <code>plot.chac</code> is called with 
+<code>mode = "corrected"</code>, a correction is applied to original heights so as
+to have only non decreasing merges). It does not change the result of the 
+clustering, only the look of the dendrogram for easier interpretation.
+Other modes are provided that correspond to different alternatives
+described in Grimm (1987):</p><ul>
+<li><p>in <code>mode = "within-disp"</code>, heights correspond to whithin-cluster
+dispersion, <em>i.e.</em>, for a corresponding cluster, its height is 
+$$I(C) = \sum_{i \in C} d(i,g_C)$$ where \(d\) is the dissimilarity 
+used to cluster objects and \(g_C\) is the center of gravity of cluster
+\(C\). In this case, heights are always non decreasing;</p></li>
+<li><p>in <code>mode = "total-disp"</code>, heights correspond to the sum of all
+whithin-cluster dispersions. It is obtained from <code>mode = "standard"</code> by
+the cumulartive sum of its heights. In this case, heights are always
+non decreasing;</p></li>
+<li><p>in <code>mode = "average-disp"</code>, heights correspond to the 
+whithin-cluster dispersion divided by the cluster size. In this case, there 
+is no guaranty that the heights are non decreasing. When reversals are 
+detected, a warning is printed to advice the user to change the mode of the
+representation.</p></li>
+</ul><p>Grimm (1987) indicates that heights as provided by 
+<code>mode = "within-disp"</code> are highly dependant on cluster sizes and that 
+the most advisable representation is the one provided by 
+<code>mode = "total-disp"</code>. Further details are provided in the vignette 
+"Notes on CHAC implementation in adjclust".</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Grimm, E.C. (1987) CONISS: a fortran 77 program for
+stratigraphically constrained analysis by the method of incremental sum of
+squares. <em>Computer &amp; Geosciences</em>, <strong>13</strong>(1), 13-35.</p>
     
 
   </div>
@@ -148,7 +238,13 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
+          </ul>
 
   </div>
 </div>

@@ -166,14 +166,13 @@ missing values are returned</p>
 <span class='fu'>data</span>(<span class='no'>testdata</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"snpStats"</span>)
 
 <span class='co'># input as snpStats::SnpMatrix</span>
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
-
+<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)</div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='input'>
 <span class='co'># input as base::matrix</span>
-<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='fu'>as.matrix</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>]), <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
-
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='fu'>as.matrix</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>]), <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)</div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='input'>
 <span class='co'># input as Matrix::dgCMatrix</span>
 <span class='no'>ld</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>snpStats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/snpStats/topics/ld'>ld</a></span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>depth</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
-<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>ld</span>, <span class='fl'>3</span>)</div></pre>
+<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>ld</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

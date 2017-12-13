@@ -92,15 +92,15 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install adjclust from github with:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools::<span class="kw">install_github</span>(<span class="st">"pneuvial/adjclust"</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
+devtools::<span class="kw">install_github</span>(<span class="st">"pneuvial/adjclust"</span>)</code></pre></div>
 </div>
 <div id="adjclust" class="section level2">
 <h2 class="hasAnchor">
 <a href="#adjclust" class="anchor"></a><code>adjClust</code>
 </h2>
 <p><code>adjClust</code> performs adjacency-constrained HAC for standard and sparse, similarity and dissimilarity matrices and <code>dist</code> objects. <code>Matrix::dgCMatrix</code> and <code>Matrix::dsCMatrix</code> are the supported sparse matrix classes. Let’s look at a basic example</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"adjclust"</span>)
 
 sim &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>,
                 <span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>,
@@ -108,7 +108,7 @@ sim &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw
                 <span class="fl">0.1</span>, <span class="fl">0.2</span> ,<span class="fl">0.6</span> ,<span class="fl">1.0</span>), <span class="dt">nrow=</span><span class="dv">4</span>)
 h &lt;-<span class="st"> </span><span class="dv">3</span>
 fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/adjClust.html">adjClust</a></span>(sim, <span class="st">"similarity"</span>, h)
-<span class="kw">plot</span>(fit)</code></pre>
+<span class="kw">plot</span>(fit)</code></pre></div>
 <p><img src="reference/figures/README-adjClust-1.png" width="672"></p>
 <p>The result is of class <code>chac</code>. It can be plotted as a dendogram (as shown above). Successive merge and heights of clustering can be obtained by <code>fit$merge</code> and <code>fit$height</code> respectively.</p>
 </div>
@@ -117,18 +117,22 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/adjClust.h
 <a href="#snpclust" class="anchor"></a><code>snpClust</code>
 </h2>
 <p><code>snpClust</code> performs adjacency-constrained HAC for specific application of Genome Wide Association Studies (GWAS). A minimal example is given below. See <a href="vignettes/snpClust.Rmd">GWAS Vignette</a> for details.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"snpStats"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"snpStats"</span>)
 <span class="co">#&gt; Loading required package: survival</span>
 <span class="co">#&gt; Loading required package: Matrix</span>
+<span class="co">#&gt; Warning: package 'Matrix' was built under R version 3.4.2</span>
 <span class="kw">data</span>(<span class="st">"ld.example"</span>, <span class="dt">package =</span> <span class="st">"snpStats"</span>)
 geno &lt;-<span class="st"> </span>ceph.1mb[, -<span class="dv">316</span>]  ## drop one SNP leading to one missing LD value
 h &lt;-<span class="st"> </span><span class="dv">100</span>
 ld.ceph &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/snpStats/topics/ld">ld</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">depth =</span> h)
-<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre>
+<span class="kw">image</span>(ld.ceph, <span class="dt">lwd =</span> <span class="dv">0</span>)</code></pre></div>
 <p><img src="reference/figures/README-snpClust-1.png" width="672"></p>
-<pre class="sourceCode r"><code class="sourceCode r">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/snpClust.html">snpClust</a></span>(geno, <span class="dt">stats =</span> <span class="st">"R.squared"</span>, <span class="dt">h =</span> h)
-<span class="kw">plot</span>(fit)</code></pre>
+<span class="co">#&gt; Note: 125 merges with non increasing heights.</span>
+<span class="kw">plot</span>(fit)
+<span class="co">#&gt; Warning in plot.chac(fit): </span>
+<span class="co">#&gt; Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.</span></code></pre></div>
 <p><img src="reference/figures/README-snpClust-2.png" width="672"></p>
 </div>
 <div id="hicclust" class="section level2">
@@ -136,17 +140,20 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/snpClust.h
 <a href="#hicclust" class="anchor"></a><code>hicClust</code>
 </h2>
 <p><code>hicClust</code> performs adjacency-constrained HAC for specific application of Hi-C data analysis. A minimal example is given below. See <a href="vignettes/hicClust.Rmd">Hi-C Vignette</a> for details.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"HiTC"</span>)</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"hic_imr90_40_XX"</span>, <span class="dt">package =</span> <span class="st">"adjclust"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"HiTC"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"hic_imr90_40_XX"</span>, <span class="dt">package =</span> <span class="st">"adjclust"</span>)
 binned &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/binningC">binningC</a></span>(hic_imr90_40_XX, <span class="dt">binsize =</span> <span class="fl">5e5</span>)
 <span class="co">#&gt; Bin size 'xgi' =501579 [1x501579]</span>
 <span class="co">#&gt; Bin size 'ygi' =501579 [1x501579]</span>
 <span class="kw"><a href="http://www.rdocumentation.org/packages/HiTC/topics/mapC">mapC</a></span>(binned)
-<span class="co">#&gt; minrange= 12  - maxrange= 1022</span></code></pre>
+<span class="co">#&gt; minrange= 12  - maxrange= 1022</span></code></pre></div>
 <p><img src="reference/figures/README-hicClust-1.png" width="672"></p>
-<pre class="sourceCode r"><code class="sourceCode r">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 fitB &lt;-<span class="st"> </span><span class="kw"><a href="reference/hicClust.html">hicClust</a></span>(binned)
-<span class="kw">plot</span>(fitB)</code></pre>
+<span class="co">#&gt; Note: 32 merges with non increasing heights.</span>
+<span class="kw">plot</span>(fitB)
+<span class="co">#&gt; Warning in plot.chac(fitB): </span>
+<span class="co">#&gt; Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.</span></code></pre></div>
 <p><img src="reference/figures/README-hicClust-2.png" width="672"></p>
 </div>
 <div id="credits" class="section level2">
@@ -187,9 +194,9 @@ fitB &lt;-<span class="st"> </span><span class="kw"><a href="reference/hicClust.
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=adjclust"><img src="http://www.r-pkg.org/badges/version/adjclust" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://travis-ci.org/pneuvial/adjclust"><img src="https://travis-ci.org/pneuvial/adjclust.svg?branch=master" alt="Travis Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/pneuvial/adjclust"><img src="https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
-<li><a href="https://codecov.io/github/pneuvial/adjclust?branch=master"><img src="https://img.shields.io/codecov/c/github/pneuvial/adjclust/master.svg" alt="Coverage Status"></a></li>
+<li><a href="https://travis-ci.org/pneuvial/adjclust"><img src="https://travis-ci.org/pneuvial/adjclust.svg?branch=develop" alt="Travis Build Status"></a></li>
+<li><a href="https://ci.appveyor.com/project/pneuvial/adjclust"><img src="https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=develop&amp;svg=true" alt="AppVeyor Build Status"></a></li>
+<li><a href="https://codecov.io/github/pneuvial/adjclust?branch=develop"><img src="https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg" alt="Coverage Status"></a></li>
 </ul>
 </div>
 
