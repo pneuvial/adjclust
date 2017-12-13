@@ -212,7 +212,7 @@ diagnose.chac <- function(x, graph = TRUE, verbose = TRUE) {
     
     invisible(res)
   } else {
-    print("All merges have non decreasing heights.")
+    message("All merges have non decreasing heights.")
     invisible(NULL)
   }
 }
