@@ -10,4 +10,12 @@ test_that("'adjClust' returns an object for which the sum of heights is the
   fit <- adjClust(sim)
   
   expect_equal(sum(fit$height), sum(dissim)/nrow(sim), tolerance = 0.00001)
+  
+  inertia_dendo <- as.hclust(plot(fit, mode = "within-disp"))
+  expect_equal(inertia_dendo$height[nrow(sim)-1], sum(dissim)/nrow(sim), 
+               tolerance = 0.00001)
+  
+  dispersion_dendo <- as.hclust(plot(fit, mode = "total-disp"))
+  expect_equal(dispersion_dendo$height[nrow(sim)-1], sum(dissim)/nrow(sim), 
+               tolerance = 0.00001)
 })
