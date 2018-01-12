@@ -5,9 +5,9 @@ context("Correctness of modify function")
 
 test_that("Output of the modify function satisfies the conditions: For all 1 <= i,j <=p, (s[i,i] == 1) and (s[i,j] <= 0.5*(s[i,i]+s[j,j])) )", {
   
-  m <- matrix(c(1,0.1,0.5,0.8,0,0.1,1,0.2,0.6,0.9,0.5,0.2,1,0.3,0.7,0.8,0.6,0.3,1,0.4,0,0.9,0.7,0.4,1), nrow=5)
+  m <- matrix(c(1,0.1,0.5,0.8,0,0.1,1,0.2,0.6,0.9,0.5,0.2,1,0.3,0.7,0.8,0.6,0.3,1,0.4,0,0.9,0.7,0.4,1), nrow = 5)
   p <- nrow(m)
-  h <- p-1
+  h <- p - 1
   
   #Case 1: Input matrix satisfies both conditions (s[i,i] == 1) and (s[i,j] <= 0.5*(s[i,i]+s[j,j])) for all 1 <= i,j <=p
   m1 <- m
