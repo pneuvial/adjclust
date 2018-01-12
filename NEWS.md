@@ -1,5 +1,12 @@
+# Version 0.5.4 [2017-01-12]
+
+* More tests for modify and modifySparse 
+* BUG FIX in condnCheck
+
 # Version 0.5.3 [2017-12-04]
 
+* Added tests for: equivalence with 'hclust',  comparing sum of heights and 
+   pseudo inertia, plots, non-increasing heights, cutree
 * Fixed #13 (man).
 * Fixed #15 (Cutree with decreasing merges).
 * Fixed #3 (Non-positive 'gains').
@@ -12,7 +19,6 @@
 
 # Version 0.5.1 [2017-10-16]
 
-* Added citation to Alia Dehman's PhD thesis to DESCRIPTION.
 * More informative 'Description' of the method in DESCRIPTION
 * Updates to test scripts to pass R CMD check on all windows platforms
 * Moved README-*.png files to man/figures
