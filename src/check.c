@@ -31,4 +31,3 @@ SEXP CCondnCheck(SEXP X){
   UNPROTECT(1);
   return(out);
 }
-
