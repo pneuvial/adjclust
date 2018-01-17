@@ -20,10 +20,10 @@ matrix:
       r: oldrel
     - os: linux
       r: release
-      r_github_packages:
-      - jimhester/covr
+      r_packages:
+      - covr
       after_success:
-      - Rscript -e 'covr::codecov(quiet=FALSE)'
+      - Rscript -e 'library(covr); codecov()'
       env: NB='w/ covr' ## Just a label
     - os: linux
       r: devel
