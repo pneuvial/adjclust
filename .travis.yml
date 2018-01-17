@@ -21,7 +21,8 @@ matrix:
     - os: linux
       r: release
       r_packages:
-      - xml2 covr
+      - xml2
+      - covr
       after_success:
       - Rscript -e 'library(covr); codecov()'
       env: NB='w/ covr' ## Just a label
