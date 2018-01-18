@@ -1,0 +1,8 @@
+urls:
+  reference: https://pneuvial.github.io/adjclust/reference
+  article: https://pneuvial.github.io/adjclust/articles
+articles:
+  hicClust: hicClust.html
+  notesCHAC: notesCHAC.html
+  snpClust: snpClust.html
+
