@@ -1,12 +1,12 @@
 ---
-title: "Notes on CHAC implementation in adjclust"
+title: "Implementation notes for the `adjclust` package"
 author: "Pierre Neuvial, Nathalie Villa-Vialaneix"
 date: "`r Sys.Date()`"
 output: 
     html_document:
         css: !expr BiocStyle:::bioconductor.css
 vignette: >
-  %\VignetteIndexEntry{Notes on CHAC implementation in adjclust}
+  %\VignetteIndexEntry{Implementation notes for the adjclust package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,7 +21,7 @@ explaining implementation choices in `adjclust`;
 implemented in `plot.chac`.
 
 In this document, we suppose given $n$ objects, $\{1, \ldots, n\}$ that have to
-be clustered using adjacency-constrained HAC, that is, in such a way that only
+be clustered using adjacency-constrained HAC (CHAC), that is, in such a way that only
 adjacent objects/clusters can be merged.
 
 # Notes on relations between similarity and dissimilarity implementation
