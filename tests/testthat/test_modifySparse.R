@@ -20,12 +20,12 @@ test_that("Output of the modifySparse function satisfies the conditions :For all
   
   #Case 2 :Input matrix satisfies condition (s[i,i] == 1) and but does NOT satisfy condition (s[i,j] <= 0.5*(s[i,i]+s[j,j])) for all 1 <= i,j <=p
   sb2 <- sb
-  sb2[3, 2] <- 2.5 ## Caution: sb2[3, 2]  is *not* m[3, 2] ...
+  sb2[3,2] <- 2.5 ## Caution: sb2[3, 2]  is *not* m[3, 2] ...
   expect_false(adjclust:::sparseCondnCheck(sb2, p, h))
   res2 <- adjclust:::modifySparse(sb2, p, h)
   
   expect_true(adjclust:::sparseCondnCheck(res2, p, h))
-  expect_equal(res2[ ,1], rep(1, p))  
+  expect_equal(res2[, 1], rep(1, p))  
   
   #Case 3 :Input matrix satisfies condition (s[i,j] <= 0.5*(s[i,i]+s[j,j])) and but does NOT satisfy condition (s[i,i] == 1) for all 1 <= i,j <=p
   sb3 <- sb
@@ -34,7 +34,7 @@ test_that("Output of the modifySparse function satisfies the conditions :For all
   res3 <- adjclust:::modifySparse(sb3, p, h)
 
   expect_true(adjclust:::sparseCondnCheck(res3, p, h))
-  expect_equal(res3[ ,1], rep(1, p))   
+  expect_equal(res3[, 1], rep(1, p))   
   
   #Case 4 :Input matrix does NOT satisfies both conditions (s[i,j] <= 0.5*(s[i,i]+s[j,j])) and (s[i,i] == 1) for all 1 <= i,j <=p
   sb4 <- sb
@@ -44,6 +44,6 @@ test_that("Output of the modifySparse function satisfies the conditions :For all
   res4 <- adjclust:::modifySparse(sb4, p, h)
   
   expect_true(adjclust:::sparseCondnCheck(res4, p, h))
-  expect_equal(res3[ ,1], rep(1, p))
+  expect_equal(res3[, 1], rep(1, p))
   
 })
