@@ -8,7 +8,7 @@
 
 ^fig$
 ^inst/localTests$
-^inst/doc$
 ^docs$
 ^_pkgdown\.yml$
 ^notes.*\.md$
+^man/figures$
