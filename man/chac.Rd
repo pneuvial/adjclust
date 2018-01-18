@@ -77,7 +77,7 @@ The function \code{\link{cutree.chac}} returns the clustering with
 on the corrected heights as provided by the function \code{correct}.
 }
 \description{
-S3 class for constrained hierarchical agglomerative clustering results
+S3 class for Constrained Hierarchical Agglomerative Clustering results
 }
 \details{
 When \code{\link{plot.chac}} is called with 
@@ -89,23 +89,23 @@ to have only non decreasing merges). It does not change the result of the
 clustering, only the look of the dendrogram for easier interpretation.\cr\cr
 Other modes are provided that correspond to different alternatives
 described in Grimm (1987): \itemize{
-\item in \code{mode = "within-disp"}, heights correspond to whithin-cluster
+\item in \code{mode = "within-disp"}, heights correspond to within-cluster
 dispersion, \emph{i.e.}, for a corresponding cluster, its height is 
 \deqn{I(C) = \sum_{i \in C} d(i,g_C)} where \eqn{d} is the dissimilarity 
 used to cluster objects and \eqn{g_C} is the center of gravity of cluster
 \eqn{C}. In this case, heights are always non decreasing;
-\item in \code{mode = "total-disp"}, heights correspond to the sum of all
-whithin-cluster dispersions. It is obtained from \code{mode = "standard"} by
-the cumulartive sum of its heights. In this case, heights are always
+\item in \code{mode = "total-disp"}, heights correspond to the total
+within-cluster dispersion. It is obtained from \code{mode = "standard"} by
+the cumulative sum of its heights. In this case, heights are always
 non decreasing;
 \item in \code{mode = "average-disp"}, heights correspond to the 
-whithin-cluster dispersion divided by the cluster size. In this case, there 
+within-cluster dispersion divided by the cluster size. In this case, there 
 is no guaranty that the heights are non decreasing. When reversals are 
 detected, a warning is printed to advice the user to change the mode of the
 representation.
 }\cr
 Grimm (1987) indicates that heights as provided by 
-\code{mode = "within-disp"} are highly dependant on cluster sizes and that 
+\code{mode = "within-disp"} are highly dependent on cluster sizes and that 
 the most advisable representation is the one provided by 
 \code{mode = "total-disp"}. Further details are provided in the vignette 
 "Notes on CHAC implementation in adjclust".
