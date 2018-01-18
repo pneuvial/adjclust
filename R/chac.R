@@ -75,8 +75,7 @@ summary.chac <- function(object, ...) {
 #' within-cluster dispersion divided by the cluster size. In this case, there 
 #' is no guaranty that the heights are non decreasing. When reversals are 
 #' detected, a warning is printed to advice the user to change the mode of the
-#' representation.
-#' }\cr
+#' representation.}
 #' Grimm (1987) indicates that heights as provided by 
 #' \code{mode = "within-disp"} are highly dependent on cluster sizes and that 
 #' the most advisable representation is the one provided by 

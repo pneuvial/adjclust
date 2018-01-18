@@ -5,8 +5,15 @@
 
 # Version 0.5.3 [2017-12-04]
 
+* 'height' is now defined as the value of the linkage criterion (as is done in
+'hclust'), rather than the total inertia of the clustering (as is done in
+'rioja').
+* Added several representations for the dendrogram corresponding to different
+choices for the height.
+* Improved documentation and vignettes.
+* Removed non-standard fields in the output of 'adjclust' (#13).
 * Added tests for: equivalence with 'hclust',  comparing sum of heights and 
-   pseudo inertia, plots, non-increasing heights, cutree
+   pseudo inertia, plots, non-increasing heights, cutree (#14).
 * Fixed #13 (man).
 * Fixed #15 (Cutree with decreasing merges).
 * Fixed #3 (Non-positive 'gains').
