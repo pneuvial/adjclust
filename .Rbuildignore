@@ -4,9 +4,11 @@
 ^cran-comments\.md$
 ^\.travis\.yml$
 ^appveyor\.yml$
-
+^codecov\.yml$
+tests/testthat/Rplots.pdf
 ^fig$
 ^inst/localTests$
 ^docs$
 ^_pkgdown\.yml$
-
+^notes.*\.md$
+^man/figures$

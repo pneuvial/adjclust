@@ -27,11 +27,11 @@ test_that("rioja and adjClust with full band give identical results on toy data"
   fit4 <- adjClust(sim, "similarity")
   
   expect_equal(fit1$merge, fit2$merge)
-  expect_equal(fit1$height, fit2$height, tolerance=0.00001)
+  expect_equal(cumsum(fit1$height), fit2$height, tolerance = 0.00001)
   
   expect_equal(fit3$merge, fit2$merge)
-  expect_equal(fit3$height, fit2$height, tolerance=0.00001)
+  expect_equal(cumsum(fit3$height), fit2$height, tolerance = 0.00001)
   
   expect_equal(fit4$merge, fit2$merge)
-  expect_equal(fit4$height, fit2$height, tolerance=0.00001)
+  expect_equal(cumsum(fit4$height), fit2$height, tolerance = 0.00001)
 })

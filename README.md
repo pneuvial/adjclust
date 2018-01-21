@@ -48,7 +48,6 @@ The result is of class `chac`. It can be plotted as a dendogram (as shown above)
 library("snpStats")
 #> Loading required package: survival
 #> Loading required package: Matrix
-#> Warning: package 'Matrix' was built under R version 3.4.2
 data("ld.example", package = "snpStats")
 geno <- ceph.1mb[, -316]  ## drop one SNP leading to one missing LD value
 h <- 100
@@ -63,8 +62,6 @@ image(ld.ceph, lwd = 0)
 fit <- snpClust(geno, stats = "R.squared", h = h)
 #> Note: 125 merges with non increasing heights.
 plot(fit)
-#> Warning in plot.chac(fit): 
-#> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
 ```
 
 ![](man/figures/README-snpClust-2.png)
@@ -94,8 +91,6 @@ mapC(binned)
 fitB <- hicClust(binned)
 #> Note: 32 merges with non increasing heights.
 plot(fitB)
-#> Warning in plot.chac(fitB): 
-#> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
 ```
 
 ![](man/figures/README-hicClust-2.png)

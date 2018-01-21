@@ -165,13 +165,15 @@ conformation capture data (Hi-C).</p>
 <span class='fu'>data</span>(<span class='st'>"hic_imr90_40_XX"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"adjclust"</span>)
 
 <span class='co'># input as HiTC::HTCexp object</span>
-<span class='no'>res1</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>hic_imr90_40_XX</span>)</div><span class='co'># NOT RUN {</span>
+<span class='no'>res1</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>hic_imr90_40_XX</span>)</div><div class='output co'>#&gt; <span class='message'>Note: 1005 merges with non increasing heights.</span></div><div class='input'>
+</div><span class='co'># NOT RUN {</span>
 <span class='co'># input as Matrix::dsCMatrix contact map</span>
 <span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>HiTC</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/HiTC/topics/HTCexp-class'>intdata</a></span>(<span class='no'>hic_imr90_40_XX</span>)
 <span class='no'>res2</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='no'>mat</span>)
 <span class='co'># }</span><div class='input'>
 <span class='co'># input as text file</span>
-<span class='no'>res3</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sample.txt"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"adjclust"</span>))</div></pre>
+<span class='no'>res3</span> <span class='kw'>&lt;-</span> <span class='fu'>hicClust</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sample.txt"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"adjclust"</span>))</div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -26,5 +26,5 @@ test_that("snpClust gives results identical to those of adjclust 0.3.0", {
 
     fit <- snpClust(ld.ceph, h = 100)
     expect_equal(fit$merge, prevfit$merge)
-    expect_equal(fit$height, prevfit$height, tolerance=1e-5)
+    expect_equal(cumsum(fit$height), prevfit$height, tolerance=1e-5)
 })

@@ -1,10 +1,31 @@
+# Version 0.5.4 [2017-01-12]
+
+* More tests for modify and modifySparse 
+* BUG FIX in condnCheck
+
+# Version 0.5.3 [2017-12-04]
+
+* 'height' is now defined as the value of the linkage criterion (as is done in
+'hclust'), rather than the total inertia of the clustering (as is done in
+'rioja').
+* Added several representations for the dendrogram corresponding to different
+choices for the height.
+* Improved documentation and vignettes.
+* Removed non-standard fields in the output of 'adjclust' (#13).
+* Added tests for: equivalence with 'hclust',  comparing sum of heights and 
+   pseudo inertia, plots, non-increasing heights, cutree (#14).
+* Fixed #13 (man).
+* Fixed #15 (Cutree with decreasing merges).
+* Fixed #3 (Non-positive 'gains').
+* Using BiocStyle::html_document2 as a temporary fix for vignette 
+  compilation errors.
+
 # Version 0.5.2 [2017-10-17]
 
 * Added citation to Alia Dehman's PhD thesis to DESCRIPTION.
 
 # Version 0.5.1 [2017-10-16]
 
-* Added citation to Alia Dehman's PhD thesis to DESCRIPTION.
 * More informative 'Description' of the method in DESCRIPTION
 * Updates to test scripts to pass R CMD check on all windows platforms
 * Moved README-*.png files to man/figures

@@ -17,8 +17,8 @@ SEXP CSparseCondnCheck(SEXP X, SEXP Rp, SEXP Rh){
 
   LOGICAL(out)[0] = TRUE;
 
-  for(i = 0; i < *p; i++) {
-    for(j = 0; (j < *h+1)&&(j < i+1); j++) {
+  for (i = 0; i < *p; i++) {
+    for (j = 0; (j < *h+1)&&(j < i+1); j++) {
       if (xptr[i + (*p)*j] > 0.5*(xptr[i] + xptr[i-j])){
         LOGICAL(out)[0] = FALSE;
         i = *p + 1; //to break outer loop

@@ -51,3 +51,5 @@ src/*.so
 fig
 inst/localTests/
 inst/doc/
+cran-comments.md
+notes*.md

@@ -7,7 +7,11 @@
 \alias{head.chac}
 \alias{summary.chac}
 \alias{plot.chac}
-\title{Methods for class 'chac'}
+\alias{diagnose}
+\alias{correct}
+\alias{cutree.chac}
+\alias{cuttree.chac}
+\title{Class chac}
 \usage{
 \method{as.hclust}{chac}(x, ...)
 
@@ -17,17 +21,96 @@
 
 \method{summary}{chac}(object, ...)
 
-\method{plot}{chac}(x, y, ...)
+\method{plot}{chac}(x, y, ..., mode = c("standard", "corrected", "total-disp",
+  "within-disp", "average-disp"))
+
+diagnose(x, graph = TRUE, verbose = TRUE)
+
+correct(x)
+
+cutree.chac(tree, k = NULL, h = NULL)
 }
 \arguments{
-\item{x, object}{an object of class 'chac'}
+\item{x, object, tree}{an object of class 'chac'}
 
 \item{...}{for \code{\link{plot}}, arguments passed to the function 
 \code{\link[stats]{plot.dendrogram}}. Default values for \code{type} and
 \code{leaflab} are respectively set to \code{"triangle"} and \code{"none"}}
 
 \item{y}{not used}
+
+\item{mode}{type of dendrogram to plot (see Details). Default to 
+\code{"standard"}}
+
+\item{graph}{(logical) whether the diagnostic plot has to be displayed or 
+not. Default to \code{TRUE}}
+
+\item{verbose}{(logical) whether to print a summary of the result or not.
+Default to \code{TRUE}}
+
+\item{k}{an integer scalar or vector with the desired number of groups}
+
+\item{h}{numeric scalar or vector with heights where the tree should be cut.
+Only available when the heights are increasing}
+}
+\value{
+The function \code{plot.chac} displays the dendrogram and 
+additionally invisibly returns an object of class 
+\code{\link[stats]{dendrogram}} with heights as specified by the user through
+the option \code{mode}.
+
+\code{\link{diagnose}} invisibly exports a data frame with the 
+numbers of decreasing merges described by the labels of the clusters being
+merged at this step and at the previous one, as well as the corresponding
+merge heights.
+
+The function \code{\link{correct}} returns a \code{chac} objects with
+modified heights so as they are increasing. The new heights are calculated in
+an way identical to the option \code{mode = "corrected"} of the function
+\code{plot.chac} (see Details). In addition, the \code{chac} object has its
+field \code{method} modified from \code{adjClust} to 
+\code{adjClust-modified}.
+
+The function \code{\link{cutree.chac}} returns the clustering with 
+\code{k} groups or with the groups obtained by cutting the tree at height
+\code{h}. If the heights are not increasing, the cutting of the tree is based
+on the corrected heights as provided by the function \code{correct}.
 }
 \description{
-Methods for class 'chac'
+S3 class for Constrained Hierarchical Agglomerative Clustering results
+}
+\details{
+When \code{\link{plot.chac}} is called with 
+\code{mode = "standard"}, the standard dendrogram is plotted, even though,
+due to contingency constrains, some branches are reversed (decreasing
+merges). When \code{\link{plot.chac}} is called with 
+\code{mode = "corrected"}, a correction is applied to original heights so as
+to have only non decreasing merges). It does not change the result of the 
+clustering, only the look of the dendrogram for easier interpretation.\cr\cr
+Other modes are provided that correspond to different alternatives
+described in Grimm (1987): \itemize{
+\item in \code{mode = "within-disp"}, heights correspond to within-cluster
+dispersion, \emph{i.e.}, for a corresponding cluster, its height is 
+\deqn{I(C) = \sum_{i \in C} d(i,g_C)} where \eqn{d} is the dissimilarity 
+used to cluster objects and \eqn{g_C} is the center of gravity of cluster
+\eqn{C}. In this case, heights are always non decreasing;
+\item in \code{mode = "total-disp"}, heights correspond to the total
+within-cluster dispersion. It is obtained from \code{mode = "standard"} by
+the cumulative sum of its heights. In this case, heights are always
+non decreasing;
+\item in \code{mode = "average-disp"}, heights correspond to the 
+within-cluster dispersion divided by the cluster size. In this case, there 
+is no guaranty that the heights are non decreasing. When reversals are 
+detected, a warning is printed to advice the user to change the mode of the
+representation.}
+Grimm (1987) indicates that heights as provided by 
+\code{mode = "within-disp"} are highly dependent on cluster sizes and that 
+the most advisable representation is the one provided by 
+\code{mode = "total-disp"}. Further details are provided in the vignette 
+"Notes on CHAC implementation in adjclust".
+}
+\references{
+{ Grimm, E.C. (1987) CONISS: a fortran 77 program for
+stratigraphically constrained analysis by the method of incremental sum of
+squares. \emph{Computer & Geosciences}, \strong{13}(1), 13-35. }
 }

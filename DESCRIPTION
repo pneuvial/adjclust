@@ -8,8 +8,8 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
                  email="pierre.neuvial@math.univ-toulouse.fr"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Villa-Vialaneix", role="aut"))
-Date: 2017-10-16
-Version: 0.5.2
+Date: 2018-01-12
+Version: 0.5.4
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 
@@ -23,14 +23,12 @@ Description: Implements a constrained version of hierarchical agglomerative
     <https://hal.archives-ouvertes.fr/tel-01288568v1>.
 Depends: R(>= 2.10.0)
 Imports:
-    Matrix,
     matrixStats,
     snpStats,
     methods,
     utils,
     HiTC,
 Suggests:
-    BiocStyle,
     knitr,
     testthat,
     rmarkdown,

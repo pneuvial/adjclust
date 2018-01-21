@@ -28,7 +28,13 @@ NULL
 #'   the algorithm stops. Default value is 1
 #' @param verbose Currently not used
 #'   
-#' @return An object of class \code{\link{chac}}.
+#' @return An object of class \code{\link{chac}} which describes the tree 
+#' produced by the clustering process. The object a list with the same elements 
+#' as an object of class \code{\link{chac}} (\code{merge}, \code{height}, 
+#' \code{order}, \code{labels}, \code{call}, \code{method}, \code{dist.method}),
+#' and an extra element \code{mat}: the data on which the clustering is 
+#' performed, possibly after pre-transformations described in the vignette 
+#' entitled "Notes on CHAC implementation in adjclust".
 #'   
 #' @seealso \code{\link{snpClust}} to cluster SNPs based on linkage disequilibrium
 #' @seealso \code{\link{hicClust}} to cluster Hi-C data
@@ -194,19 +200,26 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
                  chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
                  as.integer(blMin), PACKAGE = "adjclust")
     
-    height <- cumsum(gains)
-    tree <- list(traceW = traceW,
-                 gains = gains,
-                 merge = res,
+    height <- gains
+    if (is.null(rownames(mat))) {
+      labels <- as.character(1:p)
+    } else {
+      labels <- rownames(mat)
+    }
+    tree <- list(merge = res,
                  height = height,
-                 seqdist = height,
                  order = 1:p,
-                 labels = paste("",1:p),
-                 method = "adjClust",
+                 labels = labels,
                  call = match.call(),
+                 method = "adjClust",
                  dist.method = attr(D, "method"),
                  data = mat)
     class(tree) <- c("chac")
+    
+    if (any(diff(tree$height) < 0)) 
+      message(paste("Note:", sum(diff(tree$height) < 0),
+                    "merges with non increasing heights."))
+    
     return(tree)
 }
 
