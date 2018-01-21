@@ -28,7 +28,13 @@ NULL
 #'   the algorithm stops. Default value is 1
 #' @param verbose Currently not used
 #'   
-#' @return An object of class \code{\link{chac}} which describes the tree produced by the clustering process. The object a list with the same elements as an object of class \code{\link{chac}} (\code{merge}, \code{height}, \code{order}, \code{labels}, \code{call}, \code{method}, \code{dist.method}), and an extra element \code{mat}: the data on which the clustering is performed, possibly after pre-transformations described in the vignette entitled "Notes on CHAC implementation in adjclust".
+#' @return An object of class \code{\link{chac}} which describes the tree 
+#' produced by the clustering process. The object a list with the same elements 
+#' as an object of class \code{\link{chac}} (\code{merge}, \code{height}, 
+#' \code{order}, \code{labels}, \code{call}, \code{method}, \code{dist.method}),
+#' and an extra element \code{mat}: the data on which the clustering is 
+#' performed, possibly after pre-transformations described in the vignette 
+#' entitled "Notes on CHAC implementation in adjclust".
 #'   
 #' @seealso \code{\link{snpClust}} to cluster SNPs based on linkage disequilibrium
 #' @seealso \code{\link{hicClust}} to cluster Hi-C data
