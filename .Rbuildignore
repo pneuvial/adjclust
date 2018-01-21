@@ -5,7 +5,7 @@
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^codecov\.yml$
-
+tests/testthat/Rplots.pdf
 ^fig$
 ^inst/localTests$
 ^docs$
