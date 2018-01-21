@@ -3,8 +3,8 @@ title: "Clustering of Hi-C contact maps"
 author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix"
 date: "`r Sys.Date()`"
 output: 
-    html_document:
-        css: !expr BiocStyle:::bioconductor.css
+  html_document:
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{Clustering of Hi-C contact maps}
   %\VignetteEngine{knitr::rmarkdown}

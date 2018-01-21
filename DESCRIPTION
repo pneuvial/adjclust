@@ -29,7 +29,6 @@ Imports:
     utils,
     HiTC,
 Suggests:
-    BiocStyle,
     knitr,
     testthat,
     rmarkdown,

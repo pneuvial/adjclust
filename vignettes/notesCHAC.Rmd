@@ -4,7 +4,7 @@ author: "Pierre Neuvial, Nathalie Villa-Vialaneix"
 date: "`r Sys.Date()`"
 output: 
     html_document:
-        css: !expr BiocStyle:::bioconductor.css
+      toc: yes
 vignette: >
   %\VignetteIndexEntry{Implementation notes for the adjclust package}
   %\VignetteEngine{knitr::rmarkdown}
