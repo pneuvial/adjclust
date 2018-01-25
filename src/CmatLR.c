@@ -36,9 +36,9 @@ SEXP CmatL(SEXP X, SEXP Rp, SEXP Rh)
 
   for(i=0; i < *p; i++)
   {
-  	for(j = i+1 ; j <= minm(i + *h,*p - 1); j++)
+  	for(j = i ; j <= minm(i + *h - 1,*p - 1); j++)
   	{
-      outptr[i + (*p)*(j-i-1)] = xptr[i + (*p)*j];
+      outptr[i + (*p)*(j-i)] = xptr[i + (*p)*j];
   	}
   }
 

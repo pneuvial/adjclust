@@ -234,28 +234,11 @@ double* distance_C(int mini, int maxi, int minj, int maxj, double *rcCumRight, d
 
   ni = maxi - mini + 1;
   nj = maxj - minj + 1;
-  mI = ni - 1;
-  mJ = nj - 1;
-  mIJ = maxj - mini;
+  mIJ = maxj - mini + 1;
 
-  if ((ni==1) & (nj==1)){
-    Sii = 1;
-    Sjj = 1;
-  }
-  else if ((ni==1) & (nj>1)){
-    Sii = 1;
-    Sjj = 2*pencil_C(1, minj, MIN(h, mJ), p, rcCumRight, rcCumLeft) + 2*pencil_C(-1, maxj, MIN(h, mJ), p, rcCumRight, rcCumLeft) - 2*CUML(p, MIN(h, mJ), p)+ nj;
-  }
-  else if ((ni>1) & (nj==1)){
-    Sjj = 1;
-    Sii = 2*pencil_C(1, mini, MIN(h, mI), p, rcCumRight, rcCumLeft) + 2*pencil_C(-1, maxi, MIN(h, mI), p, rcCumRight, rcCumLeft) - 2*CUML(p, MIN(h, mI), p) + ni;
-  }
-  else {
-    Sii = 2*pencil_C(1, mini, MIN(h, mI), p, rcCumRight, rcCumLeft) + 2*pencil_C(-1, maxi, MIN(h, mI), p, rcCumRight, rcCumLeft) - 2*CUML(p, MIN(h, mI), p) + ni;
-    Sjj = 2*pencil_C(1, minj, MIN(h, mJ), p, rcCumRight, rcCumLeft) + 2*pencil_C(-1, maxj, MIN(h, mJ), p, rcCumRight, rcCumLeft) - 2*CUML(p, MIN(h, mJ), p) + nj;
-  }
-
-  Sij = pencil_C(-1, maxj, MIN(h, mIJ), p, rcCumRight, rcCumLeft) + pencil_C(1, mini, MIN(h, mIJ), p, rcCumRight, rcCumLeft) - CUML(p, MIN(h, mIJ), p) - (Sii-ni)/2 - (Sjj-nj)/2;
+  Sii = pencil_C(1, mini, MIN(h+1, ni), p, rcCumRight, rcCumLeft) + pencil_C(-1, maxi, MIN(h+1, ni), p, rcCumRight, rcCumLeft) - CUML(p, MIN(h+1, ni), p);
+  Sjj = pencil_C(1, minj, MIN(h+1, nj), p, rcCumRight, rcCumLeft) + pencil_C(-1, maxj, MIN(h+1, nj), p, rcCumRight, rcCumLeft) - CUML(p, MIN(h+1, nj), p);
+  Sij = (pencil_C(-1, maxj, MIN(h+1, mIJ), p, rcCumRight, rcCumLeft) + pencil_C(1, mini, MIN(h+1, mIJ), p, rcCumRight, rcCumLeft) - CUML(p, MIN(h+1, mIJ), p) - Sii - Sjj)/2;
 
   D =  (float)ni*nj/(ni+nj)  * ( (float)1/(ni*ni)*Sii + (float)1/(nj*nj)*Sjj - (float)2/(ni*nj)*Sij ) ;
 
@@ -263,6 +246,16 @@ double* distance_C(int mini, int maxi, int minj, int maxj, double *rcCumRight, d
   res[1] = Sii;
   res[2] = Sjj;
   res[3] = Sij;
+  
+  // debuging purpose...
+  // printf("mini: %d, ", mini);
+  // printf("maxi: %d, ", maxi);
+  // printf("minj: %d, ", minj);
+  // printf("maxj: %d\n", maxj);
+  // printf("Sii: %f, ", Sii);
+  // printf("Sjj: %f, ", Sjj);
+  // printf("Sij: %f\n", Sij);
+  // printf("D: %f\n", D);
 
   return res;
 }
@@ -297,7 +290,7 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
   k = *p - *blMin;
 
   jj = *p;
-  sumSdiag = *p;
+  sumSdiag = (float)0; // within cluster dispersion (WG)
 
   for ( step=1; step < (*p-1); step=step+1 ){
     while(CHAIN(VALID, positions[0])==0){
@@ -423,28 +416,32 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
     nii = CHAIN(MAXCL1, posMin) - CHAIN(MINCL1, posMin) + 1;
     njj = CHAIN(MAXCL2, posMin) - CHAIN(MINCL2, posMin) + 1;
     snew = CHAIN(SII, posMin) + CHAIN(SJJ, posMin) + (float)2*CHAIN(SIJ, posMin);
-    sumSdiag = sumSdiag - CHAIN(SII, posMin)/nii - CHAIN(SJJ, posMin)/njj + snew/(nii+njj);
+    sumSdiag = CHAIN(SII, posMin)/nii + CHAIN(SJJ, posMin)/njj - snew/(nii+njj);
 
     stepInv = *p - step;
     MERGE(step, 1, k) = CHAIN(LAB1, posMin);
     MERGE(step, 2, k) = CHAIN(LAB2, posMin);
     TRW(stepInv, 1, k) = stepInv;
-    TRW(stepInv, 2, k) = *p - (float)sumSdiag;
+    TRW(stepInv, 2, k) = (float)sumSdiag;
   }
 
-  // merging the remaining two classes
+  // merging the last two classes
   step = *p-1;
   stepInv = 1;
   posMin = jj-1;
 
   dLast = distance_C(CHAIN(MINCL1, posMin), CHAIN(MAXCL1, posMin), CHAIN(MINCL2, posMin), CHAIN(MAXCL2, posMin), rcCumRight, rcCumLeft, *h, *p);
-  sumSdiag = dLast[1] + dLast[2] + (float)2*dLast[3];
+  // update of sumSdiag
+  nii = CHAIN(MAXCL1, posMin) - CHAIN(MINCL1, posMin) + 1;
+  njj = CHAIN(MAXCL2, posMin) - CHAIN(MINCL2, posMin) + 1;
+  snew = CHAIN(SII, posMin) + CHAIN(SJJ, posMin) + (float)2*CHAIN(SIJ, posMin);
+  sumSdiag = CHAIN(SII, posMin)/nii + CHAIN(SJJ, posMin)/njj - snew/(nii+njj);
 
   gains[step-1] = dLast[0];
   MERGE(step, 1, k) = CHAIN(LAB1, jj-1);
   MERGE(step, 2, k) = CHAIN(LAB2, jj-1);
   TRW(stepInv, 1, k) = stepInv;
-  TRW(stepInv, 2, k) = *p - (float)sumSdiag/(*p) ;
+  TRW(stepInv, 2, k) = (float)sumSdiag;
 
   UNPROTECT(6);
   return(Rmerge);
