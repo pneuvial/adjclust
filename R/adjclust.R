@@ -129,10 +129,12 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
       mat <- 1 - 0.5*(mat^2)
     }
     
-    ## !!! FIX IT!!!
-    ## modifiy (if required) input similarity matrix
-    ##  and return a similiarity matrix with diagonal 1
-    # mat <- modify(mat, as.integer(p), as.integer(h)) 
+    res_cc <- checkCondition(mat)
+    if (is.numeric(res_cc)) {
+      message(paste("Note: modifying similarity to ensure positive heights...
+      added", res_cc, "to diagonal (merges will not be affected)"))
+      mat <- mat + diag(rep(res_cc, ncol(mat)))
+    }
         
     out_matL <- matL(mat, h)
     out_matR <- matR(mat, h)

@@ -21,3 +21,12 @@ matR <- function(mat, h) {
   out[ ,-1] <- 2*out[ ,-1]
   return(out)
 }
+
+checkCondition <- function(mat) {# used only with symmetric matrices to check condition
+  tmp <- sweep(-2*mat, 1, diag(mat), "+")
+  tmp <- sweep(tmp, 2, diag(mat), "+")
+  tmp <- tmp[upper.tri(tmp)]
+  if (any(tmp < 0)) {
+    return(-min(tmp) * 1.01)
+  } else return(NULL)
+}

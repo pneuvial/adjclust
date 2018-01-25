@@ -29,13 +29,8 @@ adjacent objects/clusters can be merged.
 ## Basic implementation of CHAC in `adjclust`
 
 The basic implementation of `adjclust` takes, as an input, a kernel $k$ which
-is supposed to be symmetric and positive (in the kernel sense) and to satisfy:
-\[
-	k(i,i) = 1,\qquad \forall\, i=1,\ldots,n.
-\]
-
-If your data are under this format, then the constrained clustering can be 
-performed with 
+is supposed to be symmetric and positive (in the kernel sense). If your data are
+under this format, then the constrained clustering can be performed with 
 ```{r ex-sim, eval=FALSE}
 fit <- adjClust(k, type = "similarity")
 ```
@@ -54,10 +49,10 @@ The implementation is the one described in [1].
 
 In this section, the available data set is a matrix $s$ that can either have 
 only positive entries (in this case it is called a similarity) or both positive 
-and non-positive entries. If, in addition, $s(i,i) = 1$ for all $i=1,\ldots,n$ 
-and $s(i,j) \leq 1$ for all $i,j=1,\ldots,n$ then the algorithm implemented in
-`adjclust` can be applied directly, similarly as for a standard kernel
-(section 1). This section explains why this is the case.
+and non-positive entries. If, in addition, the matrix $s$ is *normalized*, 
+*i.e.*, $s(i,i) + s(j,j) - 2s(i,j) \geq 0$ for all $i,j=1,\ldots,n$ then the 
+algorithm implemented in `adjclust` can be applied directly, similarly as for a 
+standard kernel (section 1). This section explains why this is the case.
 
 The interpretation is similar to the kernel case, under the assumption that 
 small similarity values or similarity values that are strongly negative are less 
@@ -75,8 +70,7 @@ the smallest negative eigenvalue of $s$. [3] shows that the HAC obtained from
 the distance induced by the kernel $k_\lambda$ in its feature space and the HAC
 obtained from the *ad hoc* dissimilarity defined by
 \[
-  \forall\, i,j=1,\ldots,n,\qquad d(i,j) = \sqrt{s(i,i) + s(j,j) - 2s(i,j)} = 
-  \sqrt{2(1-s(i,j))}
+  \forall\, i,j=1,\ldots,n,\qquad d(i,j) = \sqrt{s(i,i) + s(j,j) - 2s(i,j)}
 \]
 are identical, except that all the merging levels are shifted by $\lambda$. 
 
@@ -86,66 +80,31 @@ the ones described in section 1.
 ### Non normalized similarities
 
 Suppose now that the data set is described by a matrix $s$ as in the previous
-section except that which does not satisfy one of the two following conditions:
-
-* [C1] $\forall i \in\{1,\ldots,n\}$, $s(i,i)=1$
-* [C2] $\forall i,j \in\{1,\ldots,n\}$,
+section except that this similarity matrix is not normalized, meaning that, 
+there is at least one pair $(i,j)$, such that
 \[
-  2s(i,j) \leq s(i,i) + s(j,j).
+  2s(i,j) > s(i,i) + s(j,j).
 \]
 
-These properties were implicitly assumed to hold in the original implementation 
-of constrained HAC described in [1]. Specifically, this implementation relied on 
-the implicit dissimilarity
-\[
-  \forall\,i,j=1,\ldots,n,\qquad d^2(i,j) = s(i,i) + s(j,j) - 2s(i,j)
-\]
-which has no meaning if 2. above does not hold. If either [C1] or [C2] is not
-met, the package performs the following pre-transformations:
-
-1. a matrix $s^{*}$ is defined as
+The package then performs the following pre-transformation: a matrix $s^{*}$ is 
+defined as
 \[
   \forall\,i,j=1,\ldots,n,\qquad s^{*}(i,j) = s(i,j) + \lambda 
   \mathbb{1}_{\{i=j\}}
 \]
-for a $\lambda$ large enough to ensure that [C2] holds for $s^{*}$. In the 
+for a $\lambda$ large enough to ensure that $s^{*}$ becomes normalized. In the 
 package, $\lambda$ is chosen as
 \[
-  \lambda := \epsilon + \max_{i,j} \left(s(i,j) - s(i,i)\right)_+
+  \lambda := \epsilon + \max_{i,j} \left(2s(i,j) - s(i,i) - s(j,j)\right)_+
 \]
 for a small $\epsilon > 0$. This case is justified by the property described in 
 Section 2.1 (Non-positive but normalized similarities). The underlying idea is
 that, shifting the diagonal entries of a similarity matrix does not change HAC
 result and thus they can be shifted until they induce a proper *ad-hoc* 
-dissimilarity matrix;
+dissimilarity matrix. The transformation affects only the heights to ensure that
+they are all positive and the two command lines described in the first section
+of this note are still valid.
 
-1. $s^{*}$ is then normalized to unit diagonal ([C1]), in order to allow its use
-in the original implementation as in [1]:
-\[
-  \forall\,i,j=1,\ldots,n,\qquad s^{**} =s^{*}(i,j) + 1 - 
-  \frac{1}{2} (s^{*}(i,i) +s^{*}(j,j)).
-\]
-
-
-By definition, $s^{**}$ satisfies [C1] and [C2], and the *ad-hoc* 
-dissimilarities induced by $s^{*}$ and  $s^{**}$ are identical:
-\[
-  \forall\,i=1,\ldots,j,\qquad d^{**}(i,j) = d^{*}(i,j).
-\]
-
-**Important remark**: The transformation described above affects all the 
-elements of the similarity matrix (and not only its diagonal), contrarily to 
-what happens in section 2.1. Hence, it is not (yet) compatible with the fast 
-implementation that requires to have a $h$-band centered on the diagonal outside
-of which all entries are supposed to be 0. The current behavior of the package
-consists in forbidding the use of the fast implementation when the provided
-matrix is not normalized (all diagonal entries equal to 1). For all other cases,
-the constrained clustering from $s$, including the above-described matrix
-transformations, is available with the full matrix, i.e.:
-
-```{r ex-notnormsim, eval=FALSE}
-fit <- adjClust(s, type = "similarity")
-```
 
 ### Case of dissimilarity data
 
