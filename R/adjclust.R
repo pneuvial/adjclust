@@ -210,6 +210,9 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   
   # performing clustering  
   ##!!!FIX IT!!! MERGE RETURNS NOTHING
+  ##!!!CHECK IT!!! TRACEW
+  ##!!!CHECK IT!!! D
+  ##!!!CHECK IT!!! chainedL IS TOO LARGE (ncol)
   res <- .Call("cWardHeaps", rcCumR, rcCumL, as.integer(h), as.integer(p), 
                chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
                PACKAGE = "adjclust")
