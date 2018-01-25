@@ -5,7 +5,7 @@
 \title{Adjacency-constrained Clustering}
 \usage{
 adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
-  blMin = 1, verbose = FALSE)
+  verbose = FALSE)
 }
 \arguments{
 \item{mat}{A similarity matrix or a dist object}
@@ -16,9 +16,6 @@ adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
 \item{h}{band width. It is assumed that the similarity between two items is 0
 when these items are at a distance of more than band width h. Default value
 is \code{ncol(mat)-1}}
-
-\item{blMin}{depth of clustering. It is the number of clusters below which 
-the algorithm stops. Default value is 1}
 
 \item{verbose}{Currently not used}
 }

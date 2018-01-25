@@ -24,8 +24,6 @@ NULL
 #' @param h band width. It is assumed that the similarity between two items is 0
 #'   when these items are at a distance of more than band width h. Default value
 #'   is \code{ncol(mat)-1}
-#' @param blMin depth of clustering. It is the number of clusters below which 
-#'   the algorithm stops. Default value is 1
 #' @param verbose Currently not used
 #'   
 #' @return An object of class \code{\link{chac}} which describes the tree 
@@ -76,7 +74,7 @@ NULL
 #' @importFrom matrixStats colCumsums
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
-                     h = ncol(mat) - 1, blMin = 1, verbose = FALSE) {
+                     h = ncol(mat) - 1, verbose = FALSE) {
   # sanity checks for inputs
   ## class of 'mat'
   CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist")
@@ -109,15 +107,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
     stop("Input band width 'h' must be non negative")
   if (h >= p) 
     stop("Input band width 'h' must be strictly less than dimensions of matrix")
-  
-  ## 'blMin'
-  if (blMin != as.integer(blMin))
-    stop("Clustering depth 'blMin' must be an integer")
-  if (blMin < 0)
-    stop("Clustering depth 'blMin' must be non negative")
-  if (blMin >= p) 
-    stop("Clustering depth 'blMin' must be strictly less than dimensions of matrix")
-  
+
   ## 'verbose'
   if (!is.logical(verbose))
     stop("'verbose' must be one of TRUE/FALSE (logical)")
@@ -180,9 +170,9 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   
   # heap  
   ## initialization
-  gains <- rep(0, p-blMin)
-  merge <- matrix(0, nrow = p-blMin, ncol = 2) # matrix of the merges
-  traceW <- matrix(0, nrow = p-blMin, ncol = 2) # matrix of traceW
+  gains <- rep(0, p-1)
+  merge <- matrix(0, nrow = p-1, ncol = 2) # matrix of the merges
+  traceW <- matrix(0, nrow = p-1, ncol = 2) # matrix of traceW
   sd1 <- out_matL[1:(p-1),2]/2 # similarity of objects with their right neighbors
   sii <- out_matL[1:p,1] # auto-similarity of objects
     
@@ -222,7 +212,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   ##!!!FIX IT!!! MERGE RETURNS NOTHING
   res <- .Call("cWardHeaps", rcCumR, rcCumL, as.integer(h), as.integer(p), 
                chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
-               as.integer(blMin), PACKAGE = "adjclust")
+               PACKAGE = "adjclust")
     
   # formatting outputs (as 'hclust') and checking if decreasing heights are present
   height <- gains

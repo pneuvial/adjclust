@@ -260,9 +260,9 @@ double* distance_C(int mini, int maxi, int minj, int maxj, double *rcCumRight, d
   return res;
 }
 
-SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP RchainedL, SEXP Rpositions, SEXP Rdistances, SEXP RlHeap, SEXP Rmerge, SEXP Rgains, SEXP RtraceW, SEXP RblMin){
+SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP RchainedL, SEXP Rpositions, SEXP Rdistances, SEXP RlHeap, SEXP Rmerge, SEXP Rgains, SEXP RtraceW){
 
-  int *h, *p, *positions, *lHeap, *merge, *neiL, *neiR, *blMin;
+  int *h, *p, *positions, *lHeap, *merge, *neiL, *neiR;
   int posMin, neineiL, neineiR, k;
   double *rcCumRight, *rcCumLeft, *distances, *chainedL, *gains, *traceW, *d1, *d2, *dLast, newDR, newDL, sumSdiag, snew, nii, njj, clMin_11, clMin_12, clMin_21, clMin_22;
   int jj, step, stepInv;
@@ -285,9 +285,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
   merge = INTEGER(Rmerge);
   gains = REAL(Rgains);
   traceW = REAL(RtraceW);
-  blMin = INTEGER(RblMin);
 
-  k = *p - *blMin;
+  k = *p - 1;
 
   jj = *p;
   sumSdiag = (float)0; // within cluster dispersion (WG)
