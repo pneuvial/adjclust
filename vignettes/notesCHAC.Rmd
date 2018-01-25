@@ -129,16 +129,12 @@ similarity $s$ for which $d$ is the *ad-hoc* dissimilarity by setting:
     s(i,j) = \frac{1}{2} (a_i + a_j - d^2(i,j))
   \end{array} \right. .
 \]
-By definition, such an $s$ satisfies [C2], and any choice for 
+By definition, such an $s$ is normalized and any choice for 
 $(a_i)_{i=1,\ldots,n}$ yields the same clustering (since they all correspond to 
-the same *ad-hoc* dissimilarity). To satisfy [C1], the choice $a_i = 1$ for all
-$i=1,\ldots,n$ has been made.
+the same *ad-hoc* dissimilarity). The arbitrary choice $a_i = 1$ for all
+$i=1,\ldots,n$ has thus been made.
 
-The similarity $s$ is thus processed as described in the previous sections. In
-short, since by definition it satisfies [C1] and [C2] it is processed as 
-described in Sections 1 or 2.1 and the basic and the sparse implementations
-are both available with, respectively,
-
+The basic and the sparse implementations are both available with, respectively,
 ```{r ex-dissim, eval=FALSE}
 fit <- adjClust(d, type = "dissimilarity")
 ```

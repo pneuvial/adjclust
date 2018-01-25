@@ -90,15 +90,26 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   ## 'type' 
   type <- match.arg(type)
   
-  ## 'h'
+  ## 'inclass' and 'mat'
   if (inclass == "matrix") {
     p <- nrow(mat)
   } else if (inclass == "dgCMatrix" || inclass == "dsCMatrix") {
     p <- mat@Dim[1]
   } else if (inclass == "dist") {
+    message("Note: input class is 'dist' so 'type' is supposed to be 'dissimilarity'")
+    type <- "dissimilarity"
     mat <- as.matrix(mat)
     p <- nrow(mat)
   }
+  ### transformed the dissimilarity in an arbitrary normalized similarity    
+  if (type == "dissimilarity") {
+    mat <- 1 - 0.5*(mat^2)
+  }
+  if ((type == "dissimilarity") & (inclass %in% c("dgCMatrix", "dsCMatrix"))) {
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  }
+  
+  ## 'h'
   if (!is.numeric(h))
     stop("Input band width 'h' must be numeric")
   if (h != as.integer(h))
@@ -114,7 +125,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   
   
   # data preprocessing (depending of 'mat' class)
-  if (inclass == "matrix") {
+  if (inclass %in% c("matrix", "dist")) {
     if (!(nrow(mat) == ncol(mat)))
       stop("Input matrix is not a square matrix")
     if (!is.numeric(mat))
@@ -124,21 +135,16 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
     if (any(is.na(mat)))
       stop("Missing values in the input")
     
-    ## !!!CHECK IT!!!    
-    if (type == "dissimilarity") {
-      mat <- 1 - 0.5*(mat^2)
-    }
-    
     res_cc <- checkCondition(mat)
     if (is.numeric(res_cc)) {
       message(paste("Note: modifying similarity to ensure positive heights...
       added", res_cc, "to diagonal (merges will not be affected)"))
       mat <- mat + diag(rep(res_cc, ncol(mat)))
     }
-        
+      
     out_matL <- matL(mat, h)
     out_matR <- matR(mat, h)
-        
+
   } else if (inclass == "dgCMatrix" || inclass == "dsCMatrix") { ## !!!FIX IT!!!
     ## dgC/dsC sparse matrices
     if (mat@Dim[1] != mat@Dim[2])
@@ -153,14 +159,6 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
         
     matL <- findSparseMatL(mat, as.integer(p), as.integer(h))
     rotatedMatR <- findSparseRMatR(mat, as.integer(p), as.integer(h))
-  } else if (inclass == "dist") { ##!!!FIX IT!!!
-    if (h >= p)
-      stop("Input band width should be strictly less than dimensions of matrix")
-        
-    mat <- 1 - 0.5*(mat^2)
-        
-    matL <- findMatL(mat, p, h)
-    rotatedMatR <- findRMatR(mat, p, h)        
   }
   
   # computing pencils
