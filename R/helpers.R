@@ -11,6 +11,8 @@ matL <- function(mat, h) {
 }
 
 matR <- function(mat, h) {
+  if (class(mat) == "dgCMatrix")
+    mat <- t(mat)
   p <- ncol(mat)
   x <- rep(p:1, each = h+1)
   y <- x - rep(0:h, p)
