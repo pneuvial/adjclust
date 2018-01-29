@@ -1,5 +1,4 @@
 library("adjclust")
-library("Matrix")
 
 context("Correctness of handling general similarity matrices")
 
