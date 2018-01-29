@@ -72,6 +72,8 @@ NULL
 #' 
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
+#' @importFrom Matrix isSymmetric
+#' @importFrom Matrix diag
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
                      h = ncol(mat) - 1, verbose = FALSE) {
@@ -91,16 +93,33 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   type <- match.arg(type)
   
   ## 'inclass' and 'mat'
-  if (inclass == "matrix") {
-    p <- nrow(mat)
-  } else if (inclass == "dgCMatrix" || inclass == "dsCMatrix") {
-    p <- mat@Dim[1]
-  } else if (inclass == "dist") {
+  if (inclass == "dist") {
     message("Note: input class is 'dist' so 'type' is supposed to be 'dissimilarity'")
     type <- "dissimilarity"
     mat <- as.matrix(mat)
-    p <- nrow(mat)
   }
+  
+  ## 'mat'
+  if (!(nrow(mat) == ncol(mat)))
+    stop("Input matrix is not a square matrix")
+  if (any(is.na(mat)))
+    stop("Missing values in the input")
+  
+  if (inclass %in% c("matrix", "dist")) {
+    if (!is.numeric(mat))
+      stop("Input matrix is not numeric")
+    p <- nrow(mat)
+  } else if (inclass %in% c("dgCMatrix", "dsCMatrix")) {
+    if (mat@Dim[1] != mat@Dim[2])
+      stop("Input matrix is not a square matrix")
+    p <- mat@Dim[1]
+  }
+  
+  if (inclass != "dgCMatrix") {
+    if (!(isSymmetric(mat)))
+      stop("Input matrix is not symmetric")
+  }
+  
   ### transformed the dissimilarity in an arbitrary normalized similarity    
   if (type == "dissimilarity") {
     mat <- 1 - 0.5*(mat^2)
@@ -124,51 +143,24 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
     stop("'verbose' must be one of TRUE/FALSE (logical)")
   
   
-  # data preprocessing (depending of 'mat' class)
-  if (inclass %in% c("matrix", "dist")) {
-    if (!(nrow(mat) == ncol(mat)))
-      stop("Input matrix is not a square matrix")
-    if (!is.numeric(mat))
-      stop("Input matrix is not numeric")
-    if (!(isSymmetric.matrix(mat)))
-      stop("Input matrix is not symmetric")
-    if (any(is.na(mat)))
-      stop("Missing values in the input")
-    
-    res_cc <- checkCondition(mat)
-    if (is.numeric(res_cc)) {
-      message(paste("Note: modifying similarity to ensure positive heights...
+  # data preprocessing
+  res_cc <- checkCondition(mat)
+  if (is.numeric(res_cc)) {
+    message(paste("Note: modifying similarity to ensure positive heights...
       added", res_cc, "to diagonal (merges will not be affected)"))
-      mat <- mat + diag(rep(res_cc, ncol(mat)))
-    }
-      
-    out_matL <- matL(mat, h)
-    out_matR <- matR(mat, h)
-
-  } else if (inclass == "dgCMatrix" || inclass == "dsCMatrix") { ## !!!FIX IT!!!
-    ## dgC/dsC sparse matrices
-    if (mat@Dim[1] != mat@Dim[2])
-      stop("Input matrix is not a square matrix")
-    if (any(!(is.numeric(mat@x))))
-      stop("Input matrix is not numeric")
-        
-    p <- mat@Dim[1]
-        
-    mat <- sparseBand(mat@x, mat@p, mat@i, as.integer(p), as.integer(h))
-    mat <- modifySparse(mat, as.integer(p), as.integer(h))
-        
-    matL <- findSparseMatL(mat, as.integer(p), as.integer(h))
-    rotatedMatR <- findSparseRMatR(mat, as.integer(p), as.integer(h))
+    mat <- mat + diag(rep(res_cc, ncol(mat)))
   }
+      
+  out_matL <- matL(mat, h)
+  out_matR <- matR(mat, h)
   
-  # computing pencils
+  ## computing pencils
   rCumL <- rowCumsums(out_matL) # p x (h+1) matrix
   rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
     
   rCumR <- rowCumsums(out_matR) # p x (h+1) matrix
   rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
   
-  # heap  
   ## initialization
   gains <- rep(0, p-1)
   merge <- matrix(0, nrow = p-1, ncol = 2) # matrix of the merges
@@ -182,6 +174,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   v <- 1:(p-1)
   heap[v] <- v
   D <- rep(-1, 3*p)
+  
   ## linkage value of objects with their right neighbors
   D[v] <- (sii[1:(p-1)] + sii[2:p]) / 2 - sd1 
   ## initialization of the length of the Heap
