@@ -1,4 +1,13 @@
-# Version 0.5.4 [2017-01-12]
+# Version 0.5.5 [2018-01-30]
+
+* simplified code (replaced many C functions by a unique R function using 
+Matrix)
+* adjClust now properly handles similarities with diagonal entries different 
+from 1
+* removed arguments that were not used (blMin and verbose)
+* simplified Hi-C example
+
+# Version 0.5.4 [2018-01-12]
 
 * More tests for modify and modifySparse 
 * BUG FIX in condnCheck
