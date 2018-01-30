@@ -66,12 +66,12 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
   }
   inclass <- CLASS[classcheck]  
     
-  if (class != "dgCMatrix" ) {
+  if (inclass != "dgCMatrix" ) {
     p <- ncol(x)
     if (h >= p) {
       stop("h should be strictly less than p")
     }
-    if (class == "matrix") {
+    if (inclass == "matrix") {
       if (is.null(rownames(x)))
         rownames(x) <- 1:nrow(x)
       if (is.null(colnames(x)))
@@ -79,7 +79,7 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
       x <- as(x, "SnpMatrix")
     }
     x <- ld(x, ..., depth = h)
-    # x <- round(x, digits = 10) ## ensure ascending compatibility but removed for sanity
+    #x <- round(x, digits = 10) ## ensure ascending compatibility but removed for sanity
     if (any(is.na(x))) {
       ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)
       warning(" Clustering could not be performed due to missing value(s) or NaN(s) in LD estimates. Returning these indices")

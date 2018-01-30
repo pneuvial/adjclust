@@ -155,7 +155,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   rCumR <- rowCumsums(out_matR) # p x (h+1) matrix
   rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
   
-  ## initialization
+  ## initialization (heap, D and chainedL are too large in order to avoid memory pb in C)
   gains <- rep(0, p-1)
   merge <- matrix(0, nrow = p-1, ncol = 2) # matrix of the merges
   traceW <- matrix(0, nrow = p-1, ncol = 2) # matrix of traceW
@@ -167,14 +167,14 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   lHeap <- length(heap)
   v <- 1:(p-1)
   heap[v] <- v
-  D <- rep(-1, 2*p)
+  D <- rep(-1, 3*p)
   
   ## linkage value of objects with their right neighbors
   D[v] <- (sii[1:(p-1)] + sii[2:p]) / 2 - sd1 
   ## initialization of the length of the Heap
   lHeap <- p-1
   ## each element contains a vector: c(cl1, cl2, label1, label2, posL, posR, valid)
-  chainedL <- matrix(-1, nrow = 12, ncol = 2*p)
+  chainedL <- matrix(-1, nrow = 12, ncol = 3*p)
   rownames(chainedL) <- c("minCl1", "maxCl1", "minCl2", "maxCl2", "lab1", 
                           "lab2", "posL", "posR", "Sii", "Sjj", "Sij", "valid")
   w <- as.integer(v + 1)

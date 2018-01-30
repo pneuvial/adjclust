@@ -7,7 +7,7 @@ test_that("snpClust gives results identical to those of adjclust 0.3.0", {
     
     ## Note: this test depends on external data (genotypes) and functions 
     ## (snpStats::ld) which may change over time
-    skip_on_cran() 
+    skip_on_cran()
     
     data("res_adjclust_0.3.0", package = "adjclust")
     prevfit <- res_adjclust_0.3.0
