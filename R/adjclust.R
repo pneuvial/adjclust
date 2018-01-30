@@ -24,7 +24,6 @@ NULL
 #' @param h band width. It is assumed that the similarity between two items is 0
 #'   when these items are at a distance of more than band width h. Default value
 #'   is \code{ncol(mat)-1}
-#' @param verbose Currently not used
 #'   
 #' @return An object of class \code{\link{chac}} which describes the tree 
 #' produced by the clustering process. The object a list with the same elements 
@@ -75,7 +74,7 @@ NULL
 #' @import Matrix
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
-                     h = ncol(mat) - 1, verbose = FALSE) {
+                     h = ncol(mat) - 1) {
   # sanity checks for inputs
   ## class of 'mat'
   CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist")
@@ -136,10 +135,6 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
     stop("Input band width 'h' must be non negative")
   if (h >= p) 
     stop("Input band width 'h' must be strictly less than dimensions of matrix")
-
-  ## 'verbose'
-  if (!is.logical(verbose))
-    stop("'verbose' must be one of TRUE/FALSE (logical)")
   
   
   # data preprocessing
