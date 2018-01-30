@@ -71,7 +71,9 @@ NULL
 #' 
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
-#' @import Matrix
+#' @importFrom Matrix diag
+#' @importFrom Matrix t
+#' @importFrom Matrix isSymmetric
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
                      h = ncol(mat) - 1) {

@@ -36,6 +36,10 @@
 #' @examples
 #' # input as HiTC::HTCexp object
 #' data("hic_imr90_40_XX", package="adjclust")
+#' hic_imr90_40_XX <- new("HTCexp",
+#'                        hic_imr90_40_XX@intdata[1:10,1:10],
+#'                        hic_imr90_40_XX@xgi[1:10, ],
+#'                        hic_imr90_40_XX@xgi[1:10, ])
 #' 
 #' # input as HiTC::HTCexp object
 #' res1 <- hicClust(hic_imr90_40_XX)
