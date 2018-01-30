@@ -56,49 +56,44 @@
 #' @importFrom snpStats ld
 #'   
 snpClust <- function(x, h = ncol(x) - 1, ...) {
+  CLASS <- c("dgCMatrix", "matrix", "SnpMatrix")
+  classcheck <- pmatch(class(x), CLASS)
+  if (is.na(classcheck)) {
+    stop("Input matrix class not supported")
+  }
+  if (classcheck == -1) {
+    stop("Ambiguous matrix class")
+  }
+  inclass <- CLASS[classcheck]  
     
-    if (!is.numeric(h)) {
-        stop("h should be numeric")
+  if (class != "dgCMatrix" ) {
+    p <- ncol(x)
+    if (h >= p) {
+      stop("h should be strictly less than p")
     }
-    
-    CLASS <- c("dgCMatrix", "matrix", "SnpMatrix")
-    classcheck <- pmatch(class(x), CLASS)
-    
-    if (is.na(classcheck)) {
-        stop("Input matrix class not supported")
+    if (class == "matrix") {
+      if (is.null(rownames(x)))
+        rownames(x) <- 1:nrow(x)
+      if (is.null(colnames(x)))
+        colnames(x) <- 1:ncol(x)
+      x <- as(x, "SnpMatrix")
     }
-    if (classcheck == -1) {
-        stop("Ambiguous matrix class")
-    }
-    class <- CLASS[classcheck]  
-    
-    if (class != "dgCMatrix" ) {
-        p <- ncol(x)
-        if (h >= p) {
-            stop("h should be strictly less than p")
-        }
-        if (class == "matrix") {
-            rownames(x) <- 1:nrow(x)
-            colnames(x) <- 1:ncol(x)
-            x <- as(x, "SnpMatrix")
-        }
-        
-        x <- ld(x, ..., depth = h)
-        x <- round(x, digits = 10)
-        if (any(is.na(x))) {
-            ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)
-            warning(" Clustering could not be performed due to missing value(s) or NaN(s) in LD estimates. Returning these indices")
-            return(ww)
-        }
-    }
+    x <- ld(x, ..., depth = h)
+    # x <- round(x, digits = 10) ## ensure ascending compatibility but removed for sanity
     if (any(is.na(x))) {
-        stop("Missing value(s) or NaN(s) not allowed in similarity matrix.")    
+      ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)
+      warning(" Clustering could not be performed due to missing value(s) or NaN(s) in LD estimates. Returning these indices")
+      return(ww)
     }
-    diag(x) <- 1
-    res <- adjClust(x, type = "similarity", h = h)
-    res$method <- "snpClust"
+  }
+  if (any(is.na(x))) {
+    stop("Missing value(s) or NaN(s) not allowed in similarity matrix.")    
+  }
+  diag(x) <- 1
+  res <- adjClust(x, type = "similarity", h = h)
+  res$method <- "snpClust"
     
-    return(res)
+  return(res)
 }
 
     
