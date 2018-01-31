@@ -7,13 +7,13 @@
 snpClust(x, h = ncol(x) - 1, ...)
 }
 \arguments{
-\item{x}{either a genotype matrix of class snpStats::SnpMatrix/base::matrix 
+\item{x}{either a genotype matrix of class snpStats::SnpMatrix/base::matrix
 or a linkage disequilibrium matrix of class Matrix::dgCMatrix}
 
-\item{h}{band width. If not provided, \code{h} is set to default value `p-1` 
+\item{h}{band width. If not provided, \code{h} is set to default value `p-1`
 where `p` is the number of columns of `x`}
 
-\item{\dots}{Further arguments to be passed to the \code{snpStats::ld} 
+\item{\dots}{Further arguments to be passed to the \code{snpStats::ld}
 function}
 }
 \value{
@@ -33,7 +33,14 @@ In the special case where genotypes are given as input and the corresponding
 LD matrix has missing entries, the clustering cannot be performed. This can
 typically happen when there is insufficient variability in the sample
 genotypes. In this special case, the indices of the SNP pairs which yield
-missing values are returned
+missing values are returned.
+
+If \code{x} is of class \code{\link[snpStats:SnpMatrix]{SnpMatrix}}
+  or \code{\link{matrix}}, it is assumed to be a \eqn{n \times p} matrix of
+  \eqn{p} genotypes for \eqn{n} individuals. This input is converted to a LD
+  similarity matrix using the \code{snpStats::ld} function.  If \code{x} is
+  of class \code{\link[Matrix::dgCMatrix]{dgCMatrix}}, it is assumed to be a
+  (squared) LD matrix.
 }
 \examples{
 ## a very small example
@@ -51,12 +58,12 @@ fit3 <- snpClust(ld, 3)
 
 }
 \references{
-Dehman A. (2015) \emph{Spatial Clustering of Linkage 
-  Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+Dehman A. (2015) \emph{Spatial Clustering of Linkage
+  Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis,
   Universite Paris Saclay.
 
-Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a 
-  blockwise approach in variable selection using linkage disequilibrium 
+Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a
+  blockwise approach in variable selection using linkage disequilibrium
   information. *BMC Bioinformatics* 16:148.
 }
 \seealso{

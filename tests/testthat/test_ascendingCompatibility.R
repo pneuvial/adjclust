@@ -23,7 +23,12 @@ test_that("snpClust gives results identical to those of adjclust 0.3.0", {
     ceph.1mb[4,286]@.Data[1,1] <- as.raw(3) ## to avoid NaNs
     ld.ceph <- ld(ceph.1mb, depth = h, stats = "R.squared")
     ld.ceph <- round(ld.ceph, digits = 10)
-
+    
+    ## diagonal elements are 0 
+    expect_identical(diag(ld.ceph), rep(0, p))
+    expect_warning(snpClust(ld.ceph, h = 100))
+    
+    diag(ld.ceph) <- rep(1, p)
     fit <- snpClust(ld.ceph, h = 100)
     # expect_equal(fit$merge, prevfit$merge)
     expect_equal(cumsum(fit$height), prevfit$height, tolerance = 1e-5)

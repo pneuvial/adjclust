@@ -12,46 +12,52 @@
 #' LD matrix has missing entries, the clustering cannot be performed. This can
 #' typically happen when there is insufficient variability in the sample
 #' genotypes. In this special case, the indices of the SNP pairs which yield
-#' missing values are returned
+#' missing values are returned.
 #' 
-
-#' @param x either a genotype matrix of class snpStats::SnpMatrix/base::matrix 
+#' @param x either a genotype matrix of class snpStats::SnpMatrix/base::matrix
 #'   or a linkage disequilibrium matrix of class Matrix::dgCMatrix
-#'   
-#' @param h band width. If not provided, \code{h} is set to default value `p-1` 
+#'
+#' @param h band width. If not provided, \code{h} is set to default value `p-1`
 #'   where `p` is the number of columns of `x`
-#'   
-#' @param \dots Further arguments to be passed to the \code{snpStats::ld} 
+#'
+#' @param \dots Further arguments to be passed to the \code{snpStats::ld}
 #'   function
-#'   
+#'
 #' @return An object of class \code{\link{chac}} (when no LD value is missing)
-#'   
+#'
 #' @seealso \code{\link{adjClust}} \code{\link[snpStats:ld]{ld}}
-#'   
-#' @references Dehman A. (2015) \emph{Spatial Clustering of Linkage 
-#'   Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+#'
+#' @references Dehman A. (2015) \emph{Spatial Clustering of Linkage
+#'   Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis,
 #'   Universite Paris Saclay.
-#'   
-#' @references Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a 
-#'   blockwise approach in variable selection using linkage disequilibrium 
+#'
+#' @references Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a
+#'   blockwise approach in variable selection using linkage disequilibrium
 #'   information. *BMC Bioinformatics* 16:148.
-#'   
+#'
+#' @details If \code{x} is of class \code{\link[snpStats:SnpMatrix]{SnpMatrix}}
+#'   or \code{\link{matrix}}, it is assumed to be a \eqn{n \times p} matrix of
+#'   \eqn{p} genotypes for \eqn{n} individuals. This input is converted to a LD
+#'   similarity matrix using the \code{snpStats::ld} function.  If \code{x} is
+#'   of class \code{\link[Matrix::dgCMatrix]{dgCMatrix}}, it is assumed to be a
+#'   (squared) LD matrix.
+#'
 #' @examples
 #' ## a very small example
 #' data(testdata, package = "snpStats")
-#' 
+#'
 #' # input as snpStats::SnpMatrix
 #' fit1 <- snpClust(Autosomes[1:200, 1:5], h = 3, stats = "R.squared")
-#' 
+#'
 #' # input as base::matrix
 #' fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), h = 3, stats = "R.squared")
-#' 
+#'
 #' # input as Matrix::dgCMatrix
 #' ld <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared")
 #' fit3 <- snpClust(ld, 3)
-#' 
+#'
 #' @export
-#' 
+#'
 #' @importFrom methods as
 #' @importFrom snpStats ld
 #'   
@@ -66,8 +72,8 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
   }
   inclass <- CLASS[classcheck]  
     
+  p <- ncol(x)
   if (inclass != "dgCMatrix" ) {
-    p <- ncol(x)
     if (h >= p) {
       stop("h should be strictly less than p")
     }
@@ -79,6 +85,7 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
       x <- as(x, "SnpMatrix")
     }
     x <- ld(x, ..., depth = h)
+    diag(x) <- rep(1, p)  ## by default the diagonal is 0 after 'snpStats::ld'
     #x <- round(x, digits = 10) ## ensure ascending compatibility but removed for sanity
     if (any(is.na(x))) {
       ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)
@@ -87,9 +94,15 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
     }
   }
   if (any(is.na(x))) {
-    stop("Missing value(s) or NaN(s) not allowed in similarity matrix.")    
+      stop("Missing value(s) or NaN(s) not allowed in similarity matrix.")    
   }
-  diag(x) <- 1
+  if (ncol(x) !=  nrow(x)) {
+      stop("A similarity matrix should be square.")
+  }
+  if (!all(diag(x) == 1)) {
+      warning("Forcing the diagonal of the LD similarity matrix to be 1")
+      diag(x) <- rep(1, p)
+  }
   res <- adjClust(x, type = "similarity", h = h)
   res$method <- "snpClust"
     
