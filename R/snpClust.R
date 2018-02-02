@@ -1,27 +1,32 @@
 #' Adjacency-constrained Clustering of Single Nucleotide Polymorphisms
-#' 
-#' Adjacency-constrained hierarchical agglomerative clustering of Single 
+#'
+#' Adjacency-constrained hierarchical agglomerative clustering of Single
 #' Nucleotide Polymorphisms based on Linkage Disequilibrium
-#' 
-#' Adjacency-constrained hierarchical agglomerative clustering (HAC) is HAC in 
-#' which each observation is associated to a position, and the clustering is 
+#'
+#' Adjacency-constrained hierarchical agglomerative clustering (HAC) is HAC in
+#' which each observation is associated to a position, and the clustering is
 #' constrained so as only adjacent clusters are merged. SNPs are clustered based
 #' on their similarity as measured by the linkage disequilibrium.
-#' 
+#'
 #' In the special case where genotypes are given as input and the corresponding
 #' LD matrix has missing entries, the clustering cannot be performed. This can
 #' typically happen when there is insufficient variability in the sample
 #' genotypes. In this special case, the indices of the SNP pairs which yield
 #' missing values are returned.
-#' 
-#' @param x either a genotype matrix of class snpStats::SnpMatrix/base::matrix
-#'   or a linkage disequilibrium matrix of class Matrix::dgCMatrix
+#'
+#' @param x either a genotype matrix of class
+#'   \code{\link[snpStats:SnpMatrix-class]{SnpMatrix}}/\code{\link{matrix}} or a
+#'   linkage disequilibrium matrix of class
+#'   \code{\link[Matrix:dgCMatrix-class]{dgCMatrix}}. In the latter case the LD
+#'   values are expected to be in [0,1]
 #'
 #' @param h band width. If not provided, \code{h} is set to default value `p-1`
 #'   where `p` is the number of columns of `x`
 #'
-#' @param \dots Further arguments to be passed to the \code{snpStats::ld}
-#'   function
+#' @param stats a character vector specifying the linkage disequilibrium
+#'   measures to be calculated (using the \code{\link[snpStats:ld]{ld}}
+#'   function) when \code{x} is a genotype matrix. Only "R.squared" and
+#'   "D.prime" are allowed, see Details.
 #'
 #' @return An object of class \code{\link{chac}} (when no LD value is missing)
 #'
@@ -35,12 +40,18 @@
 #'   blockwise approach in variable selection using linkage disequilibrium
 #'   information. *BMC Bioinformatics* 16:148.
 #'
-#' @details If \code{x} is of class \code{\link[snpStats:SnpMatrix]{SnpMatrix}}
-#'   or \code{\link{matrix}}, it is assumed to be a \eqn{n \times p} matrix of
-#'   \eqn{p} genotypes for \eqn{n} individuals. This input is converted to a LD
-#'   similarity matrix using the \code{snpStats::ld} function.  If \code{x} is
-#'   of class \code{\link[Matrix::dgCMatrix]{dgCMatrix}}, it is assumed to be a
+#' @details If \code{x} is of class
+#'   \code{\link[snpStats:SnpMatrix-class]{SnpMatrix}} or \code{\link{matrix}},
+#'   it is assumed to be a \eqn{n \times p} matrix of \eqn{p} genotypes for
+#'   \eqn{n} individuals. This input is converted to a LD similarity matrix
+#'   using the \code{snpStats::ld}. If \code{x} is of class
+#'   \code{\link[Matrix:dgCMatrix-class]{dgCMatrix}}, it is assumed to be a
 #'   (squared) LD matrix.
+#'
+#'   Clustering on a LD similarity other than "R.squared" or "D.prime" can be
+#'   performed by providing the LD values directly as argument \code{x}. These
+#'   values are expected to be in [0,1], otherwise they are truncated to [0,1].
+#'
 #'
 #' @examples
 #' ## a very small example
@@ -61,8 +72,9 @@
 #' @importFrom methods as
 #' @importFrom snpStats ld
 #'   
-snpClust <- function(x, h = ncol(x) - 1, ...) {
+snpClust <- function(x, h = ncol(x) - 1, stats = c("R.squared", "D.prime")) {
   CLASS <- c("dgCMatrix", "matrix", "SnpMatrix")
+  stats <- match.arg(stats)
   classcheck <- pmatch(class(x), CLASS)
   if (is.na(classcheck)) {
     stop("Input matrix class not supported")
@@ -73,7 +85,18 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
   inclass <- CLASS[classcheck]  
     
   p <- ncol(x)
-  if (inclass != "dgCMatrix" ) {
+  if (inclass == "dgCMatrix" ) {
+      out <- sum(x > 1, na.rm = TRUE)
+      if (out > 0) {
+          x[x > 1] <- 1
+          warning(out, " LD values > 1 have been set to 1")
+      } 
+      out <- sum(x < 0, na.rm = TRUE)
+      if (out > 0) {
+          x[x < 0] <- 0
+          warning(out, " LD values < 0 have been set to 0")
+      } 
+  } else {
     if (h >= p) {
       stop("h should be strictly less than p")
     }
@@ -84,7 +107,9 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
         colnames(x) <- 1:ncol(x)
       x <- as(x, "SnpMatrix")
     }
-    x <- ld(x, ..., depth = h)
+    x <- ld(x, stats = stats, depth = h)
+    x[x > 1] <- 1  ## fix numerical aberrations
+    x[x < 0] <- 0  ## fix numerical aberrations
     diag(x) <- rep(1, p)  ## by default the diagonal is 0 after 'snpStats::ld'
     #x <- round(x, digits = 10) ## ensure ascending compatibility but removed for sanity
     if (any(is.na(x))) {

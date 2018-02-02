@@ -4,28 +4,33 @@
 \alias{snpClust}
 \title{Adjacency-constrained Clustering of Single Nucleotide Polymorphisms}
 \usage{
-snpClust(x, h = ncol(x) - 1, ...)
+snpClust(x, h = ncol(x) - 1, stats = c("R.squared", "D.prime"))
 }
 \arguments{
-\item{x}{either a genotype matrix of class snpStats::SnpMatrix/base::matrix
-or a linkage disequilibrium matrix of class Matrix::dgCMatrix}
+\item{x}{either a genotype matrix of class
+\code{\link[snpStats:SnpMatrix-class]{SnpMatrix}}/\code{\link{matrix}} or a
+linkage disequilibrium matrix of class
+\code{\link[Matrix:dgCMatrix-class]{dgCMatrix}}. In the latter case the LD
+values are expected to be in [0,1]}
 
 \item{h}{band width. If not provided, \code{h} is set to default value `p-1`
 where `p` is the number of columns of `x`}
 
-\item{\dots}{Further arguments to be passed to the \code{snpStats::ld}
-function}
+\item{stats}{a character vector specifying the linkage disequilibrium
+measures to be calculated (using the \code{\link[snpStats:ld]{ld}}
+function) when \code{x} is a genotype matrix. Only "R.squared" and
+"D.prime" are allowed, see Details.}
 }
 \value{
 An object of class \code{\link{chac}} (when no LD value is missing)
 }
 \description{
-Adjacency-constrained hierarchical agglomerative clustering of Single 
+Adjacency-constrained hierarchical agglomerative clustering of Single
 Nucleotide Polymorphisms based on Linkage Disequilibrium
 }
 \details{
-Adjacency-constrained hierarchical agglomerative clustering (HAC) is HAC in 
-which each observation is associated to a position, and the clustering is 
+Adjacency-constrained hierarchical agglomerative clustering (HAC) is HAC in
+which each observation is associated to a position, and the clustering is
 constrained so as only adjacent clusters are merged. SNPs are clustered based
 on their similarity as measured by the linkage disequilibrium.
 
@@ -35,12 +40,17 @@ typically happen when there is insufficient variability in the sample
 genotypes. In this special case, the indices of the SNP pairs which yield
 missing values are returned.
 
-If \code{x} is of class \code{\link[snpStats:SnpMatrix]{SnpMatrix}}
-  or \code{\link{matrix}}, it is assumed to be a \eqn{n \times p} matrix of
-  \eqn{p} genotypes for \eqn{n} individuals. This input is converted to a LD
-  similarity matrix using the \code{snpStats::ld} function.  If \code{x} is
-  of class \code{\link[Matrix::dgCMatrix]{dgCMatrix}}, it is assumed to be a
+If \code{x} is of class
+  \code{\link[snpStats:SnpMatrix-class]{SnpMatrix}} or \code{\link{matrix}},
+  it is assumed to be a \eqn{n \times p} matrix of \eqn{p} genotypes for
+  \eqn{n} individuals. This input is converted to a LD similarity matrix
+  using the \code{snpStats::ld}. If \code{x} is of class
+  \code{\link[Matrix:dgCMatrix-class]{dgCMatrix}}, it is assumed to be a
   (squared) LD matrix.
+
+  Clustering on a LD similarity other than "R.squared" or "D.prime" can be
+  performed by providing the LD values directly as argument \code{x}. These
+  values are expected to be in [0,1], otherwise they are truncated to [0,1].
 }
 \examples{
 ## a very small example
