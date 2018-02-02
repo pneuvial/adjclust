@@ -16,7 +16,7 @@ check_snpStat_data <- function() {
 }
 
 test_that("'snpClust' gives identical results regardless of data input format", {
-  # check_snpStat_data()
+  check_snpStat_data()
   data("ld.example", package = "snpStats")
   h <- 100
   ld.ceph <- ld(ceph.1mb, depth = h, stats = "R.squared")

@@ -230,7 +230,7 @@ double pencil_C(int sense, int lim, int hLoc, int p, double *rcCumRight, double 
 double* distance_C(int mini, int maxi, int minj, int maxj, double *rcCumRight, double *rcCumLeft, int h, int p){
   double *res = malloc(sizeof(double)*4);
   double Sii, Sjj, Sij, D;
-  int ni, nj, mI, mJ, mIJ;
+  int ni, nj, mIJ;
 
   ni = maxi - mini + 1;
   nj = maxj - minj + 1;
