@@ -26,7 +26,9 @@ test_that("snpClust gives results identical to those of adjclust 0.3.0", {
     
     ## diagonal elements are 0 
     expect_identical(diag(ld.ceph), rep(0, p))
-    expect_warning(snpClust(ld.ceph, h = 100))
+    expect_message(snpClust(ld.ceph, h = 100), 
+                  "Note: forcing the diagonal of the LD similarity matrix to be 1",
+                  all = FALSE)
     
     diag(ld.ceph) <- rep(1, p)
     fit <- snpClust(ld.ceph, h = 100)

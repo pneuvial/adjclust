@@ -100,7 +100,7 @@ snpClust <- function(x, h = ncol(x) - 1, ...) {
       stop("A similarity matrix should be square.")
   }
   if (!all(diag(x) == 1)) {
-      warning("Forcing the diagonal of the LD similarity matrix to be 1")
+      message("Note: forcing the diagonal of the LD similarity matrix to be 1")
       diag(x) <- rep(1, p)
   }
   res <- adjClust(x, type = "similarity", h = h)
