@@ -3,7 +3,7 @@ library("adjclust")
 context("Case of NA values in LD estimates")
 
 check_snp <- function() {
-  if (!requireNamespace("snpStats")) {
+  if (!require("snpStats")) {
     skip("'snpStats' package not available")
   }
 }
@@ -12,7 +12,7 @@ check_missing_ld <- function() {
   data("ld.example", package = "snpStats")
   p <- ncol(ceph.1mb)
   h <- p-1
-  ld.ceph <- ld(ceph.1mb, depth = h, stats = "R.squared")
+  ld.ceph <- snpStats::ld(ceph.1mb, depth = h, stats = "R.squared")
   if (!any(is.na(ld.ceph)))  {
       skip("No NA value: nothing to test here!")
   }

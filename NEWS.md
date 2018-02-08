@@ -1,3 +1,8 @@
+# Version 0.5.6 [2018-02-08]
+
+* changed dependencies to bioconductor packages 'HiTC' and 'snpStats' into 
+Suggest and conditionnaly used them
+
 # Version 0.5.5 [2018-01-30]
 
 * simplified code (replaced many C functions by a unique R function using 
