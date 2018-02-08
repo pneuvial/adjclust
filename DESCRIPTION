@@ -8,8 +8,8 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
                  email="pierre.neuvial@math.univ-toulouse.fr"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Villa-Vialaneix", role="aut"))
-Date: 2018-01-12
-Version: 0.5.5
+Date: 2018-02-08
+Version: 0.5.6
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 
