@@ -25,15 +25,15 @@ Depends: R(>= 2.10.0)
 Imports:
     Matrix,
     matrixStats,
-    snpStats,
     methods,
-    utils,
-    HiTC,
+    utils
 Suggests:
     knitr,
     testthat,
     rmarkdown,
-    rioja
+    rioja,
+    HiTC,
+    snpStats
 VignetteBuilder: knitr
 URL: https://github.com/pneuvial/adjclust
 BugReports: https://github.com/pneuvial/adjclust/issues

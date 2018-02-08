@@ -14,7 +14,7 @@ linkage disequilibrium matrix of class
 values are expected to be in [0,1]}
 
 \item{h}{band width. If not provided, \code{h} is set to default value `p-1`
-where `p` is the number of columns of `x`}
+where `p` is the number of columns of \code{x}}
 
 \item{stats}{a character vector specifying the linkage disequilibrium
 measures to be calculated (using the \code{\link[snpStats:ld]{ld}}
@@ -54,17 +54,19 @@ If \code{x} is of class
 }
 \examples{
 ## a very small example
-data(testdata, package = "snpStats")
+if (requireNamespace("snpStats", quietly = TRUE)) {
+  data(testdata, package = "snpStats")
 
-# input as snpStats::SnpMatrix
-fit1 <- snpClust(Autosomes[1:200, 1:5], h = 3, stats = "R.squared")
+  # input as snpStats::SnpMatrix
+  fit1 <- snpClust(Autosomes[1:200, 1:5], h = 3, stats = "R.squared")
 
-# input as base::matrix
-fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), h = 3, stats = "R.squared")
+  # input as base::matrix
+  fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), h = 3, stats = "R.squared")
 
-# input as Matrix::dgCMatrix
-ld <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared")
-fit3 <- snpClust(ld, 3)
+  # input as Matrix::dgCMatrix
+  ldres <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared")
+  fit3 <- snpClust(ldres, 3)
+}
 
 }
 \references{

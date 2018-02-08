@@ -1,16 +1,22 @@
 library("adjclust")
-library("HiTC")
+
+check_hic <- function() {
+  if (!requireNamespace("HiTC")) {
+    skip("'HiTC' package not available")
+  }
+}
 
 context("Consistency of the results of 'hicClust' across various input formats")
 
 test_that("'hicClust' gives identical results regardless of data input format", {
-
+  check_hic()
+  
   #case1: Input as HiTC::HTCexp object
-  data("hic_imr90_40_XX", package="adjclust")
+  load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
   fit1 <- hicClust(hic_imr90_40_XX)
   
   #case2: Input as Matrix::dsCMatrix contact map
-  mat <- intdata(hic_imr90_40_XX) 
+  mat <- HiTC::intdata(hic_imr90_40_XX) 
   fit2 <- hicClust(mat)
   
   V1 <- mat@Dimnames[[1]][mat@i+1]          #loci1names

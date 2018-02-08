@@ -21,7 +21,7 @@
 #'   values are expected to be in [0,1]
 #'
 #' @param h band width. If not provided, \code{h} is set to default value `p-1`
-#'   where `p` is the number of columns of `x`
+#'   where `p` is the number of columns of \code{x}
 #'
 #' @param stats a character vector specifying the linkage disequilibrium
 #'   measures to be calculated (using the \code{\link[snpStats:ld]{ld}}
@@ -55,22 +55,23 @@
 #'
 #' @examples
 #' ## a very small example
-#' data(testdata, package = "snpStats")
+#' if (requireNamespace("snpStats", quietly = TRUE)) {
+#'   data(testdata, package = "snpStats")
 #'
-#' # input as snpStats::SnpMatrix
-#' fit1 <- snpClust(Autosomes[1:200, 1:5], h = 3, stats = "R.squared")
+#'   # input as snpStats::SnpMatrix
+#'   fit1 <- snpClust(Autosomes[1:200, 1:5], h = 3, stats = "R.squared")
 #'
-#' # input as base::matrix
-#' fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), h = 3, stats = "R.squared")
+#'   # input as base::matrix
+#'   fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), h = 3, stats = "R.squared")
 #'
-#' # input as Matrix::dgCMatrix
-#' ld <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared")
-#' fit3 <- snpClust(ld, 3)
+#'   # input as Matrix::dgCMatrix
+#'   ldres <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared")
+#'   fit3 <- snpClust(ldres, 3)
+#' }
 #'
 #' @export
 #'
 #' @importFrom methods as
-#' @importFrom snpStats ld
 #'   
 snpClust <- function(x, h = ncol(x) - 1, stats = c("R.squared", "D.prime")) {
   CLASS <- c("dgCMatrix", "matrix", "SnpMatrix")
@@ -86,17 +87,20 @@ snpClust <- function(x, h = ncol(x) - 1, stats = c("R.squared", "D.prime")) {
     
   p <- ncol(x)
   if (inclass == "dgCMatrix" ) {
-      out <- sum(x > 1, na.rm = TRUE)
-      if (out > 0) {
-          x[x > 1] <- 1
-          warning(out, " LD values > 1 have been set to 1")
-      } 
-      out <- sum(x < 0, na.rm = TRUE)
-      if (out > 0) {
-          x[x < 0] <- 0
-          warning(out, " LD values < 0 have been set to 0")
-      } 
+    out <- sum(x > 1, na.rm = TRUE)
+    if (out > 0) {
+        x[x > 1] <- 1
+        warning(out, " LD values > 1 have been set to 1")
+    } 
+    out <- sum(x < 0, na.rm = TRUE)
+    if (out > 0) {
+        x[x < 0] <- 0
+        warning(out, " LD values < 0 have been set to 0")
+    } 
   } else {
+    if (!requireNamespace("snpStats")) {
+      stop("Package 'snpStats' not available. This function cannot be used with 'matrix' data.")
+    }
     if (h >= p) {
       stop("h should be strictly less than p")
     }
@@ -107,14 +111,14 @@ snpClust <- function(x, h = ncol(x) - 1, stats = c("R.squared", "D.prime")) {
         colnames(x) <- 1:ncol(x)
       x <- as(x, "SnpMatrix")
     }
-    x <- ld(x, stats = stats, depth = h)
+    x <- snpStats::ld(x, stats = stats, depth = h)
     x[x > 1] <- 1  ## fix numerical aberrations
     x[x < 0] <- 0  ## fix numerical aberrations
     diag(x) <- rep(1, p)  ## by default the diagonal is 0 after 'snpStats::ld'
     #x <- round(x, digits = 10) ## ensure ascending compatibility but removed for sanity
     if (any(is.na(x))) {
       ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)
-      warning(" Clustering could not be performed due to missing value(s) or NaN(s) in LD estimates. Returning these indices")
+      warning("Clustering could not be performed due to missing value(s) or NaN(s) in LD estimates. Returning these indices")
       return(ww)
     }
   }

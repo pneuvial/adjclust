@@ -36,20 +36,20 @@ conformation capture data (Hi-C).
 }
 \examples{
 # input as HiTC::HTCexp object
-data("hic_imr90_40_XX", package="adjclust")
-hic_imr90_40_XX <- new("HTCexp",
-                       hic_imr90_40_XX@intdata[1:10,1:10],
-                       hic_imr90_40_XX@xgi[1:10, ],
-                       hic_imr90_40_XX@xgi[1:10, ])
+if (require("HiTC", quietly = TRUE)) {
+  load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
+  hic_imr90_40_XX <- new("HTCexp",
+                         hic_imr90_40_XX@intdata[1:10,1:10],
+                         hic_imr90_40_XX@xgi[1:10, ],
+                         hic_imr90_40_XX@xgi[1:10, ])
+  res1 <- hicClust(hic_imr90_40_XX)
+}
 
-# input as HiTC::HTCexp object
-res1 <- hicClust(hic_imr90_40_XX)
-
-\dontrun{
 # input as Matrix::dsCMatrix contact map
+\dontrun{
 mat <- HiTC::intdata(hic_imr90_40_XX) 
 res2 <- hicClust(mat)
-} 
+}
 
 # input as text file
 res3 <- hicClust(system.file("extdata", "sample.txt", package = "adjclust"))
