@@ -41,11 +41,17 @@ library("adjclust")
 # Loading and displaying a sample Hi-C contact map
 
 The data set `hic_imr90_40_XX` is an object of class `HTCexp` which has been 
-obtained from the `HiTC` package [3]. It is a contact map corresponding to 
-chromosome X vs chromosome X. 
+obtained from the `HiTC` package [3]. It is a contact map corresponding to the first 500 x 500 bins on chromosome X vs chromosome X. 
+
 
 ```{r loadData}
 load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
+```
+
+The script used to create this map can be found by executing the following command:
+
+```{r create-data-script, eval=FALSE}
+system.file("system/create_hic_chrXchrX.R", package="adjclust")
 ```
 
 Now we have a look at the data.
@@ -66,7 +72,7 @@ It is also possible to work on binned data. Below we choose a bin size of
 $5 \times 10^5$:
 
 ```{r binning, message=FALSE}
-binned <- HiTC::binningC(hic_imr90_40_XX, binsize = 5e5)
+binned <- HiTC::binningC(hic_imr90_40_XX, binsize = 1e5)
 HiTC::mapC(binned)
 fitB <- hicClust(binned)
 fitB
