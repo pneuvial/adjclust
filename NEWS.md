@@ -1,3 +1,8 @@
+# Version 0.5.7 [2018-02-10]
+
+* Example Hi-C data now 10x smaller (subset of the original one). The package 
+is smaller and tests are faster.
+
 # Version 0.5.6 [2018-02-08]
 
 * changed dependencies to bioconductor packages 'HiTC' and 'snpStats' into 

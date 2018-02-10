@@ -37,10 +37,6 @@
 #' # input as HiTC::HTCexp object
 #' if (require("HiTC", quietly = TRUE)) {
 #'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
-#'   hic_imr90_40_XX <- new("HTCexp",
-#'                          hic_imr90_40_XX@intdata[1:10,1:10],
-#'                          hic_imr90_40_XX@xgi[1:10, ],
-#'                          hic_imr90_40_XX@xgi[1:10, ])
 #'   res1 <- hicClust(hic_imr90_40_XX)
 #' }
 #' 
@@ -87,6 +83,9 @@ hicClust <- function(x, h = NULL, ...) {
       }
       if (is.null(inoptions$header)) {
         inoptions$header <- FALSE
+      }
+      if (is.null(inoptions$stringsAsFactors)) {
+          inoptions$stringsAsFactors <- FALSE
       }
       df <- do.call("read.table", inoptions) 
           
