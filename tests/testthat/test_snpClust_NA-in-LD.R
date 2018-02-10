@@ -68,7 +68,7 @@ test_that("Modifying one genotype also fixes the NA problem", {
   nSamples <- nrow(ceph.1mb)
 
   ceph.1mb[4,286]@.Data[1,1] <- as.raw(3) ## to avoid NaNs
-  ld.ceph <- ld(ceph.1mb, depth = h, stats = "R.squared")
+  ld.ceph <- snpStats::ld(ceph.1mb, depth = h, stats = "R.squared")
   expect_true(all(!is.na(ld.ceph)))
   
   ## avoid LD values slightly greater than 1
