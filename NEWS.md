@@ -1,3 +1,9 @@
+# Version 0.5.X
+
+* implemented a model selection approach based on slope heuristic to select a
+relevant number of clusters
+* fixed minor problems in some method definition for class 'chac'
+
 # Version 0.5.7 [2018-02-10]
 
 * Example Hi-C data now 10x smaller (subset of the original one). The package 

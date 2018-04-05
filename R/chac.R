@@ -174,6 +174,8 @@ diagnose <- function(x, graph = TRUE, verbose = TRUE) {
   UseMethod("diagnose")
 }
 
+#' @export
+
 diagnose.chac <- function(x, graph = TRUE, verbose = TRUE) {
   diff_heights <- diff(x$height)
   if (any(diff_heights < 0)) {
@@ -230,6 +232,7 @@ correct <- function(x) {
   UseMethod("correct")
 }
 
+#' @export
 correct.chac <- function(x) {
   if (any(diff(x$height) < 0)) {
     res_diagnose <- diagnose(x, graph = FALSE, verbose = FALSE)
@@ -273,5 +276,63 @@ cutree.chac <- function(tree, k = NULL, h = NULL) {
   }
   tree <- as.hclust(tree)
   res <- cutree(tree, k = k, h = h)
+  return(res)
+}
+
+#' @name select
+#' @aliases select.chac
+#' @title Clustering selection
+#' @description Clustering selection from a chac object with the slope heuristic
+#' @param x an object of class 'chac'
+#' @param k.max maximum number of clusters that can be selected. Default to 
+#' \code{NULL}, in which case it is set to 
+#' \eqn{\min(\max(100, \frac{n}{\log(n)}), \frac{n}{2})} where \eqn{n} is the
+#' number of objects to be clustered
+#' @param pct minimum percentage of points for the plateau selection in 
+#' capushe selection. See \code{\link[capushe]{DDSE}} for further details
+#' @param graph logical. Whether the diagnostic plot for the capushe selection
+#' is displayed or not. Default to \code{FALSE}
+#' @return The function returns the clustering selected by the slope heuristic,
+#' as implemented in the R package \code{capushe}.
+#' @importFrom capushe DDSE
+#' @importFrom capushe Djump
+#' @references Baudy, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 
+#' overview and implementation. \emph{Statistics and Computing}, \strong{22}(2),
+#' 355-470.
+#' @examples if (require("HiTC", quietly = TRUE)) {
+#'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
+#'   log_hic <- log(intdata(hic_imr90_40_XX) + 1)
+#'   log_hic <- as(log_hic, "matrix")
+#'   res <- adjClust(log_hic)
+#'   selected.clust <- select(res)
+#'   table(selected.clust)
+#' }
+#' @export
+
+select <- function(x, k.max = NULL, pct = 0.15, graph = FALSE) {
+  UseMethod("select")
+}
+
+#' @export
+select.chac <- function(x, k.max = NULL, pct = 0.15, graph = FALSE) {
+  n <- length(x$labels)
+  if (is.null(k.max)) {
+    k.max <- round(min(max(100, n/log(n)), n/2))
+  }
+  
+  in_capushe <- data.frame(name = 1:k.max, 
+                           pen.shape = lchoose(n - 1, 0:(k.max-1)),
+                           complexity = 1:k.max, 
+                           contrast = cumsum(x$height)[(n-1):(n-k.max)])
+  
+  KC <- try(DDSE(in_capushe, pct = pct), silent = TRUE)
+  
+  if (class(KC) == "try-error")
+    KC <- Djump(in_capushe)
+  
+  if (graph)
+    plot(KC)
+  
+  res <- cutree(x, k = as.integer(KC@model))
   return(res)
 }

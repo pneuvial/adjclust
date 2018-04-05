@@ -26,7 +26,8 @@ Imports:
     Matrix,
     matrixStats,
     methods,
-    utils
+    utils,
+    capushe
 Suggests:
     knitr,
     testthat,
