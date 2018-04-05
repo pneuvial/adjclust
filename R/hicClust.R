@@ -17,6 +17,9 @@
 #'   observed (in the format: locus1<tab>locus2<tab>signal).
 #'   
 #' @param h band width. If not provided, \code{h} is set to default value `p-1`.
+#' 
+#' @param log logical. Whether to log-transform the count data. Default to 
+#' \code{FALSE}.
 #'   
 #' @param \dots further arguments to be passed to \code{\link{read.table}} 
 #'   function when \code{x} is a text file name. If not provided, the text file 
@@ -53,7 +56,7 @@
 #' 
 #' @importFrom utils read.table
 
-hicClust <- function(x, h = NULL, ...) {
+hicClust <- function(x, h = NULL, log = FALSE, ...) {
   
   if (!is.null(h)) {
     if (!is.numeric(h))
@@ -71,6 +74,7 @@ hicClust <- function(x, h = NULL, ...) {
       if (inclass == "HTCexp") {
         x <- HiTC::intdata(x)
       }
+      if (log) x@x <- log(x@x + 1)
       p <- x@Dim[1]
       if (is.null(h)) h <- p-1  
         res <- adjClust(x, type = "similarity", h)
@@ -95,7 +99,11 @@ hicClust <- function(x, h = NULL, ...) {
       colindx <- match(df[,2], lis)
           
       mat <- matrix(0, nrow = p, ncol = p)
-      mat[cbind(rowindx,colindx)] <- mat[cbind(colindx,rowindx)] <- df[,3]
+      if (log) {
+        mat[cbind(rowindx,colindx)] <- mat[cbind(colindx,rowindx)] <- log(df[,3] + 1)
+      } else {
+        mat[cbind(rowindx,colindx)] <- mat[cbind(colindx,rowindx)] <- df[,3]
+      }
         
       if (is.null(h)) h <- p-1  
       res <- adjClust(mat, type = "similarity", h = h)

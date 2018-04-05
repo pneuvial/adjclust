@@ -3,6 +3,7 @@
 * implemented a model selection approach based on slope heuristic to select a
 relevant number of clusters
 * fixed minor problems in some method definition for class 'chac'
+* proposed a log-transformation of data in the wrapper 'hicClust'
 
 # Version 0.5.7 [2018-02-10]
 

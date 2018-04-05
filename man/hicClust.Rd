@@ -4,7 +4,7 @@
 \alias{hicClust}
 \title{Adjacency-constrained Clustering of Hi-C contact maps}
 \usage{
-hicClust(x, h = NULL, ...)
+hicClust(x, h = NULL, log = FALSE, ...)
 }
 \arguments{
 \item{x}{either: 1. A pxp contact map of class Matrix::dsCMatrix in which the
@@ -15,6 +15,9 @@ text file with one line per pair of loci for which an interaction has been
 observed (in the format: locus1<tab>locus2<tab>signal).}
 
 \item{h}{band width. If not provided, \code{h} is set to default value `p-1`.}
+
+\item{log}{logical. Whether to log-transform the count data. Default to 
+\code{FALSE}.}
 
 \item{\dots}{further arguments to be passed to \code{\link{read.table}} 
 function when \code{x} is a text file name. If not provided, the text file 
