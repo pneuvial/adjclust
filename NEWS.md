@@ -1,7 +1,7 @@
 # Version 0.5.X
 
-* implemented a model selection approach based on slope heuristic to select a
-relevant number of clusters
+* implemented a model selection approach based on slope heuristic or on the 
+broken stick heuristic to select a relevant number of clusters
 * fixed minor problems in some method definition for class 'chac'
 * proposed a log-transformation of data in the wrapper 'hicClust'
 

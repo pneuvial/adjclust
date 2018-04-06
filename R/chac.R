@@ -283,56 +283,91 @@ cutree.chac <- function(tree, k = NULL, h = NULL) {
 #' @aliases select.chac
 #' @title Clustering selection
 #' @description Clustering selection from a chac object with the slope heuristic
+#' or the broken stick heuristic
 #' @param x an object of class 'chac'
+#' @param type model selection approach between slope heuristic 
+#' (\code{"capushe"}) and broken stick approach (\code{"bstick"})
 #' @param k.max maximum number of clusters that can be selected. Default to 
 #' \code{NULL}, in which case it is set to 
 #' \eqn{\min(\max(100, \frac{n}{\log(n)}), \frac{n}{2})} where \eqn{n} is the
-#' number of objects to be clustered
-#' @param pct minimum percentage of points for the plateau selection in 
-#' capushe selection. See \code{\link[capushe]{DDSE}} for further details
+#' number of objects to be clustered for capushe and to \eqn{n} for the broken
+#' stick model
 #' @param graph logical. Whether the diagnostic plot for the capushe selection
 #' is displayed or not. Default to \code{FALSE}
+#' @param pct minimum percentage of points for the plateau selection in 
+#' capushe selection. See \code{\link[capushe]{DDSE}} for further details
 #' @return The function returns the clustering selected by the slope heuristic,
 #' as implemented in the R package \code{capushe}.
 #' @importFrom capushe DDSE
 #' @importFrom capushe Djump
+#' @importFrom graphics lines
 #' @references Baudy, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 
 #' overview and implementation. \emph{Statistics and Computing}, \strong{22}(2),
 #' 355-470.
+#' MacArthur, R.H. (1957) On the relative abundance of bird species. 
+#' \emph{Proceedings of the National Academy of Sciences}, \strong{43}, 293-295.
 #' @examples if (require("HiTC", quietly = TRUE)) {
 #'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
-#'   log_hic <- log(intdata(hic_imr90_40_XX) + 1)
-#'   log_hic <- as(log_hic, "matrix")
-#'   res <- adjClust(log_hic)
-#'   selected.clust <- select(res)
-#'   table(selected.clust)
+#'   res <- hicClust(hic_imr90_40_XX, log = TRUE)
+#'   selected.capushe <- select(res)
+#'   table(selected.capushe)
+#'   selected.bs <- select(res, type = "bstick")
+#'   table(selected.bs)
 #' }
 #' @export
 
-select <- function(x, k.max = NULL, pct = 0.15, graph = FALSE) {
+select <- function(x, type = c("capushe", "bstick"), k.max = NULL, 
+                   graph = FALSE, pct = 0.15) {
   UseMethod("select")
 }
 
 #' @export
-select.chac <- function(x, k.max = NULL, pct = 0.15, graph = FALSE) {
+select.chac <- function(x, type = c("capushe", "bstick"), k.max = NULL, 
+                        graph = FALSE, pct = 0.15) {
+  type <- match.arg(type)
   n <- length(x$labels)
-  if (is.null(k.max)) {
-    k.max <- round(min(max(100, n/log(n)), n/2))
+
+  if (type == "capushe") {
+    if (is.null(k.max)) {
+      k.max <- round(min(max(100, n/log(n)), n/2))
+    }
+    
+    in_capushe <- data.frame(name = 1:k.max, 
+                             pen.shape = lchoose(n - 1, 0:(k.max-1)),
+                             complexity = 1:k.max, 
+                             contrast = cumsum(x$height)[(n-1):(n-k.max)])
+    
+    KC <- try(DDSE(in_capushe, pct = pct), silent = TRUE)
+    
+    if (class(KC) == "try-error")
+      KC <- Djump(in_capushe)
+    
+    if (graph)
+      plot(KC)
+    
+    res <- cutree(x, k = as.integer(KC@model))
+  } else if (type == "bstick") {
+    if (is.null(k.max)) k.max <- n
+    disp <- rev(x$height)
+    tot.disp <- sum(disp)
+    disp <- abs(disp)
+    bs <- tot.disp * rev(cumsum(1/((n-1):1))/(n-1))
+    cdt <- which(disp[1:(k.max-1)] <= bs[1:(k.max-1)])
+    if (length(cdt) > 0) {
+      KC <- min(cdt)
+    } else {
+      KC <- k.max
+    }
+    
+    if (graph) {
+      plot(bs, type = "l", xlab = "number of clusters", ylab = "broken stick")
+      lines(seq_along(bs)[1:KC], disp[1:KC], type = "b", pch = "+", 
+            col = "darkgreen")
+      lines(seq_along(bs)[KC:length(bs)], disp[KC:length(bs)], type = "b", 
+            pch = "+", col = "red")
+    }
+    
+    res <- cutree(x, k = KC)
   }
-  
-  in_capushe <- data.frame(name = 1:k.max, 
-                           pen.shape = lchoose(n - 1, 0:(k.max-1)),
-                           complexity = 1:k.max, 
-                           contrast = cumsum(x$height)[(n-1):(n-k.max)])
-  
-  KC <- try(DDSE(in_capushe, pct = pct), silent = TRUE)
-  
-  if (class(KC) == "try-error")
-    KC <- Djump(in_capushe)
-  
-  if (graph)
-    plot(KC)
-  
-  res <- cutree(x, k = as.integer(KC@model))
   return(res)
 }

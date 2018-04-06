@@ -5,21 +5,26 @@
 \alias{select.chac}
 \title{Clustering selection}
 \usage{
-select(x, k.max = NULL, pct = 0.15, graph = FALSE)
+select(x, type = c("capushe", "bstick"), k.max = NULL, graph = FALSE,
+  pct = 0.15)
 }
 \arguments{
 \item{x}{an object of class 'chac'}
 
+\item{type}{model selection approach between slope heuristic 
+(\code{"capushe"}) and broken stick approach (\code{"bstick"})}
+
 \item{k.max}{maximum number of clusters that can be selected. Default to 
 \code{NULL}, in which case it is set to 
 \eqn{\min(\max(100, \frac{n}{\log(n)}), \frac{n}{2})} where \eqn{n} is the
-number of objects to be clustered}
-
-\item{pct}{minimum percentage of points for the plateau selection in 
-capushe selection. See \code{\link[capushe]{DDSE}} for further details}
+number of objects to be clustered for capushe and to \eqn{n} for the broken
+stick model}
 
 \item{graph}{logical. Whether the diagnostic plot for the capushe selection
 is displayed or not. Default to \code{FALSE}}
+
+\item{pct}{minimum percentage of points for the plateau selection in 
+capushe selection. See \code{\link[capushe]{DDSE}} for further details}
 }
 \value{
 The function returns the clustering selected by the slope heuristic,
@@ -27,19 +32,22 @@ as implemented in the R package \code{capushe}.
 }
 \description{
 Clustering selection from a chac object with the slope heuristic
+or the broken stick heuristic
 }
 \examples{
 if (require("HiTC", quietly = TRUE)) {
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
-  log_hic <- log(intdata(hic_imr90_40_XX) + 1)
-  log_hic <- as(log_hic, "matrix")
-  res <- adjClust(log_hic)
-  selected.clust <- select(res)
-  table(selected.clust)
+  res <- hicClust(hic_imr90_40_XX, log = TRUE)
+  selected.capushe <- select(res)
+  table(selected.capushe)
+  selected.bs <- select(res, type = "bstick")
+  table(selected.bs)
 }
 }
 \references{
 Baudy, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 
 overview and implementation. \emph{Statistics and Computing}, \strong{22}(2),
 355-470.
+MacArthur, R.H. (1957) On the relative abundance of bird species. 
+\emph{Proceedings of the National Academy of Sciences}, \strong{43}, 293-295.
 }
