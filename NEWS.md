@@ -4,6 +4,8 @@
 broken stick heuristic to select a relevant number of clusters
 * fixed minor problems in some method definition for class 'chac'
 * proposed a log-transformation of data in the wrapper 'hicClust'
+* implemented a heatmap with possible highlighting of the constrained 
+clustering
 
 # Version 0.5.7 [2018-02-10]
 
