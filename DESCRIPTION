@@ -23,6 +23,9 @@ Description: Implements a constrained version of hierarchical agglomerative
     <https://hal.archives-ouvertes.fr/tel-01288568v1>.
 Depends: R(>= 2.10.0)
 Imports:
+    stats,
+    graphics,
+    grDevices,
     Matrix,
     matrixStats,
     methods,
