@@ -4,9 +4,10 @@
 \alias{plotSim}
 \title{Plot (dis)similarity matrix}
 \usage{
-plotSim(mat, type = c("similarity", "dissimilarity"), palette = heat.colors,
-  breaks = 10, log = TRUE, h = p - 1, stats = c("R.squared", "D.prime"),
-  main = NULL)
+plotSim(mat, type = c("similarity", "dissimilarity"), clustering = NULL,
+  palette = heat.colors, breaks = 10, log = TRUE, h = p - 1,
+  stats = c("R.squared", "D.prime"), main = NULL, col.clust = "darkblue",
+  lwd.clust = 2)
 }
 \arguments{
 \item{mat}{matrix to plot. It can be of class \code{'matrix'}, 
@@ -16,6 +17,11 @@ plotSim(mat, type = c("similarity", "dissimilarity"), palette = heat.colors,
 \item{type}{input matrix type. Can be either \code{"similarity"} or 
 \code{"dissimilarity"} (kernels are supposed to be of type 
 \code{"similarity"}).}
+
+\item{clustering}{vector of length the number of rows (columns) of the 
+matrix that contains a contiguity constrained clustering (as provided by
+\code{\link{select}} for instance). If supplied the clustering is 
+superimposed over the heatmap.}
 
 \item{palette}{color palette. Default to \code{\link[grDevices]{heat.colors}}}
 
@@ -33,6 +39,12 @@ compute the linkage desiquilibrium (see \code{\link[snpStats]{ld}}).}
 desiquilibrium measure (see \code{\link[snpStats]{ld}}).}
 
 \item{main}{graphic title.}
+
+\item{col.clust}{color for the borders of the clusters (if \code{clustering}
+is provided).}
+
+\item{lwd.clust}{line width for the borders of the clusters (if 
+\code{clustering} is provided).}
 }
 \description{
 Heatmap of the (dis)similarity matrix
@@ -47,6 +59,14 @@ obtained clustering and the original (dis)similarity
 if (require("HiTC", quietly = TRUE)) {
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
   plotSim(hic_imr90_40_XX)
+  
+  # with a constrained clustering
+  res <- hicClust(hic_imr90_40_XX, log = TRUE)
+  selected.capushe <- select(res)
+  plotSim(hic_imr90_40_XX, clustering = selected.capushe)
 }
 plotSim(dist(iris[ ,1:4]), log = FALSE)
+}
+\seealso{
+\code{\link{select}}
 }

@@ -12,6 +12,10 @@
 #' @param type input matrix type. Can be either \code{"similarity"} or 
 #' \code{"dissimilarity"} (kernels are supposed to be of type 
 #' \code{"similarity"}).
+#' @param clustering vector of length the number of rows (columns) of the 
+#' matrix that contains a contiguity constrained clustering (as provided by
+#' \code{\link{select}} for instance). If supplied the clustering is 
+#' superimposed over the heatmap.
 #' @param palette color palette. Default to \code{\link[grDevices]{heat.colors}}
 #' @param breaks number of breaks used to set colors from the palette. Those
 #' are based on the quantiles of the matrix entries and for skewed distributions
@@ -23,6 +27,10 @@
 #' @param stats if \code{mat} is of class \code{"snpMatrix"}, type of linkage
 #' desiquilibrium measure (see \code{\link[snpStats]{ld}}).
 #' @param main graphic title.
+#' @param col.clust color for the borders of the clusters (if \code{clustering}
+#' is provided).
+#' @param lwd.clust line width for the borders of the clusters (if 
+#' \code{clustering} is provided).
 #' @importFrom grDevices heat.colors
 #' @importFrom graphics image
 #' @importFrom stats quantile
@@ -31,14 +39,20 @@
 #' if (require("HiTC", quietly = TRUE)) {
 #'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
 #'   plotSim(hic_imr90_40_XX)
+#'   
+#'   # with a constrained clustering
+#'   res <- hicClust(hic_imr90_40_XX, log = TRUE)
+#'   selected.capushe <- select(res)
+#'   plotSim(hic_imr90_40_XX, clustering = selected.capushe)
 #' }
 #' plotSim(dist(iris[ ,1:4]), log = FALSE)
+#' @seealso \code{\link{select}}
 #' @export
 
 plotSim <- function(mat, type = c("similarity", "dissimilarity"),
-                    palette = heat.colors, breaks = 10, log = TRUE,
-                    h = p - 1, stats = c("R.squared", "D.prime"),
-                    main = NULL) {
+                    clustering = NULL, palette = heat.colors, breaks = 10, 
+                    log = TRUE, h = p - 1, stats = c("R.squared", "D.prime"),
+                    main = NULL, col.clust = "darkblue", lwd.clust = 2) {
   # checks
   type <- match.arg(type)
   stats <- match.arg(stats)
@@ -60,6 +74,11 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
       type <- "dissimilarity"
       message("type 'dissimilarity' used for objects of class 'dist'")
     }
+  }
+  
+  if (!is.null(clustering)) {
+    if (sum(!(diff(clustering) %in% c(0,1))))
+      stop("'clustering' is not a contiguity constrained clustering.")
   }
   
   # special cases and preprocessing
@@ -129,10 +148,19 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
   image(1:(2*p+1), 1:p, z, breaks = bvalues, col = all_colors, 
         useRaster = TRUE, axes = FALSE, ylab = "", xlab = "", main = main)
   
+  if (!is.null(clustering)) {
+    starts <- sapply(unique(clustering), function(aclust) {
+      min(which(clustering == aclust))
+    })
+    ends <- sapply(unique(clustering), function(aclust) {
+      max(which(clustering == aclust))
+    })
+    x0 <- c(2*starts - 1.5, 2*ends + 0.5)
+    y0 <- rep(0.5, 2*length(starts))
+    x1 <- rep(starts + ends - 0.5, 2)
+    y1 <- rep(ends - starts + 2, 2)
+    segments(x0, y0, x1, y1, lwd = lwd.clust, col = col.clust)
+  }
+  
   invisible(NULL)
 }
-
-# TODO
-# add an option to put text (bin numbers or names)
-# add an option to show clusters
-# add an option to show dendrogram
