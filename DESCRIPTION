@@ -37,7 +37,8 @@ Suggests:
     rmarkdown,
     rioja,
     HiTC,
-    snpStats
+    snpStats,
+    BiocGenerics
 VignetteBuilder: knitr
 URL: https://github.com/pneuvial/adjclust
 BugReports: https://github.com/pneuvial/adjclust/issues

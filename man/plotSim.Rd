@@ -7,7 +7,7 @@
 plotSim(mat, type = c("similarity", "dissimilarity"), clustering = NULL,
   palette = heat.colors, breaks = 10, log = TRUE, h = p - 1,
   stats = c("R.squared", "D.prime"), main = NULL, col.clust = "darkblue",
-  lwd.clust = 2)
+  lwd.clust = 2, xaxis = FALSE, naxis = 10)
 }
 \arguments{
 \item{mat}{matrix to plot. It can be of class \code{'matrix'}, 
@@ -45,6 +45,13 @@ is provided).}
 
 \item{lwd.clust}{line width for the borders of the clusters (if 
 \code{clustering} is provided).}
+
+\item{xaxis}{logical. Should a x-axis be displayed? Default to \code{FALSE}}
+
+\item{naxis}{number of breaks to display on the x-axis. For 
+\code{HTCexp} objects, the axis is displayed in terms of Mpb and for the 
+other types of input, it is displayed in terms of bin number. Default to 
+\code{10}.}
 }
 \description{
 Heatmap of the (dis)similarity matrix
@@ -63,7 +70,7 @@ if (require("HiTC", quietly = TRUE)) {
   # with a constrained clustering
   res <- hicClust(hic_imr90_40_XX, log = TRUE)
   selected.capushe <- select(res)
-  plotSim(hic_imr90_40_XX, clustering = selected.capushe)
+  plotSim(hic_imr90_40_XX, clustering = selected.capushe, xaxis = TRUE)
 }
 plotSim(dist(iris[ ,1:4]), log = FALSE)
 }

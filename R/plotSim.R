@@ -31,6 +31,11 @@
 #' is provided).
 #' @param lwd.clust line width for the borders of the clusters (if 
 #' \code{clustering} is provided).
+#' @param xaxis logical. Should a x-axis be displayed? Default to \code{FALSE}
+#' @param naxis number of breaks to display on the x-axis. For 
+#' \code{HTCexp} objects, the axis is displayed in terms of Mpb and for the 
+#' other types of input, it is displayed in terms of bin number. Default to 
+#' \code{10}.
 #' @importFrom grDevices heat.colors
 #' @importFrom graphics image
 #' @importFrom stats quantile
@@ -43,7 +48,7 @@
 #'   # with a constrained clustering
 #'   res <- hicClust(hic_imr90_40_XX, log = TRUE)
 #'   selected.capushe <- select(res)
-#'   plotSim(hic_imr90_40_XX, clustering = selected.capushe)
+#'   plotSim(hic_imr90_40_XX, clustering = selected.capushe, xaxis = TRUE)
 #' }
 #' plotSim(dist(iris[ ,1:4]), log = FALSE)
 #' @seealso \code{\link{select}}
@@ -52,7 +57,8 @@
 plotSim <- function(mat, type = c("similarity", "dissimilarity"),
                     clustering = NULL, palette = heat.colors, breaks = 10, 
                     log = TRUE, h = p - 1, stats = c("R.squared", "D.prime"),
-                    main = NULL, col.clust = "darkblue", lwd.clust = 2) {
+                    main = NULL, col.clust = "darkblue", lwd.clust = 2,
+                    xaxis = FALSE, naxis = 10) {
   # checks
   type <- match.arg(type)
   stats <- match.arg(stats)
@@ -86,6 +92,7 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
     if (!requireNamespace("HiTC")) {
       stop("Package 'HiTC' not available. 'HTCexp' input cannot be used.")
     }
+    hic_ranges <- mat@xgi
     mat <- HiTC::intdata(mat)
     if (type != "similarity")
       stop("type 'dissimilarity' does not match 'HTCexp' data")
@@ -147,6 +154,30 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
   # plot
   image(1:(2*p), 1:p, z, breaks = bvalues, col = all_colors, 
         useRaster = TRUE, axes = FALSE, ylab = "", xlab = "", main = main)
+  
+  if (xaxis) {
+    if (inclass == "HTCexp") {
+      requireNamespace("BiocGenerics")
+      startend <- c(min(BiocGenerics::start(hic_ranges@ranges)), 
+                    max(BiocGenerics::end(hic_ranges@ranges)))
+      startend <- startend / 10^6
+      step <- floor((floor(startend[2] - ceiling(startend[1]))) / naxis)
+      all_breaks <- seq(ceiling(startend[1]), floor(startend[2]), by = step)
+      
+      where_1 <- (BiocGenerics::start(hic_ranges@ranges)[1] +
+                    BiocGenerics::start(hic_ranges@ranges)[1]) / 2 / 10^6
+      where_p <- (BiocGenerics::start(hic_ranges@ranges)[p] +
+                    BiocGenerics::start(hic_ranges@ranges)[p]) / 2 / 10^6
+      all_pos <- 1.5 + (all_breaks - where_1) / (where_p - where_1) * (2*p - 1)
+      axis(1, at = all_pos, labels = paste0(all_breaks, "Mb"))
+    } else {
+      step <- floor((p-1) / naxis)
+      all_breaks <- seq(1, p, by = step)
+      
+      all_pos <- 1.5 + (all_breaks - 1) / (p - 1) * (2*p - 1)
+      axis(1, at = all_pos, labels = paste("bin", all_breaks))
+    }
+  }
   
   if (!is.null(clustering)) {
     starts <- sapply(unique(clustering), function(aclust) {
