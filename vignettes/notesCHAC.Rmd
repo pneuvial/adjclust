@@ -110,8 +110,8 @@ of this note are still valid.
 
 The original implementation of (unconstrained) HAC in `stats::hclust` takes as 
 input a dissimilarity matrix. However, the implementation of `adjclust` is based
-on a kernel/similarity approach. We describe in this section how the case of 
-dissimilarity is handled.
+on a kernel/similarity approach. We describe in this section how the 
+dissimilarity case is handled.
 
 Suppose given a dissimilarity $d$ which satisfies:
 
