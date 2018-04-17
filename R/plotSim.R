@@ -145,7 +145,7 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
   z[cbind(x-1, y)] <- values
   
   # plot
-  image(1:(2*p+1), 1:p, z, breaks = bvalues, col = all_colors, 
+  image(1:(2*p), 1:p, z, breaks = bvalues, col = all_colors, 
         useRaster = TRUE, axes = FALSE, ylab = "", xlab = "", main = main)
   
   if (!is.null(clustering)) {
