@@ -5,9 +5,9 @@
 \title{Plot (dis)similarity matrix}
 \usage{
 plotSim(mat, type = c("similarity", "dissimilarity"), clustering = NULL,
-  palette = heat.colors, breaks = 10, log = TRUE, h = p - 1,
-  stats = c("R.squared", "D.prime"), main = NULL, col.clust = "darkblue",
-  lwd.clust = 2, xaxis = FALSE, naxis = 10)
+  dendro = NULL, palette = heat.colors, breaks = 10, log = TRUE, h = p
+  - 1, stats = c("R.squared", "D.prime"), main = NULL,
+  col.clust = "darkblue", lwd.clust = 2, xaxis = FALSE, naxis = 10)
 }
 \arguments{
 \item{mat}{matrix to plot. It can be of class \code{'matrix'}, 
@@ -22,6 +22,9 @@ plotSim(mat, type = c("similarity", "dissimilarity"), clustering = NULL,
 matrix that contains a contiguity constrained clustering (as provided by
 \code{\link{select}} for instance). If supplied the clustering is 
 superimposed over the heatmap.}
+
+\item{dendro}{\code{\link{chac}} object as provided, e.g., by the function
+\code{\link{adjClust}} (or any of the other wrappers).}
 
 \item{palette}{color palette. Default to \code{\link[grDevices]{heat.colors}}}
 
@@ -71,9 +74,10 @@ if (require("HiTC", quietly = TRUE)) {
   res <- hicClust(hic_imr90_40_XX, log = TRUE)
   selected.capushe <- select(res)
   plotSim(hic_imr90_40_XX, clustering = selected.capushe, xaxis = TRUE)
+  plotSim(hic_imr90_40_XX, clustering = selected.capushe, dendro = res)
 }
 plotSim(dist(iris[ ,1:4]), log = FALSE)
 }
 \seealso{
-\code{\link{select}}
+\code{\link{select}}, \code{\link{adjClust}}
 }

@@ -16,6 +16,8 @@
 #' matrix that contains a contiguity constrained clustering (as provided by
 #' \code{\link{select}} for instance). If supplied the clustering is 
 #' superimposed over the heatmap.
+#' @param dendro \code{\link{chac}} object as provided, e.g., by the function
+#' \code{\link{adjClust}} (or any of the other wrappers).
 #' @param palette color palette. Default to \code{\link[grDevices]{heat.colors}}
 #' @param breaks number of breaks used to set colors from the palette. Those
 #' are based on the quantiles of the matrix entries and for skewed distributions
@@ -39,6 +41,8 @@
 #' @importFrom grDevices heat.colors
 #' @importFrom graphics image
 #' @importFrom stats quantile
+#' @importFrom stats rect.hclust
+#' @importFrom graphics par
 #' @examples
 #' # input as HiTC::HTCexp object
 #' if (require("HiTC", quietly = TRUE)) {
@@ -49,16 +53,18 @@
 #'   res <- hicClust(hic_imr90_40_XX, log = TRUE)
 #'   selected.capushe <- select(res)
 #'   plotSim(hic_imr90_40_XX, clustering = selected.capushe, xaxis = TRUE)
+#'   plotSim(hic_imr90_40_XX, clustering = selected.capushe, dendro = res)
 #' }
 #' plotSim(dist(iris[ ,1:4]), log = FALSE)
-#' @seealso \code{\link{select}}
+#' @seealso \code{\link{select}}, \code{\link{adjClust}}
 #' @export
 
 plotSim <- function(mat, type = c("similarity", "dissimilarity"),
-                    clustering = NULL, palette = heat.colors, breaks = 10, 
-                    log = TRUE, h = p - 1, stats = c("R.squared", "D.prime"),
-                    main = NULL, col.clust = "darkblue", lwd.clust = 2,
-                    xaxis = FALSE, naxis = 10) {
+                    clustering = NULL, dendro = NULL, palette = heat.colors, 
+                    breaks = 10, log = TRUE, h = p - 1, 
+                    stats = c("R.squared", "D.prime"), main = NULL, 
+                    col.clust = "darkblue", lwd.clust = 2, xaxis = FALSE, 
+                    naxis = 10) {
   # checks
   type <- match.arg(type)
   stats <- match.arg(stats)
@@ -85,6 +91,11 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
   if (!is.null(clustering)) {
     if (sum(!(diff(clustering) %in% c(0,1))))
       stop("'clustering' is not a contiguity constrained clustering.")
+  }
+  
+  if (!is.null(dendro)) {
+    if (class(dendro) != "chac")
+      stop("'dendro' is not a 'chac' object.")
   }
   
   # special cases and preprocessing
@@ -118,6 +129,10 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
   
   # extract dimension and initialize
   p <- nrow(mat)
+  if (!is.null(clustering)) {
+    if (length(clustering) != p)
+      stop("'clustering' must have the same length that the similarity matrix.")
+  }
   z <- matrix(0, ncol = p, nrow = 2*p)
   
   if (type == "dissimilarity") {
@@ -152,8 +167,26 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
   z[cbind(x-1, y)] <- values
   
   # plot
-  image(1:(2*p), 1:p, z, breaks = bvalues, col = all_colors, 
-        useRaster = TRUE, axes = FALSE, ylab = "", xlab = "", main = main)
+  if (is.null(dendro)) {
+    image(1:(2*p), 1:p, z, breaks = bvalues, col = all_colors, 
+          useRaster = TRUE, axes = FALSE, ylab = "", xlab = "", main = main)
+  } else {
+    par(mfrow = c(2, 1))
+    par(mar = c(0, 1, 2, 1), xaxs = "i")
+    suppressWarnings(plot(dendro, center = TRUE, main = main, axes = FALSE))
+    if (!is.null(clustering)) {
+      rect.hclust(dendro, k = length(unique(clustering)))
+    }
+    # plot
+    if (xaxis) {
+      ylim <- c(1, p*1.1)
+    } else {
+      ylim <- c(1, p)
+    }
+    par(mar = c(0, 1, 0, 1))
+    image(1:(2*p), (1:p), z[ ,p:1], breaks = bvalues, col = all_colors, 
+          useRaster = TRUE, axes = FALSE, ylab = "", xlab = "", ylim = ylim)
+  }
   
   if (xaxis) {
     if (inclass == "HTCexp") {
@@ -169,13 +202,19 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
       where_p <- (BiocGenerics::start(hic_ranges@ranges)[p] +
                     BiocGenerics::start(hic_ranges@ranges)[p]) / 2 / 10^6
       all_pos <- 1.5 + (all_breaks - where_1) / (where_p - where_1) * (2*p - 1)
-      axis(1, at = all_pos, labels = paste0(all_breaks, "Mb"))
+      if (is.null(dendro)) {
+        axis_pos <- NA
+      } else axis_pos <- 1.1*p
+      axis(1, at = all_pos, labels = paste0(all_breaks, "Mb"), pos = axis_pos)
     } else {
       step <- floor((p-1) / naxis)
       all_breaks <- seq(1, p, by = step)
       
       all_pos <- 1.5 + (all_breaks - 1) / (p - 1) * (2*p - 1)
-      axis(1, at = all_pos, labels = paste("bin", all_breaks))
+      if (is.null(dendro)) {
+        axis_pos <- NA
+      } else axis_pos <- 1.1*p
+      axis(1, at = all_pos, labels = paste("bin", all_breaks), pos = axis_pos)
     }
   }
   
@@ -188,8 +227,10 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
     })
     x0 <- c(2*starts - 1.5, 2*ends + 0.5)
     y0 <- rep(0.5, 2*length(starts))
+    if (!is.null(dendro)) y0 <- (p + 1) - y0
     x1 <- rep(starts + ends - 0.5, 2)
     y1 <- rep(ends - starts + 2, 2)
+    if (!is.null(dendro)) y1 <- (p + 1) - y1
     segments(x0, y0, x1, y1, lwd = lwd.clust, col = col.clust)
   }
   
