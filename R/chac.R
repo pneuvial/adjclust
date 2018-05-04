@@ -111,9 +111,12 @@ plot.chac <- function(x, y, ...,
   } else if (mode == "corrected") {
     res_diagnose <- diagnose(x, graph = FALSE, verbose = FALSE)
     x <- correct(x)
+    args$ylab <- "corrected"
   } else if (mode == "total-disp") {
     x$height <- cumsum(x$height)
+    args$ylab <- "total dispersion"
   } else if (mode == "within-disp" | mode == "average-disp") {
+    args$ylab <- "within-cluster dispersion"
     to_correct <- which((x$merge[ ,1] > 0) | (x$merge[ ,2] > 0))
     for (ind in to_correct) {
       clusters <- x$merge[ind, ]
@@ -136,8 +139,8 @@ plot.chac <- function(x, y, ...,
         warning(paste0("\nDetected reversals in dendrogram: ",
                        "mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant."))
       if (is.null(args$ylim)) args$ylim <- range(x$height)
+      args$ylab <- "average dispersion"
     }
-    args$ylab <- "within-cluster dispersion"
   }
   
   args$x <- as.dendrogram(as.hclust(x))
