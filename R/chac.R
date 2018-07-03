@@ -81,6 +81,9 @@ summary.chac <- function(object, ...) {
 #' the most advisable representation is the one provided by 
 #' \code{mode = "total-disp"}. Further details are provided in the vignette 
 #' "Notes on CHAC implementation in adjclust".
+#' @param nodeLabel (logical) whether the order of merging has to be displayed
+#' or not. \code{nodeLabel=TRUE} prints orders of fusion at corresponding
+#' nodes. Default to \code{FALSE}
 #' @references { Grimm, E.C. (1987) CONISS: a fortran 77 program for
 #' stratigraphically constrained analysis by the method of incremental sum of
 #' squares. \emph{Computer & Geosciences}, \strong{13}(1), 13-35. }
@@ -93,7 +96,8 @@ summary.chac <- function(object, ...) {
 #' @importFrom stats as.dendrogram cutree
 plot.chac <- function(x, y, ..., 
                       mode = c("standard", "corrected", "total-disp", 
-                               "within-disp", "average-disp")) {
+                               "within-disp", "average-disp"), 
+                      nodeLabel = FALSE) {
   mode <- match.arg(mode)
   args <- list(...)
   if (is.null(args$type)) args$type <- "triangle"
@@ -142,9 +146,13 @@ plot.chac <- function(x, y, ...,
       args$ylab <- "average dispersion"
     }
   }
-  
-  args$x <- as.dendrogram(as.hclust(x))
-  do.call(plot, args)
+  if (nodeLabel) {
+	  args$x <- alt.as.dendrogram(as.hclust(x))
+	  do.call(alt.plot, args)
+  } else {
+	  args$x <- as.dendrogram(as.hclust(x))
+	  do.call(plot, args)
+  }
   
   # for "mode='corrected'", show the corrections
   if (mode == "corrected") {
