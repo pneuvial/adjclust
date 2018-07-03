@@ -96,7 +96,8 @@ summary.chac <- function(object, ...) {
 #' @importFrom stats as.dendrogram cutree
 plot.chac <- function(x, y, ..., 
                       mode = c("standard", "corrected", "total-disp", 
-                               "within-disp", "average-disp"), nodeLabel=FALSE) {
+                               "within-disp", "average-disp"), 
+                      nodeLabel = FALSE) {
   mode <- match.arg(mode)
   args <- list(...)
   if (is.null(args$type)) args$type <- "triangle"
@@ -145,13 +146,13 @@ plot.chac <- function(x, y, ...,
       args$ylab <- "average dispersion"
     }
   }
-  if (nodeLabel==TRUE) {
+  if (nodeLabel) {
 	  args$x <- alt.as.dendrogram(as.hclust(x))
 	  do.call(alt.plot, args)
   } else {
 	  args$x <- as.dendrogram(as.hclust(x))
 	  do.call(plot, args)
-}
+  }
   
   # for "mode='corrected'", show the corrections
   if (mode == "corrected") {
