@@ -7,7 +7,7 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Pierre", "Neuvial", role=c("aut", "cre"), 
                  email="pierre.neuvial@math.univ-toulouse.fr"),
              person("Guillem", "Rigaill", role="aut"),
-             person("Nathalie", "Villa-Vialaneix", role="aut"))
+             person("Nathalie", "Vialaneix", role="aut"))
 Date: 2018-02-10
 Version: 0.5.7
 License: GPL-3
