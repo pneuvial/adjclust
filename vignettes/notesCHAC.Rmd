@@ -143,7 +143,6 @@ and
 fit <- adjClust(d, type = "dissimilarity", h = h)
 ```
 
-
 # Options for displaying the dendrogram
 
 In this section, we suppose given an Euclidean distance $d$ between objects 
@@ -225,6 +224,32 @@ by the previous method (`"within-disp"`) by using the average within-cluster
 dispersion of the two clusters being merged at avery given step of the 
 algorithm. This criterion is also a cluster specific one but does not guaranty
 the absence of reversals in heights.
+
+
+# Relations with 'hclust' and 'rioja'
+
+As documented in [4], the call to ```hclust(..., method = "Ward.D")``` 
+implicitely supposes that ```...``` is a *squared* distance matrix. As explained
+above, we did not make such an assumption so 
+```hclust(d^2, method = "Ward.D")``` and 
+```adjClust(d, method = "dissimilarity")``` give identical results when the 
+ordering of the (unconstrained) clustering is compatible with the natural 
+ordering of objects used as a constraint. In addition, since 
+```hclust(..., method = "Ward.D2")``` takes for linkage $\sqrt{m_t}$, 
+```hclust(d, method = "Ward.D2")``` and 
+```adjClust(d, method = "dissimilarity")``` give identical results for the 
+merges and the slot ```height``` of the first is the square root of the slot 
+```height``` of the second, when the ordering of the (unconstrained) clustering 
+is compatible with the natural ordering of objects used as a constraint.
+
+Finally, ```rioja``` uses ESS$_t$ to display the heights of the dendrogram 
+(because, as documented above, this quantity is non decreasing, in the 
+Euclidean case, even for constrained clusterings). Hence, 
+```rioja(d, method = "coniss")``` and 
+```adjClust(d, method = "dissimilarity")``` give identical results for the 
+merges and the slot ```height``` of the first is the cumulative sum of the slot 
+```height``` of the second.
+
 
 # References
 
