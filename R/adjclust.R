@@ -135,6 +135,18 @@ adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 }
 
 #' @export
+adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  type <- match.arg(type)
+  if (!(isSymmetric(mat)))
+    stop("Input matrix is not symmetric")
+  if (type == "dissimilarity")
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
 adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"), 
                           h = ncol(mat) - 1) {
   type <- match.arg(type)
@@ -145,8 +157,7 @@ adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"),
   return(res)
 }
 
-run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), 
-                         h = ncol(mat) - 1) {
+run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h) {
   # sanity checks
   type <- match.arg(type)
   if (!(nrow(mat) == ncol(mat)))

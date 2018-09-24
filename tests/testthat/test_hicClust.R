@@ -28,7 +28,7 @@ test_that("'hicClust' gives identical results regardless of data input format", 
   
   tf <- tempfile(fileext = ".txt")
   write.table(content, tf, sep = " ", col.names = FALSE, row.names = FALSE)
-  fit3 <- hicClust(tf, sep = " ")  
+  fit3 <- hicClust(tf, sep = " ")
   
   expect_equal(fit1$merge, fit2$merge)
   expect_equal(fit1$height, fit2$height)  

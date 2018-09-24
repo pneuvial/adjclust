@@ -57,59 +57,95 @@
 #' @importFrom utils read.table
 
 hicClust <- function(x, h = NULL, log = FALSE, ...) {
+  UseMethod("hicClust")
+}
+
+#' @export
+hicClust.character <- function(x, h = NULL, log = FALSE, ...) {
+  if (!file.exists(x)) {
+    stop("Input of type 'character' should be a valid file.")
+  }
+  inoptions <- list(...)
+  inoptions$file <- x
+  if (is.null(inoptions$sep)) {
+    inoptions$sep <- "\t"
+  }
+  if (is.null(inoptions$header)) {
+    inoptions$header <- FALSE
+  }
+  if (is.null(inoptions$stringsAsFactors)) {
+    inoptions$stringsAsFactors <- FALSE
+  }
+  df <- do.call("read.table", inoptions) 
   
-  if (!is.null(h)) {
-    if (!is.numeric(h))
-      stop("h should be numeric")
-  }
-    
-  inclass <- class(x)
-  if (inclass == "HTCexp" && !requireNamespace("HiTC", quietly = TRUE)) {
+  lis <- sort(unique(c(df[,1], df[,2])))
+  p <- length(lis)
+  rowindx <- match(df[,1], lis)
+  colindx <- match(df[,2], lis)
+  identical <- rowindx == colindx
+  df[ ,3] <- as.numeric(df[ ,3])
+  
+  mat <- new("dgTMatrix", Dim = c(as.integer(p), as.integer(p)),
+             i = c(rowindx, colindx[!identical]) - 1L, 
+             j = c(colindx, rowindx[!identical]) - 1L, 
+             x = c(df[ ,3], df[!identical,3]))
+  if (log) mat@x <- log(mat@x + 1)
+  
+  res <- run.hicclust(mat, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.matrix <- function(x, h = NULL, log = FALSE) {
+  if (log) x <- log(x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.Matrix <- function(x, h = NULL, log = FALSE) {
+  if (log) x <- log(x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.dgCMatrix <- function(x, h = NULL, log = FALSE) {
+  if (log) x@x <- log(x@x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.dsCMatrix <- function(x, h = NULL, log = FALSE) {
+  if (log) x@x <- log(x@x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.dgeMatrix <- function(x, h = NULL, log = FALSE) {
+  if (log) x <- log(x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.HTCexp <- function(x, h = NULL, log = FALSE) {
+  if (!requireNamespace("HiTC", quietly = TRUE))
     stop("Package 'HiTC' not available. This function cannot be used with 'HTCexp' data.")
-  } else {
-    if( (inclass != "dsCMatrix") && (inclass !=  "HTCexp") && (!file.exists(x)) )
-      stop("Invalid Input:x should be a text file or an object of class Matrix::dsCMatrix/HiTC::HTCexp")
-      
-    if (inclass == "dsCMatrix" || inclass  == "HTCexp") {
-      if (inclass == "HTCexp") {
-        x <- HiTC::intdata(x)
-      }
-      if (log) x@x <- log(x@x + 1)
-      p <- x@Dim[1]
-      if (is.null(h)) h <- p-1  
-        res <- adjClust(x, type = "similarity", h)
-        return(res)
-    } else {
-      inoptions <- list(...)
-      inoptions$file <- x
-      if (is.null(inoptions$sep)) {
-        inoptions$sep <- "\t"
-      }
-      if (is.null(inoptions$header)) {
-        inoptions$header <- FALSE
-      }
-      if (is.null(inoptions$stringsAsFactors)) {
-          inoptions$stringsAsFactors <- FALSE
-      }
-      df <- do.call("read.table", inoptions) 
-          
-      lis <- sort(unique(c(df[,1], df[,2])))
-      p <- length(lis)
-      rowindx <- match(df[,1], lis)
-      colindx <- match(df[,2], lis)
-          
-      mat <- matrix(0, nrow = p, ncol = p)
-      if (log) {
-        mat[cbind(rowindx,colindx)] <- mat[cbind(colindx,rowindx)] <- log(df[,3] + 1)
-      } else {
-        mat[cbind(rowindx,colindx)] <- mat[cbind(colindx,rowindx)] <- df[,3]
-      }
+  x <- HiTC::intdata(x)
+  res <- hicClust(x, h = h, log = log) # sparse or dense version
+  return(res)
+}
+
+run.hicclust <- function(x, h) {
+  if (is.null(h)) h <- nrow(x) - 1
+  if (!is.numeric(h))
+    stop("h should be numeric")
+  
+  res <- adjClust(x, type = "similarity", h = h)
+  res$method <- "hicClust"
         
-      if (is.null(h)) h <- p-1  
-      res <- adjClust(mat, type = "similarity", h = h)
-      res$method <- "hicClust"
-        
-      return(res)
-    }
-  }
+  return(res)
 }
