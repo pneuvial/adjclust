@@ -9,12 +9,14 @@
 #' are clustered according to information provided by high-throughput
 #' conformation capture data (Hi-C).
 #' 
-#' @param x either: 1. A pxp contact map of class Matrix::dsCMatrix in which the
-#'   entries are the number of counts of physical interactions observed between 
-#'   all pairs of loci 2. An object of class HiTC::HTCexp. The corresponding 
-#'   Hi-C data is stored as a Matrix::dsCMatrix object in the intdata slot 3. A 
-#'   text file with one line per pair of loci for which an interaction has been 
-#'   observed (in the format: locus1<tab>locus2<tab>signal).
+#' @param x either: 1. A pxp contact sparse or dense matrix (classes matrix,
+#' Matrix, dscMatrix, dgTMatrix, dgCMatrix, dgeMatrix). Its entries are the 
+#' number of counts of physical interactions observed between all pairs of loci. 
+#' 2. An object of class HiTC::HTCexp. The corresponding Hi-C data is stored as 
+#' a Matrix::dsCMatrix object in the intdata slot. 3. A text file path with one 
+#' line per pair of loci for which an interaction has been observed (in the 
+#' format: locus1<tab>locus2<tab>signal) or a matrix or data frame with similar
+#' data (3 columns).
 #'   
 #' @param h band width. If not provided, \code{h} is set to default value `p-1`.
 #' 
@@ -55,13 +57,33 @@
 #' @export
 #' 
 #' @importFrom utils read.table
+#' @importFrom methods new
 
 hicClust <- function(x, h = NULL, log = FALSE, ...) {
   UseMethod("hicClust")
 }
 
 #' @export
-hicClust.character <- function(x, h = NULL, log = FALSE, ...) {
+hicClust.data.frame <- function(x, h = NULL, log = FALSE, ...) { # bin pair list
+  lis <- sort(unique(c(x[,1], x[,2])))
+  p <- length(lis)
+  rowindx <- match(x[,1], lis)
+  colindx <- match(x[,2], lis)
+  identical <- rowindx == colindx
+  x[ ,3] <- as.numeric(x[ ,3])
+  
+  mat <- new("dgTMatrix", Dim = c(as.integer(p), as.integer(p)),
+             i = c(rowindx, colindx[!identical]) - 1L, 
+             j = c(colindx, rowindx[!identical]) - 1L, 
+             x = c(x[ ,3], x[!identical,3]))
+  if (log) mat@x <- log(mat@x + 1)
+  
+  res <- run.hicclust(mat, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.character <- function(x, h = NULL, log = FALSE, ...) { # file with bin pair list
   if (!file.exists(x)) {
     stop("Input of type 'character' should be a valid file.")
   }
@@ -77,61 +99,55 @@ hicClust.character <- function(x, h = NULL, log = FALSE, ...) {
     inoptions$stringsAsFactors <- FALSE
   }
   df <- do.call("read.table", inoptions) 
-  
-  lis <- sort(unique(c(df[,1], df[,2])))
-  p <- length(lis)
-  rowindx <- match(df[,1], lis)
-  colindx <- match(df[,2], lis)
-  identical <- rowindx == colindx
-  df[ ,3] <- as.numeric(df[ ,3])
-  
-  mat <- new("dgTMatrix", Dim = c(as.integer(p), as.integer(p)),
-             i = c(rowindx, colindx[!identical]) - 1L, 
-             j = c(colindx, rowindx[!identical]) - 1L, 
-             x = c(df[ ,3], df[!identical,3]))
-  if (log) mat@x <- log(mat@x + 1)
-  
-  res <- run.hicclust(mat, h = h)
+  res <- hicClust.data.frame(df, h = h, log = log)
+
   return(res)
 }
 
 #' @export
-hicClust.matrix <- function(x, h = NULL, log = FALSE) {
+hicClust.matrix <- function(x, h = NULL, log = FALSE, ...) {
+  if ((nrow(x) != ncol(x)) & (ncol(x) == 3)) {
+    # bin pair list
+    x <- as.data.frame(x)
+    res <- hicClust.data.frame(x, h = h, log = log)
+  } else {
+    # full hic matrix
+    if (log) x <- log(x + 1)
+    res <- run.hicclust(x, h = h)
+  }
+  return(res)
+}
+
+#' @export
+hicClust.Matrix <- function(x, h = NULL, log = FALSE, ...) {
   if (log) x <- log(x + 1)
   res <- run.hicclust(x, h = h)
   return(res)
 }
 
 #' @export
-hicClust.Matrix <- function(x, h = NULL, log = FALSE) {
-  if (log) x <- log(x + 1)
-  res <- run.hicclust(x, h = h)
-  return(res)
-}
-
-#' @export
-hicClust.dgCMatrix <- function(x, h = NULL, log = FALSE) {
+hicClust.dgCMatrix <- function(x, h = NULL, log = FALSE, ...) {
   if (log) x@x <- log(x@x + 1)
   res <- run.hicclust(x, h = h)
   return(res)
 }
 
 #' @export
-hicClust.dsCMatrix <- function(x, h = NULL, log = FALSE) {
+hicClust.dsCMatrix <- function(x, h = NULL, log = FALSE, ...) {
   if (log) x@x <- log(x@x + 1)
   res <- run.hicclust(x, h = h)
   return(res)
 }
 
 #' @export
-hicClust.dgeMatrix <- function(x, h = NULL, log = FALSE) {
+hicClust.dgeMatrix <- function(x, h = NULL, log = FALSE, ...) {
   if (log) x <- log(x + 1)
   res <- run.hicclust(x, h = h)
   return(res)
 }
 
 #' @export
-hicClust.HTCexp <- function(x, h = NULL, log = FALSE) {
+hicClust.HTCexp <- function(x, h = NULL, log = FALSE, ...) {
   if (!requireNamespace("HiTC", quietly = TRUE))
     stop("Package 'HiTC' not available. This function cannot be used with 'HTCexp' data.")
   x <- HiTC::intdata(x)

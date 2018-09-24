@@ -7,12 +7,14 @@
 hicClust(x, h = NULL, log = FALSE, ...)
 }
 \arguments{
-\item{x}{either: 1. A pxp contact map of class Matrix::dsCMatrix in which the
-entries are the number of counts of physical interactions observed between 
-all pairs of loci 2. An object of class HiTC::HTCexp. The corresponding 
-Hi-C data is stored as a Matrix::dsCMatrix object in the intdata slot 3. A 
-text file with one line per pair of loci for which an interaction has been 
-observed (in the format: locus1<tab>locus2<tab>signal).}
+\item{x}{either: 1. A pxp contact sparse or dense matrix (classes matrix,
+Matrix, dscMatrix, dgTMatrix, dgCMatrix, dgeMatrix). Its entries are the 
+number of counts of physical interactions observed between all pairs of loci. 
+2. An object of class HiTC::HTCexp. The corresponding Hi-C data is stored as 
+a Matrix::dsCMatrix object in the intdata slot. 3. A text file path with one 
+line per pair of loci for which an interaction has been observed (in the 
+format: locus1<tab>locus2<tab>signal) or a matrix or data frame with similar
+data (3 columns).}
 
 \item{h}{band width. If not provided, \code{h} is set to default value `p-1`.}
 
