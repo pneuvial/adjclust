@@ -41,9 +41,11 @@ conformation capture data (Hi-C).
 }
 \examples{
 # input as HiTC::HTCexp object
+\dontrun{
 if (require("HiTC", quietly = TRUE)) {
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
   res1 <- hicClust(hic_imr90_40_XX)
+}
 }
 
 # input as Matrix::dsCMatrix contact map
