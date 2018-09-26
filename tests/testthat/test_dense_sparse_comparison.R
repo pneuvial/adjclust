@@ -3,12 +3,17 @@ library("adjclust")
 context("Comparison between the results of adjClust with sparse and dense matrices")
 
 mat <- matrix(c(1,0,0,0,0,0.1,1,0,0,0,0.5,0.2,1,0,0,0.8,0.6,0.3,1,0,0,0.9,0.7,0.4,1), nrow = 5)
-smat1 <- as(mat, "dgCMatrix")
+mat <- mat + t(mat)
+smat1 <- as(mat, "dgeMatrix")
+smat2 <- as(mat, "dgCMatrix")
+smat3 <- as(mat, "dgTMatrix")
+
 mat <- Matrix::forceSymmetric(mat)
-smat3 <- as(mat, "dgeMatrix")
-smat2 <- as(mat, "dsCMatrix")
+smat4 <- as(mat, "dsCMatrix")
+smat5 <- as(mat, "dsTMatrix")
+smat6 <- as(mat, "dsyMatrix")
+
 mat <- as(mat, "matrix")
-smat4 <- as(mat, "dgTMatrix")
 p <- nrow(mat)
 
 test_that("test that adjClust gives identical results for sparse and dense matrices when h < p-1", {
@@ -17,6 +22,8 @@ test_that("test that adjClust gives identical results for sparse and dense matri
   fit3 <- adjClust(smat2, h = 2)
   fit4 <- adjClust(smat3, h = 2)
   fit5 <- adjClust(smat4, h = 2)
+  fit6 <- adjClust(smat5, h = 2)
+  fit7 <- adjClust(smat6, h = 2)
   
   expect_equal(fit1$merge, fit2$merge)
   expect_equal(fit1$height, fit2$height)
@@ -29,6 +36,12 @@ test_that("test that adjClust gives identical results for sparse and dense matri
   
   expect_equal(fit1$merge, fit5$merge)
   expect_equal(fit1$height, fit5$height)
+  
+  expect_equal(fit1$merge, fit6$merge)
+  expect_equal(fit1$height, fit6$height)
+  
+  expect_equal(fit1$merge, fit7$merge)
+  expect_equal(fit1$height, fit7$height)
 })
 
 test_that("test that adjClust gives identical results for sparse and dense matrices when h is p-1", {
@@ -37,6 +50,8 @@ test_that("test that adjClust gives identical results for sparse and dense matri
   fit3 <- adjClust(smat2)
   fit4 <- adjClust(smat3)
   fit5 <- adjClust(smat4)
+  fit6 <- adjClust(smat5)
+  fit7 <- adjClust(smat6)
   
   expect_equal(fit1$merge, fit2$merge)
   expect_equal(fit1$height, fit2$height)
@@ -49,4 +64,10 @@ test_that("test that adjClust gives identical results for sparse and dense matri
   
   expect_equal(fit1$merge, fit5$merge)
   expect_equal(fit1$height, fit5$height)
+  
+  expect_equal(fit1$merge, fit6$merge)
+  expect_equal(fit1$height, fit6$height)
+  
+  expect_equal(fit1$merge, fit7$merge)
+  expect_equal(fit1$height, fit7$height)
 })

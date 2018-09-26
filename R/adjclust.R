@@ -18,7 +18,8 @@ NULL
 #' implementation are available in the package vignette entitled "Notes on CHAC 
 #' implementation in adjclust".
 #' 
-#' @param mat A similarity matrix or a dist object
+#' @param mat A similarity matrix or a dist object. Most sparse formats from 
+#' \code{\link[Matrix]{`sparseMatrix-class`}} are allowed
 #' @param type Type of matrix : similarity or dissimilarity. Defaults to 
 #'   \code{"similarity"}
 #' @param h band width. It is assumed that the similarity between two items is 0
@@ -92,32 +93,10 @@ adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"),
 }
 
 #' @export
-adjClust.Matrix <- function(mat, type = c("similarity", "dissimilarity"), 
+adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                             h = ncol(mat) - 1) {
   if (!(isSymmetric(mat)))
     stop("Input matrix is not symmetric")
-  res <- run.adjclust(mat, type = type, h = h)
-  return(res)
-}
-
-#' @export
-adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                            h = ncol(mat) - 1) {
-  type <- match.arg(type)
-  if (type == "dissimilarity")
-    stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  res <- run.adjclust(mat, type = type, h = h)
-  return(res)
-}
-
-#' @export
-adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1) {
-  type <- match.arg(type)
-  if (!(isSymmetric(mat)))
-    stop("Input matrix is not symmetric")
-  if (type == "dissimilarity")
-    stop("'type' can only be 'similarity' with sparse Matrix inputs")
   res <- run.adjclust(mat, type = type, h = h)
   return(res)
 }
@@ -126,8 +105,41 @@ adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1) {
   type <- match.arg(type)
-  if (!(isSymmetric(mat)))
+  if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
+  } else {
+    mat <- forceSymmetric(mat)
+  }
+  res <- adjClust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  type <- match.arg(type)
+  if (type == "dissimilarity")
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  if (!(isSymmetric(mat))) {
+    stop("Input matrix is not symmetric")
+  } else {
+    mat <- forceSymmetric(mat)
+  }
+  res <- adjClust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dsTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  type <- match.arg(type)
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
   res <- run.adjclust(mat, type = type, h = h)
@@ -138,11 +150,12 @@ adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1) {
   type <- match.arg(type)
-  if (!(isSymmetric(mat)))
+  if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
-  if (type == "dissimilarity")
-    stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  res <- run.adjclust(mat, type = type, h = h)
+  } else {
+    mat <- forceSymmetric(mat)
+  }
+  res <- adjClust(mat, type = type, h = h)
   return(res)
 }
 
