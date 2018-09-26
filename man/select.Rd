@@ -35,14 +35,19 @@ Clustering selection from a chac object with the slope heuristic
 or the broken stick heuristic
 }
 \examples{
-if (require("HiTC", quietly = TRUE)) {
+\dontrun{if (require("HiTC", quietly = TRUE)) {
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
   res <- hicClust(hic_imr90_40_XX, log = TRUE)
   selected.capushe <- select(res)
   table(selected.capushe)
   selected.bs <- select(res, type = "bstick")
   table(selected.bs)
-}
+}}
+
+res <- adjClust(dist(iris[ ,1:4]))
+select.clust <- select(res, "bs")
+table(select.clust)
+
 }
 \references{
 Baudy, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 

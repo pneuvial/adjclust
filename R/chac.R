@@ -317,14 +317,19 @@ cutree.chac <- function(tree, k = NULL, h = NULL) {
 #' 355-470.
 #' MacArthur, R.H. (1957) On the relative abundance of bird species. 
 #' \emph{Proceedings of the National Academy of Sciences}, \strong{43}, 293-295.
-#' @examples if (require("HiTC", quietly = TRUE)) {
+#' @examples \dontrun{if (require("HiTC", quietly = TRUE)) {
 #'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
 #'   res <- hicClust(hic_imr90_40_XX, log = TRUE)
 #'   selected.capushe <- select(res)
 #'   table(selected.capushe)
 #'   selected.bs <- select(res, type = "bstick")
 #'   table(selected.bs)
-#' }
+#' }}
+#' 
+#' res <- adjClust(dist(iris[ ,1:4]))
+#' select.clust <- select(res, "bs")
+#' table(select.clust)
+#' 
 #' @export
 
 select <- function(x, type = c("capushe", "bstick"), k.max = NULL, 
