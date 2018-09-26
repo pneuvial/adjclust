@@ -60,11 +60,20 @@ image(ld.ceph, lwd = 0)
 ``` r
 
 fit <- snpClust(geno, stats = "R.squared", h = h)
-#> Note: 125 merges with non increasing heights.
+#> Note: 132 merges with non increasing heights.
 plot(fit)
+#> Warning in plot.chac(fit): 
+#> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
 ```
 
 ![](man/figures/README-snpClust-2.png)
+
+``` r
+sel_clust <- select(fit, "bs")
+plotSim(as.matrix(ld.ceph), clustering = sel_clust, dendro = fit)
+```
+
+![](man/figures/README-snpClust-3.png)
 
 `hicClust`
 ----------
@@ -73,15 +82,18 @@ plot(fit)
 
 ``` r
 library("HiTC")
+#> Warning: multiple methods tables found for 'acbind'
+#> Warning: multiple methods tables found for 'arbind'
+#> Warning: multiple methods tables found for 'rglist'
 ```
 
 ``` r
-data("hic_imr90_40_XX", package = "adjclust")
+load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
 binned <- binningC(hic_imr90_40_XX, binsize = 5e5)
-#> Bin size 'xgi' =501579 [1x501579]
-#> Bin size 'ygi' =501579 [1x501579]
+#> Bin size 'xgi' =500488 [1x500488]
+#> Bin size 'ygi' =500488 [1x500488]
 mapC(binned)
-#> minrange= 12  - maxrange= 1022
+#> minrange= 104  - maxrange= 36776.8
 ```
 
 ![](man/figures/README-hicClust-1.png)
@@ -89,11 +101,19 @@ mapC(binned)
 ``` r
 
 fitB <- hicClust(binned)
-#> Note: 32 merges with non increasing heights.
+#> Note: 5 merges with non increasing heights.
 plot(fitB)
+#> Warning in plot.chac(fitB): 
+#> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
 ```
 
 ![](man/figures/README-hicClust-2.png)
+
+``` r
+plotSim(intdata(binned), dendro = fitB) # default: log scale for colors
+```
+
+![](man/figures/README-hicClust-3.png)
 
 Credits
 -------
