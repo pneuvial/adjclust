@@ -22,7 +22,7 @@
 \method{summary}{chac}(object, ...)
 
 \method{plot}{chac}(x, y, ..., mode = c("standard", "corrected", "total-disp",
-  "within-disp", "average-disp"))
+  "within-disp", "average-disp"), nodeLabel = FALSE)
 
 diagnose(x, graph = TRUE, verbose = TRUE)
 
@@ -41,6 +41,10 @@ cutree.chac(tree, k = NULL, h = NULL)
 
 \item{mode}{type of dendrogram to plot (see Details). Default to 
 \code{"standard"}}
+
+\item{nodeLabel}{(logical) whether the order of merging has to be displayed
+or not. \code{nodeLabel=TRUE} prints orders of fusion at corresponding
+nodes. Default to \code{FALSE}}
 
 \item{graph}{(logical) whether the diagnostic plot has to be displayed or 
 not. Default to \code{TRUE}}

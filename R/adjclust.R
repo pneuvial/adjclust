@@ -77,58 +77,97 @@ NULL
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
                      h = ncol(mat) - 1) {
-  # sanity checks for inputs
-  ## class of 'mat'
-  CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist")
-  classcheck <- pmatch(class(mat), CLASS)
-  if (is.na(classcheck)) {
-    stop("Input matrix class not supported")
-  }
-  if (classcheck == -1) {
-    stop("Ambiguous matrix class")
-  }
-  inclass <- CLASS[classcheck]
-  
-  ## 'type' 
+  UseMethod("adjClust")
+}
+
+#' @export
+adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                            h = ncol(mat) - 1) {
+  if (!is.numeric(mat))
+    stop("Input matrix is not numeric")
+  if (!(isSymmetric(mat)))
+    stop("Input matrix is not symmetric")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.Matrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                            h = ncol(mat) - 1) {
+  if (!(isSymmetric(mat)))
+    stop("Input matrix is not symmetric")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                            h = ncol(mat) - 1) {
   type <- match.arg(type)
-  
-  ## 'inclass' and 'mat'
-  if (inclass == "dist") {
+  if (type == "dissimilarity")
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  type <- match.arg(type)
+  if (!(isSymmetric(mat)))
+    stop("Input matrix is not symmetric")
+  if (type == "dissimilarity")
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  type <- match.arg(type)
+  if (!(isSymmetric(mat)))
+    stop("Input matrix is not symmetric")
+  if (type == "dissimilarity")
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  type <- match.arg(type)
+  if (!(isSymmetric(mat)))
+    stop("Input matrix is not symmetric")
+  if (type == "dissimilarity")
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"), 
+                          h = ncol(mat) - 1) {
+  type <- match.arg(type)
+  if (type != "dissimilarity")
     message("Note: input class is 'dist' so 'type' is supposed to be 'dissimilarity'")
-    type <- "dissimilarity"
-    mat <- as.matrix(mat)
-  }
-  
-  ## 'mat'
+  mat <- as.matrix(mat)
+  res <- adjClust.matrix(mat, type = "dissimilarity", h = h)
+  return(res)
+}
+
+run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h) {
+  # sanity checks
+  type <- match.arg(type)
   if (!(nrow(mat) == ncol(mat)))
     stop("Input matrix is not a square matrix")
   if (any(is.na(mat)))
-    stop("Missing values in the input")
+    stop("Missing values in the input are not allowed")
   
-  if (inclass %in% c("matrix", "dist")) {
-    if (!is.numeric(mat))
-      stop("Input matrix is not numeric")
-    p <- nrow(mat)
-  } else if (inclass %in% c("dgCMatrix", "dsCMatrix")) {
-    if (mat@Dim[1] != mat@Dim[2])
-      stop("Input matrix is not a square matrix")
-    p <- mat@Dim[1]
-  }
+  p <- nrow(mat)
   
-  if (inclass != "dgCMatrix") {
-    if (!(isSymmetric(mat)))
-      stop("Input matrix is not symmetric")
-  }
-  
-  ### transformed the dissimilarity in an arbitrary normalized similarity    
-  if (type == "dissimilarity") {
-    mat <- 1 - 0.5*(mat^2)
-  }
-  if ((type == "dissimilarity") & (inclass %in% c("dgCMatrix", "dsCMatrix"))) {
-    stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  }
-  
-  ## 'h'
+  # 'h'
   if (!is.numeric(h))
     stop("Input band width 'h' must be numeric")
   if (h != as.integer(h))
@@ -138,15 +177,18 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
   if (h >= p) 
     stop("Input band width 'h' must be strictly less than dimensions of matrix")
   
-  
   # data preprocessing
+  if (type == "dissimilarity") {
+    mat <- 1 - 0.5*(mat^2)
+  }
+  
   res_cc <- checkCondition(mat)
   if (is.numeric(res_cc)) {
     message(paste("Note: modifying similarity to ensure positive heights...
       added", res_cc, "to diagonal (merges will not be affected)"))
     mat <- mat + diag(rep(res_cc, ncol(mat)))
   }
-      
+  
   out_matL <- matL(mat, h)
   out_matR <- matR(mat, h)
   

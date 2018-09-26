@@ -1,3 +1,4 @@
+library("HiTC")
 ## source("https://bioconductor.org/biocLite.R")
 ## biocLite("HiCDataHumanIMR90")
 library("HiCDataHumanIMR90")
@@ -12,9 +13,12 @@ obj <- hic_imr90_40$chrXchrX ## contact map corresponding to chromosome X vs chr
 
 ## Remove all the rows and columns containing only zeros from the dataset.
 selected <- apply(intdata(obj), 1, sum) > 0
-intd <- intdata(obj)[selected,selected]
-x_int <- x_intervals(obj)[selected,]
-y_int <- y_intervals(obj)[selected,]
+
+## keep only the first 500 indices (10x smaller object)
+idxs <- which(selected)[1:500]
+intd <- intdata(obj)[idxs, idxs]
+x_int <- x_intervals(obj)[idxs, ]
+y_int <- y_intervals(obj)[idxs, ]
 hic_imr90_40_XX <- new("HTCexp", intd, x_int, y_int)
 
-save(hic_imr90_40_XX, file="data/hic_imr90_40_XX.rda", compress="xz")
+save(hic_imr90_40_XX, file = "inst/extdata/hic_imr90_40_XX.rda", compress = "xz")

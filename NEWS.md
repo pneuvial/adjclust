@@ -1,3 +1,15 @@
+# Version 0.5.7 [2018-09-26]
+
+* Example Hi-C data now 10x smaller (subset of the original one). The package 
+is smaller and tests are faster.
+* implemented a model selection approach based on slope heuristic or on the 
+broken stick heuristic to select a relevant number of clusters
+* fixed minor problems in some method definition for class 'chac'
+* proposed a log-transformation of data in the wrapper 'hicClust'
+* implemented a heatmap with possible highlighting of the constrained 
+clustering
+* implemented an option to display number of the merge on the dendrogram
+
 # Version 0.5.6 [2018-02-08]
 
 * changed dependencies to bioconductor packages 'HiTC' and 'snpStats' into 

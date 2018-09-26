@@ -9,14 +9,19 @@
 #' are clustered according to information provided by high-throughput
 #' conformation capture data (Hi-C).
 #' 
-#' @param x either: 1. A pxp contact map of class Matrix::dsCMatrix in which the
-#'   entries are the number of counts of physical interactions observed between 
-#'   all pairs of loci 2. An object of class HiTC::HTCexp. The corresponding 
-#'   Hi-C data is stored as a Matrix::dsCMatrix object in the intdata slot 3. A 
-#'   text file with one line per pair of loci for which an interaction has been 
-#'   observed (in the format: locus1<tab>locus2<tab>signal).
+#' @param x either: 1. A pxp contact sparse or dense matrix (classes matrix,
+#' Matrix, dscMatrix, dgTMatrix, dgCMatrix, dgeMatrix). Its entries are the 
+#' number of counts of physical interactions observed between all pairs of loci. 
+#' 2. An object of class HiTC::HTCexp. The corresponding Hi-C data is stored as 
+#' a Matrix::dsCMatrix object in the intdata slot. 3. A text file path with one 
+#' line per pair of loci for which an interaction has been observed (in the 
+#' format: locus1<tab>locus2<tab>signal) or a matrix or data frame with similar
+#' data (3 columns).
 #'   
 #' @param h band width. If not provided, \code{h} is set to default value `p-1`.
+#' 
+#' @param log logical. Whether to log-transform the count data. Default to 
+#' \code{FALSE}.
 #'   
 #' @param \dots further arguments to be passed to \code{\link{read.table}} 
 #'   function when \code{x} is a text file name. If not provided, the text file 
@@ -37,10 +42,6 @@
 #' # input as HiTC::HTCexp object
 #' if (require("HiTC", quietly = TRUE)) {
 #'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
-#'   hic_imr90_40_XX <- new("HTCexp",
-#'                          hic_imr90_40_XX@intdata[1:10,1:10],
-#'                          hic_imr90_40_XX@xgi[1:10, ],
-#'                          hic_imr90_40_XX@xgi[1:10, ])
 #'   res1 <- hicClust(hic_imr90_40_XX)
 #' }
 #' 
@@ -56,53 +57,111 @@
 #' @export
 #' 
 #' @importFrom utils read.table
+#' @importFrom methods new
 
-hicClust <- function(x, h = NULL, ...) {
+hicClust <- function(x, h = NULL, log = FALSE, ...) {
+  UseMethod("hicClust")
+}
+
+#' @export
+hicClust.data.frame <- function(x, h = NULL, log = FALSE, ...) { # bin pair list
+  lis <- sort(unique(c(x[,1], x[,2])))
+  p <- length(lis)
+  rowindx <- match(x[,1], lis)
+  colindx <- match(x[,2], lis)
+  identical <- rowindx == colindx
+  x[ ,3] <- as.numeric(x[ ,3])
   
-  if (!is.null(h)) {
-    if (!is.numeric(h))
-      stop("h should be numeric")
+  mat <- new("dgTMatrix", Dim = c(as.integer(p), as.integer(p)),
+             i = c(rowindx, colindx[!identical]) - 1L, 
+             j = c(colindx, rowindx[!identical]) - 1L, 
+             x = c(x[ ,3], x[!identical,3]))
+  if (log) mat@x <- log(mat@x + 1)
+  
+  res <- run.hicclust(mat, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.character <- function(x, h = NULL, log = FALSE, ...) { # file with bin pair list
+  if (!file.exists(x)) {
+    stop("Input of type 'character' should be a valid file.")
   }
-    
-  inclass <- class(x)
-  if (inclass == "HTCexp" && !requireNamespace("HiTC", quietly = TRUE)) {
-    stop("Package 'HiTC' not available. This function cannot be used with 'HTCexp' data.")
+  inoptions <- list(...)
+  inoptions$file <- x
+  if (is.null(inoptions$sep)) {
+    inoptions$sep <- "\t"
+  }
+  if (is.null(inoptions$header)) {
+    inoptions$header <- FALSE
+  }
+  if (is.null(inoptions$stringsAsFactors)) {
+    inoptions$stringsAsFactors <- FALSE
+  }
+  df <- do.call("read.table", inoptions) 
+  res <- hicClust.data.frame(df, h = h, log = log)
+
+  return(res)
+}
+
+#' @export
+hicClust.matrix <- function(x, h = NULL, log = FALSE, ...) {
+  if ((nrow(x) != ncol(x)) & (ncol(x) == 3)) {
+    # bin pair list
+    x <- as.data.frame(x)
+    res <- hicClust.data.frame(x, h = h, log = log)
   } else {
-    if( (inclass != "dsCMatrix") && (inclass !=  "HTCexp") && (!file.exists(x)) )
-      stop("Invalid Input:x should be a text file or an object of class Matrix::dsCMatrix/HiTC::HTCexp")
-      
-    if (inclass == "dsCMatrix" || inclass  == "HTCexp") {
-      if (inclass == "HTCexp") {
-        x <- HiTC::intdata(x)
-      }
-      p <- x@Dim[1]
-      if (is.null(h)) h <- p-1  
-        res <- adjClust(x, type = "similarity", h)
-        return(res)
-    } else {
-      inoptions <- list(...)
-      inoptions$file <- x
-      if (is.null(inoptions$sep)) {
-        inoptions$sep <- "\t"
-      }
-      if (is.null(inoptions$header)) {
-        inoptions$header <- FALSE
-      }
-      df <- do.call("read.table", inoptions) 
-          
-      lis <- sort(unique(c(df[,1], df[,2])))
-      p <- length(lis)
-      rowindx <- match(df[,1], lis)
-      colindx <- match(df[,2], lis)
-          
-      mat <- matrix(0, nrow = p, ncol = p)
-      mat[cbind(rowindx,colindx)] <- mat[cbind(colindx,rowindx)] <- df[,3]
-        
-      if (is.null(h)) h <- p-1  
-      res <- adjClust(mat, type = "similarity", h = h)
-      res$method <- "hicClust"
-        
-      return(res)
-    }
+    # full hic matrix
+    if (log) x <- log(x + 1)
+    res <- run.hicclust(x, h = h)
   }
+  return(res)
+}
+
+#' @export
+hicClust.Matrix <- function(x, h = NULL, log = FALSE, ...) {
+  if (log) x <- log(x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.dgCMatrix <- function(x, h = NULL, log = FALSE, ...) {
+  if (log) x@x <- log(x@x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.dsCMatrix <- function(x, h = NULL, log = FALSE, ...) {
+  if (log) x@x <- log(x@x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.dgeMatrix <- function(x, h = NULL, log = FALSE, ...) {
+  if (log) x <- log(x + 1)
+  res <- run.hicclust(x, h = h)
+  return(res)
+}
+
+#' @export
+hicClust.HTCexp <- function(x, h = NULL, log = FALSE, ...) {
+  if (!requireNamespace("HiTC", quietly = TRUE))
+    stop("Package 'HiTC' not available. This function cannot be used with 'HTCexp' data.")
+  x <- HiTC::intdata(x)
+  res <- hicClust(x, h = h, log = log) # sparse or dense version
+  return(res)
+}
+
+run.hicclust <- function(x, h) {
+  if (is.null(h)) h <- nrow(x) - 1
+  if (!is.numeric(h))
+    stop("h should be numeric")
+  
+  res <- adjClust(x, type = "similarity", h = h)
+  res$method <- "hicClust"
+        
+  return(res)
 }

@@ -73,68 +73,73 @@
 #'
 #' @importFrom methods as
 #'   
+
 snpClust <- function(x, h = ncol(x) - 1, stats = c("R.squared", "D.prime")) {
-  CLASS <- c("dgCMatrix", "matrix", "SnpMatrix")
-  stats <- match.arg(stats)
-  classcheck <- pmatch(class(x), CLASS)
-  if (is.na(classcheck)) {
-    stop("Input matrix class not supported")
-  }
-  if (classcheck == -1) {
-    stop("Ambiguous matrix class")
-  }
-  inclass <- CLASS[classcheck]  
-    
+  UseMethod("snpClust")
+}
+
+#' @export
+snpClust.matrix <- function(x, h = ncol(x) - 1, 
+                            stats = c("R.squared", "D.prime")) {
+  if (is.null(rownames(x)))
+    rownames(x) <- 1:nrow(x)
+  if (is.null(colnames(x)))
+    colnames(x) <- 1:ncol(x)
+  x <- as(x, "SnpMatrix")
+  res <- snpClust.snpStats(x, h = h, stats = stats)
+  return(res)
+}
+
+#' @export
+snpClust.dgCMatrix <- function(x, h = ncol(x) - 1, 
+                               stats = c("R.squared", "D.prime")) {
+  res <- run.snpClust(x, h = h, stats = stats)
+  return(res)
+}
+
+#' @export
+snpClust.snpStats <- function(x, h = ncol(x) - 1, 
+                              stats = c("R.squared", "D.prime")) {
+  if (!requireNamespace("snpStats"))
+    stop("Package 'snpStats' not available. This function cannot be used with 'matrix' data.")
   p <- ncol(x)
-  if (inclass == "dgCMatrix" ) {
-    out <- sum(x > 1, na.rm = TRUE)
-    if (out > 0) {
-        x[x > 1] <- 1
-        warning(out, " LD values > 1 have been set to 1")
-    } 
-    out <- sum(x < 0, na.rm = TRUE)
-    if (out > 0) {
-        x[x < 0] <- 0
-        warning(out, " LD values < 0 have been set to 0")
-    } 
-  } else {
-    if (!requireNamespace("snpStats")) {
-      stop("Package 'snpStats' not available. This function cannot be used with 'matrix' data.")
-    }
-    if (h >= p) {
-      stop("h should be strictly less than p")
-    }
-    if (inclass == "matrix") {
-      if (is.null(rownames(x)))
-        rownames(x) <- 1:nrow(x)
-      if (is.null(colnames(x)))
-        colnames(x) <- 1:ncol(x)
-      x <- as(x, "SnpMatrix")
-    }
-    x <- snpStats::ld(x, stats = stats, depth = h)
-    x[x > 1] <- 1  ## fix numerical aberrations
-    x[x < 0] <- 0  ## fix numerical aberrations
-    diag(x) <- rep(1, p)  ## by default the diagonal is 0 after 'snpStats::ld'
-    #x <- round(x, digits = 10) ## ensure ascending compatibility but removed for sanity
-    if (any(is.na(x))) {
-      ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)
-      warning("Clustering could not be performed due to missing value(s) or NaN(s) in LD estimates. Returning these indices")
-      return(ww)
-    }
+  if (h >= p) {
+    stop("h should be strictly less than p")
   }
+  stats <- match.arg(stats)
+  x <- snpStats::ld(x, stats = stats, depth = h)
+  diag(x) <- rep(1, p)
   if (any(is.na(x))) {
-      stop("Missing value(s) or NaN(s) not allowed in similarity matrix.")    
+    ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)
+    warning("Clustering could not be performed due to missing value(s) or NaN(s) in LD estimates. Returning these indices.")
+    return(ww)
   }
-  if (ncol(x) !=  nrow(x)) {
-      stop("A similarity matrix should be square.")
+  res <- run.snpClust(x, h = h, stats = stats)
+  return(res)
+}
+
+run.snpClust <- function(x, h, stats) {
+  if (any(is.na(x))) {
+    stop("Missing value(s) or NaN(s) not allowed in LDs (and found some).")    
   }
   if (!all(diag(x) == 1)) {
-      message("Note: forcing the diagonal of the LD similarity matrix to be 1")
-      diag(x) <- rep(1, p)
+    message("Note: forcing the diagonal of the LD similarity matrix to be 1")
+    diag(x) <- rep(1, length(diag(x)))
   }
+  out <- (x > 1)
+  if (any(out)) {
+    warning("Forcing the LD similarity to be smaller than or equal to 1")
+    x[out] <- 1
+  }
+  out <- x < 0
+  if (any(out)) {
+    warning("Forcing the LD similarity to be larger than or equal to 0")
+    x[out] <- 0
+  }
+
   res <- adjClust(x, type = "similarity", h = h)
   res$method <- "snpClust"
-    
+  
   return(res)
 }
 
