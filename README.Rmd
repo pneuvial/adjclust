@@ -66,6 +66,8 @@ image(ld.ceph, lwd = 0)
 
 fit <- snpClust(geno, stats = "R.squared", h = h)
 plot(fit)
+sel_clust <- select(fit, "bs")
+plotSim(as.matrix(ld.ceph), clustering = sel_clust, dendro = fit)
 ```
 
 ## `hicClust` 
@@ -77,12 +79,13 @@ library("HiTC")
 ```
 
 ```{r hicClust}
-data("hic_imr90_40_XX", package = "adjclust")
+load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
 binned <- binningC(hic_imr90_40_XX, binsize = 5e5)
 mapC(binned)
 
 fitB <- hicClust(binned)
 plot(fitB)
+plotSim(intdata(binned), dendro = fitB) # default: log scale for colors
 ```
 
 
