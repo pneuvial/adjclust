@@ -67,6 +67,7 @@ plot(fit3)
 ## dissimilarity, h < p-1
 fit4 <- adjClust(dist, "dissimilarity", h = 2)
 plot(fit4)
+
 }
 \references{
 Dehman A. (2015) \emph{Spatial Clustering of Linkage 

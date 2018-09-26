@@ -66,6 +66,7 @@ obtained clustering and the original (dis)similarity
 }
 \examples{
 # input as HiTC::HTCexp object
+\dontrun{
 if (require("HiTC", quietly = TRUE)) {
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
   plotSim(hic_imr90_40_XX)
@@ -75,7 +76,8 @@ if (require("HiTC", quietly = TRUE)) {
   selected.capushe <- select(res)
   plotSim(hic_imr90_40_XX, clustering = selected.capushe, xaxis = TRUE)
   plotSim(hic_imr90_40_XX, clustering = selected.capushe, dendro = res)
-}
+}}
+
 plotSim(dist(iris[ ,1:4]), log = FALSE)
 }
 \seealso{
