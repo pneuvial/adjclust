@@ -264,7 +264,7 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
 
   int *h, *p, *positions, *lHeap, *merge, *neiL, *neiR;
   int posMin, neineiL, neineiR, k;
-  double *rcCumRight, *rcCumLeft, *distances, *chainedL, *gains, *traceW, *d1, *d2, *dLast, newDR, newDL, sumSdiag, snew, nii, njj, min_cl1, max_cl2;
+  double *rcCumRight, *rcCumLeft, *distances, *chainedL, *gains, *traceW, *d1, *d2, *dLast, newDR, newDL, sumSdiag, snew, nii, njj, min_cl1, max_cl1, min_cl2, max_cl2;
   int jj, step, stepInv;
 
   Rpositions = PROTECT(coerceVector(Rpositions, INTSXP));
@@ -300,6 +300,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
     }
     posMin = positions[0];
     min_cl1 = CHAIN(MINCL1, posMin);
+    max_cl1 = CHAIN(MAXCL1, posMin);
+    min_cl2 = CHAIN(MINCL2, posMin);
     max_cl2 = CHAIN(MAXCL2, posMin);
     gains[step-1] = distances[posMin-1];
 
@@ -316,8 +318,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
     if (min_cl1==1){
       d1 = distance_C(min_cl1, max_cl2, neiR[1], neiR[2], rcCumRight, rcCumLeft, *h, *p);
       newDR = d1[0];
-      CHAIN(MINCL1, jj) = CHAIN(MINCL1, posMin);
-      CHAIN(MAXCL1, jj) = CHAIN(MAXCL2, posMin);
+      CHAIN(MINCL1, jj) = min_cl1;
+      CHAIN(MAXCL1, jj) = max_cl2;
       CHAIN(MINCL2, jj) = neiR[1];
       CHAIN(MAXCL2, jj) = neiR[2];
       CHAIN(LAB1, jj) = step;
@@ -343,8 +345,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       newDL = d2[0] ;
       CHAIN(MINCL1, jj) = neiL[1];
       CHAIN(MAXCL1, jj) = neiL[2];
-      CHAIN(MINCL2, jj) = CHAIN(MINCL1, posMin);
-      CHAIN(MAXCL2, jj) = CHAIN(MAXCL2, posMin);
+      CHAIN(MINCL2, jj) = min_cl1;
+      CHAIN(MAXCL2, jj) = max_cl2;
       CHAIN(LAB1, jj) = neiL[3];
       CHAIN(LAB2, jj) = step;
       CHAIN(POSL, jj) = neineiL;
@@ -370,8 +372,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       newDL = d1[0];
       CHAIN(MINCL1, jj) = neiL[1];
       CHAIN(MAXCL1, jj) = neiL[2];
-      CHAIN(MINCL2, jj) = CHAIN(MINCL1, posMin);
-      CHAIN(MAXCL2, jj) = CHAIN(MAXCL2, posMin);
+      CHAIN(MINCL2, jj) = min_cl1;
+      CHAIN(MAXCL2, jj) = max_cl2;
       CHAIN(LAB1, jj) = neiL[3];
       CHAIN(LAB2, jj) = step;
       CHAIN(POSL, jj) = neineiL;
@@ -380,8 +382,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       CHAIN(SJJ, jj) = d1[2];
       CHAIN(SIJ, jj) = d1[3];
       CHAIN(VALID, jj) = 1;
-      CHAIN(MINCL1, jj+1) = CHAIN(MINCL1, posMin);
-      CHAIN(MAXCL1, jj+1) = CHAIN(MAXCL2, posMin);
+      CHAIN(MINCL1, jj+1) = min_cl1;
+      CHAIN(MAXCL1, jj+1) = max_cl2;
       CHAIN(MINCL2, jj+1) = neiR[1];
       CHAIN(MAXCL2, jj+1) = neiR[2];
       CHAIN(LAB1, jj+1) = step;
@@ -410,8 +412,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
      jj = jj+2;
     }
     // update of sumSdiag
-    nii = CHAIN(MAXCL1, posMin) - CHAIN(MINCL1, posMin) + 1;
-    njj = CHAIN(MAXCL2, posMin) - CHAIN(MINCL2, posMin) + 1;
+    nii = max_cl1 - min_cl1 + 1;
+    njj = max_cl2 - min_cl2 + 1;
     snew = CHAIN(SII, posMin) + CHAIN(SJJ, posMin) + (float)2*CHAIN(SIJ, posMin);
     sumSdiag = CHAIN(SII, posMin)/nii + CHAIN(SJJ, posMin)/njj - snew/(nii+njj);
 
@@ -426,11 +428,14 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
   step = *p-1;
   stepInv = 1;
   posMin = jj-1;
-
-  dLast = distance_C(CHAIN(MINCL1, posMin), CHAIN(MAXCL1, posMin), CHAIN(MINCL2, posMin), CHAIN(MAXCL2, posMin), rcCumRight, rcCumLeft, *h, *p);
+  min_cl1 = CHAIN(MINCL1, posMin);
+  max_cl1 = CHAIN(MAXCL1, posMin);
+  min_cl2 = CHAIN(MINCL2, posMin);
+  max_cl2 = CHAIN(MAXCL2, posMin);
+  dLast = distance_C(min_cl1, max_cl1, min_cl2, max_cl2, rcCumRight, rcCumLeft, *h, *p);
   // update of sumSdiag
-  nii = CHAIN(MAXCL1, posMin) - CHAIN(MINCL1, posMin) + 1;
-  njj = CHAIN(MAXCL2, posMin) - CHAIN(MINCL2, posMin) + 1;
+  nii = max_cl1 - min_cl1 + 1;
+  njj = max_cl2 - min_cl2 + 1;
   snew = CHAIN(SII, posMin) + CHAIN(SJJ, posMin) + (float)2*CHAIN(SIJ, posMin);
   sumSdiag = CHAIN(SII, posMin)/nii + CHAIN(SJJ, posMin)/njj - snew/(nii+njj);
 

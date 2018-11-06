@@ -6,7 +6,7 @@ context("Comparison between the results of the 'hclust' and 'adjclust' when
 test_that("'hclust' and 'adjClust' give identical results on toy data when the
           best merges are always adjacent merges", {
   data("iris")
-  dissim <- dist(iris[1:10,1:4])^2
+  dissim <- dist(iris[1:10,1:4])^2  ## Note the "^2"
   fit0 <- hclust(dissim, method = "ward.D")
   # permute so as to have constrained HAC = HAC
   dissim <- as.dist(as.matrix(dissim)[fit0$order,fit0$order])
@@ -17,4 +17,15 @@ test_that("'hclust' and 'adjClust' give identical results on toy data when the
   
   expect_equal(fit1$height, fit2$height, tolerance = 0.00001)
   expect_equal(fit1$merge, fit2$merge)
-})
+
+  ## simpler and equivalent:
+  fit1 <- hclust(dissim, method = "ward.D")
+  
+  sim <- 2-as.matrix(dissim)  ## why are there 2:s on the diagonal?
+  fit2 <- adjClust(sim)
+  
+  expect_equal(fit1$height, fit2$height, tolerance = 0.00001)
+  expect_equal(fit1$merge, fit2$merge)
+  
+  
+  })
