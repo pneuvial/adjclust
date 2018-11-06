@@ -160,50 +160,35 @@ int* insertHeap_C(int *positions, double *distances, int l, int key){
   return(positions);
 }
 
-// nrow(chainedL)==9
-// sense==1/-1
-// sense==1 --> right
-int* neighborCl_C(int sense, int posMin, double *chainedL){
-  int *res = malloc(4*sizeof(int));  // vector of size 4
-  if ((sense==1) & (CHAIN(POSR, posMin)<0)){
-    res[0] = -1;
-  } else if ((sense==1) & (CHAIN(POSR, posMin)>0)) {
-    res[0] = CHAIN(POSR, posMin);
-    res[1] = CHAIN(MINCL2, res[0]);
-    res[2] = CHAIN(MAXCL2, res[0]);
-    res[3] = CHAIN(LAB2, res[0]);
-  } else if ((sense==-1) & (CHAIN(POSL, posMin)<0)){
-    res[0] = -1;
-  } else {
-    res[0] = CHAIN(POSL, posMin);
-    res[1] = CHAIN(MINCL1, res[0]);
-    res[2] = CHAIN(MAXCL1, res[0]);
-    res[3] = CHAIN(LAB1, res[0]);
 
-  }
-  return res;
+// retrieve info for the right cluster to be fused
+int* rightCluster_C(int posMin, double *chainedL){
+    int *res = malloc(5*sizeof(int));  // vector of size 5
+    if (CHAIN(POSR, posMin)<0) {
+        res[0] = -1;
+    } else  {
+        res[0] = CHAIN(POSR, posMin);   // index of the (right) fusion in the chained list of candidate fusions
+        res[1] = CHAIN(MINCL2, res[0]); // position of the leftmost element of the fusion
+        res[2] = CHAIN(MAXCL2, res[0]); // position of the rightmost element of the fusion
+        res[3] = CHAIN(LAB2, res[0]);   // label of the fusion
+        res[4] = CHAIN(POSR, res[0]);   // index of the right element of the fusion
+    } 
+    return res;
 }
 
-int neiNeighborPos_C(int sense, int posMin, double *chainedL){
-  int pos;
-  if (sense==1){
-    if (CHAIN(POSR, posMin)<0){
-      pos = -1;
-    } else if (CHAIN(POSR, (int)CHAIN(POSR, posMin))<0) {
-      pos = -1;
-    }  else {
-      pos = CHAIN(POSR, (int)CHAIN(POSR, posMin));
-    }
-  } else {
+// retrieve info for the left cluster to be fused
+int* leftCluster_C(int posMin, double *chainedL){
+    int *res = malloc(5*sizeof(int));  // vector of size 5
     if (CHAIN(POSL, posMin)<0){
-      pos = -1;
-    } else if (CHAIN(POSL, (int)CHAIN(POSL, posMin))<0) {
-      pos = -1;
-    }  else {
-      pos = CHAIN(POSL, (int)CHAIN(POSL, posMin));
+        res[0] = -1;
+    } else {  
+        res[0] = CHAIN(POSL, posMin);   // index of the (left) fusion in the chained list of candidate fusions
+        res[1] = CHAIN(MINCL1, res[0]); // position of the leftmost element of the fusion
+        res[2] = CHAIN(MAXCL1, res[0]); // position of the rightmost element of the fusion
+        res[3] = CHAIN(LAB1, res[0]);   // label of the fusion
+        res[4] = CHAIN(POSL, res[0]);   // index of the left element of the fusion
     }
-  }
-  return(pos);
+    return res;
 }
 
 double pencil_C(int sense, int lim, int hLoc, int p, double *rcCumRight, double *rcCumLeft){
@@ -263,7 +248,7 @@ double* distance_C(int mini, int maxi, int minj, int maxj, double *rcCumRight, d
 SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP RchainedL, SEXP Rpositions, SEXP Rdistances, SEXP RlHeap, SEXP Rmerge, SEXP Rgains, SEXP RtraceW){
 
   int *h, *p, *positions, *lHeap, *merge, *neiL, *neiR;
-  int posMin, neineiL, neineiR, k;
+  int posMin, k;
   double *rcCumRight, *rcCumLeft, *distances, *chainedL, *gains, *traceW, *d1, *d2, *dLast, newDR, newDL, sumSdiag, snew, nii, njj, min_cl1, max_cl1, min_cl2, max_cl2;
   int jj, step, stepInv;
 
@@ -309,13 +294,10 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
     positions = deleteMin_C(positions, distances, *lHeap);
     *lHeap = *lHeap - 1;
 
-    neiL = neighborCl_C(-1, posMin, chainedL);
-    neiR = neighborCl_C(1, posMin, chainedL);
-    neineiR = neiNeighborPos_C(1, posMin, chainedL);
-    neineiL = neiNeighborPos_C(-1, posMin, chainedL);
+    neiL = leftCluster_C(posMin, chainedL);
+    neiR = rightCluster_C(posMin, chainedL);
 
-
-    if (min_cl1==1){
+    if (min_cl1==1){ // left element of the fusion is the leftmost cluster
       d1 = distance_C(min_cl1, max_cl2, neiR[1], neiR[2], rcCumRight, rcCumLeft, *h, *p);
       newDR = d1[0];
       CHAIN(MINCL1, jj) = min_cl1;
@@ -325,13 +307,13 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       CHAIN(LAB1, jj) = step;
       CHAIN(LAB2, jj) = neiR[3];
       CHAIN(POSL, jj) = -1;
-      CHAIN(POSR, jj) = neineiR;
+      CHAIN(POSR, jj) = neiR[4];
       CHAIN(SII, jj) = d1[1];
       CHAIN(SJJ, jj) = d1[2];
       CHAIN(SIJ, jj) = d1[3];
       CHAIN(VALID, jj) = 1;
-      if (neineiR>0){
-    	CHAIN(POSL, neineiR) = jj;
+      if (neiR[4]>0){
+    	CHAIN(POSL, neiR[4]) = jj;
       }
       CHAIN(VALID, posMin) = 0;
       CHAIN(VALID, neiR[0]) = 0;
@@ -340,7 +322,7 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       *lHeap = *lHeap + 1;
       jj = jj+1;
     }
-    else if (max_cl2==*p){
+    else if (max_cl2==*p){ // right element of the fusion is the rightmost cluster
       d2 = distance_C(neiL[1], neiL[2], min_cl1, max_cl2, rcCumRight, rcCumLeft, *h, *p);
       newDL = d2[0] ;
       CHAIN(MINCL1, jj) = neiL[1];
@@ -349,14 +331,14 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       CHAIN(MAXCL2, jj) = max_cl2;
       CHAIN(LAB1, jj) = neiL[3];
       CHAIN(LAB2, jj) = step;
-      CHAIN(POSL, jj) = neineiL;
+      CHAIN(POSL, jj) = neiL[4];
       CHAIN(POSR, jj) = -1;
       CHAIN(SII, jj) = d2[1];
       CHAIN(SJJ, jj) = d2[2];
       CHAIN(SIJ, jj) = d2[3];
       CHAIN(VALID, jj) = 1;
-      if (neineiL>0){
-    	CHAIN(POSR, neineiL) = jj;
+      if (neiL[4]>0){
+    	CHAIN(POSR, neiL[4]) = jj;
       }
       CHAIN(VALID, posMin) = 0;
       CHAIN(VALID, neiL[0]) = 0;
@@ -365,7 +347,7 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       *lHeap = *lHeap + 1;
       jj = jj+1;
     }
-    else {
+    else {  // fusion does not involve leftmost or rightmost cluster
       d2 = distance_C(min_cl1, max_cl2, neiR[1], neiR[2], rcCumRight, rcCumLeft, *h, *p);
       d1 = distance_C(neiL[1], neiL[2], min_cl1, max_cl2, rcCumRight, rcCumLeft, *h, *p);
       newDR = d2[0];
@@ -376,7 +358,7 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       CHAIN(MAXCL2, jj) = max_cl2;
       CHAIN(LAB1, jj) = neiL[3];
       CHAIN(LAB2, jj) = step;
-      CHAIN(POSL, jj) = neineiL;
+      CHAIN(POSL, jj) = neiL[4];
       CHAIN(POSR, jj) = jj+1;
       CHAIN(SII, jj) = d1[1];
       CHAIN(SJJ, jj) = d1[2];
@@ -389,16 +371,16 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       CHAIN(LAB1, jj+1) = step;
       CHAIN(LAB2, jj+1) = neiR[3];
       CHAIN(POSL, jj+1) = jj;
-      CHAIN(POSR, jj+1) = neineiR;
+      CHAIN(POSR, jj+1) = neiR[4];
       CHAIN(SII, jj+1) = d2[1];
       CHAIN(SJJ, jj+1) = d2[2];
       CHAIN(SIJ, jj+1) = d2[3];
       CHAIN(VALID, jj+1) = 1;
-      if (neineiL>0){
-     	CHAIN(POSR, neineiL) = jj;
+      if (neiL[4]>0){
+     	CHAIN(POSR, neiL[4]) = jj;
       }
-     if (neineiR>0){
-       CHAIN(POSL, neineiR) = jj+1;
+     if (neiR[4]>0){
+       CHAIN(POSL, neiR[4]) = jj+1;
      }
      CHAIN(VALID, posMin) = 0;
      CHAIN(VALID, neiL[0]) = 0;
