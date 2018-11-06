@@ -264,7 +264,7 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
 
   int *h, *p, *positions, *lHeap, *merge, *neiL, *neiR;
   int posMin, neineiL, neineiR, k;
-  double *rcCumRight, *rcCumLeft, *distances, *chainedL, *gains, *traceW, *d1, *d2, *dLast, newDR, newDL, sumSdiag, snew, nii, njj, clMin_11, clMin_12, clMin_21, clMin_22;
+  double *rcCumRight, *rcCumLeft, *distances, *chainedL, *gains, *traceW, *d1, *d2, *dLast, newDR, newDL, sumSdiag, snew, nii, njj, min_cl1, max_cl2;
   int jj, step, stepInv;
 
   Rpositions = PROTECT(coerceVector(Rpositions, INTSXP));
@@ -299,11 +299,9 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       *lHeap = *lHeap -1;
     }
     posMin = positions[0];
-    clMin_11 = CHAIN(MINCL1, posMin);
-    clMin_12 = CHAIN(MAXCL1, posMin);
-    clMin_21 = CHAIN(MINCL2, posMin);
-    clMin_22 = CHAIN(MAXCL2, posMin);
-    gains[step-1] = distances[positions[0]-1];
+    min_cl1 = CHAIN(MINCL1, posMin);
+    max_cl2 = CHAIN(MAXCL2, posMin);
+    gains[step-1] = distances[posMin-1];
 
     //remove head
     positions = deleteMin_C(positions, distances, *lHeap);
@@ -315,8 +313,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
     neineiL = neiNeighborPos_C(-1, posMin, chainedL);
 
 
-    if (clMin_11==1){
-      d1 = distance_C(clMin_11, clMin_22, neiR[1], neiR[2], rcCumRight, rcCumLeft, *h, *p);
+    if (min_cl1==1){
+      d1 = distance_C(min_cl1, max_cl2, neiR[1], neiR[2], rcCumRight, rcCumLeft, *h, *p);
       newDR = d1[0];
       CHAIN(MINCL1, jj) = CHAIN(MINCL1, posMin);
       CHAIN(MAXCL1, jj) = CHAIN(MAXCL2, posMin);
@@ -340,8 +338,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       *lHeap = *lHeap + 1;
       jj = jj+1;
     }
-    else if (clMin_22==*p){
-      d2 = distance_C(neiL[1], neiL[2], clMin_11, clMin_22, rcCumRight, rcCumLeft, *h, *p);
+    else if (max_cl2==*p){
+      d2 = distance_C(neiL[1], neiL[2], min_cl1, max_cl2, rcCumRight, rcCumLeft, *h, *p);
       newDL = d2[0] ;
       CHAIN(MINCL1, jj) = neiL[1];
       CHAIN(MAXCL1, jj) = neiL[2];
@@ -366,8 +364,8 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
       jj = jj+1;
     }
     else {
-      d2 = distance_C(clMin_11, clMin_22, neiR[1], neiR[2], rcCumRight, rcCumLeft, *h, *p);
-      d1 = distance_C(neiL[1], neiL[2], clMin_11, clMin_22, rcCumRight, rcCumLeft, *h, *p);
+      d2 = distance_C(min_cl1, max_cl2, neiR[1], neiR[2], rcCumRight, rcCumLeft, *h, *p);
+      d1 = distance_C(neiL[1], neiL[2], min_cl1, max_cl2, rcCumRight, rcCumLeft, *h, *p);
       newDR = d2[0];
       newDL = d1[0];
       CHAIN(MINCL1, jj) = neiL[1];
