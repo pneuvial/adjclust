@@ -5,6 +5,8 @@
 #include <Rinternals.h>
 #include <Rmath.h>
 
+#define VERBOSE 1
+
 #define MINCL1 1
 #define MAXCL1 2
 #define MINCL2 3
@@ -191,23 +193,18 @@ int* leftCluster_C(int posMin, double *chainedL){
     return res;
 }
 
-double pencil_C(int sense, int lim, int hLoc, int p, double *rcCumRight, double *rcCumLeft){
-    double tot, sumPen=0;
-    
-    tot = CUML(p, hLoc, p);
-    if (sense==-1){
-        if (lim==p){
-            sumPen = tot;
-        } else {
-            sumPen = tot - CUMR(p-lim, hLoc, p);
-        }
+double rightPencil_C(int lim, int hLoc, int p, double *rcCumRight){
+    double sumPen = CUMR(p, hLoc, p);
+    if (lim<p){
+        sumPen = sumPen - CUMR(p-lim, hLoc, p);
     }
-    else {
-        if (lim==1){
-            sumPen = tot;
-        } else {
-            sumPen = tot - CUML(lim-1, hLoc, p);
-        }
+    return(sumPen);
+}
+
+double leftPencil_C(int lim, int hLoc, int p, double *rcCumLeft){
+    double sumPen = CUML(p, hLoc, p);
+    if (lim>1){
+        sumPen = sumPen - CUML(lim-1, hLoc, p);
     }
     return(sumPen);
 }
@@ -221,27 +218,36 @@ double* distance_C(int mini, int maxi, int minj, int maxj, double *rcCumRight, d
     nj = maxj - minj + 1;
     mIJ = maxj - mini + 1;
     
-    Sii = pencil_C(1, mini, MIN(h+1, ni), p, rcCumRight, rcCumLeft) + pencil_C(-1, maxi, MIN(h+1, ni), p, rcCumRight, rcCumLeft) - CUML(p, MIN(h+1, ni), p);
-    Sjj = pencil_C(1, minj, MIN(h+1, nj), p, rcCumRight, rcCumLeft) + pencil_C(-1, maxj, MIN(h+1, nj), p, rcCumRight, rcCumLeft) - CUML(p, MIN(h+1, nj), p);
-    Sij = (pencil_C(-1, maxj, MIN(h+1, mIJ), p, rcCumRight, rcCumLeft) + pencil_C(1, mini, MIN(h+1, mIJ), p, rcCumRight, rcCumLeft) - CUML(p, MIN(h+1, mIJ), p) - Sii - Sjj)/2;
+    Sii = leftPencil_C(mini, MIN(h+1, ni), p, rcCumLeft) + 
+        rightPencil_C(maxi, MIN(h+1, ni), p, rcCumRight) - 
+        CUML(p, MIN(h+1, ni), p);
     
-    D =  (float)ni*nj/(ni+nj)  * ( (float)1/(ni*ni)*Sii + (float)1/(nj*nj)*Sjj - (float)2/(ni*nj)*Sij ) ;
+    Sjj = leftPencil_C(minj, MIN(h+1, nj), p, rcCumLeft) + 
+        rightPencil_C(maxj, MIN(h+1, nj), p, rcCumRight) - 
+        CUML(p, MIN(h+1, nj), p);
+    
+    Sij = (rightPencil_C(maxj, MIN(h+1, mIJ), p, rcCumRight) + 
+        leftPencil_C(mini, MIN(h+1, mIJ), p, rcCumLeft) - 
+        CUML(p, MIN(h+1, mIJ), p) - Sii - Sjj)/2;
+    
+    D = (float)ni*nj/(ni+nj)  * ( (float)1/(ni*ni)*Sii + (float)1/(nj*nj)*Sjj - (float)2/(ni*nj)*Sij ) ;
     
     res[0] = D;
     res[1] = Sii;
     res[2] = Sjj;
     res[3] = Sij;
     
-    // debuging purpose...
-    // printf("mini: %d, ", mini);
-    // printf("maxi: %d, ", maxi);
-    // printf("minj: %d, ", minj);
-    // printf("maxj: %d\n", maxj);
-    // printf("Sii: %f, ", Sii);
-    // printf("Sjj: %f, ", Sjj);
-    // printf("Sij: %f\n", Sij);
-    // printf("D: %f\n", D);
-    
+#ifdef VERBOSE
+    printf("mini: %d, ", mini);
+    printf("maxi: %d, ", maxi);
+    printf("minj: %d, ", minj);
+    printf("maxj: %d\n", maxj);
+    printf("Sii: %f, ", Sii);
+    printf("Sjj: %f, ", Sjj);
+    printf("Sij: %f\n", Sij);
+    printf("D: %f\n", D);
+#endif
+
     return res;
 }
 
