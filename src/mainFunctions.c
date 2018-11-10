@@ -5,7 +5,7 @@
 #include <Rinternals.h>
 #include <Rmath.h>
 
-#define VERBOSE 1
+//#define VERBOSE
 
 #define MINCL1 1
 #define MAXCL1 2
