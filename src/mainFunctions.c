@@ -7,18 +7,20 @@
 
 //#define VERBOSE
 
-#define MINCL1 1
-#define MAXCL1 2
-#define MINCL2 3
-#define MAXCL2 4
-#define LAB1 5
-#define LAB2 6
-#define POSL 7
-#define POSR 8
-#define SII 9
-#define SJJ 10
-#define SIJ 11
-#define VALID 12
+// "row" indices in the chained list for each fusion (between a "left" cluster and a "right" cluster)
+#define MINCL1 1  // min/leftmost position (in the original data) of the left cluster
+#define MAXCL1 2  // max/rightmost position (in the original data) of the left cluster
+#define MINCL2 3  // leftmost position (in the original data) of the right cluster
+#define MAXCL2 4  // max/rightmost position (in the original data) of the right cluster
+#define LAB1 5    // label of the left cluster (why call it "1" instead of "left"?)
+#define LAB2 6    // label of the right cluster (why call it "2" instead of "right"?)
+#define POSL 7    // position (in the chained list) of the left *neighbor* of the fusion (= a fusion!)
+#define POSR 8    // position (in the chained list) of the right *neighbor* of the fusion (= a fusion!)
+// NB: POSL and POSR are the elements that make it possible to navigate in the chained list
+#define SII 9     // sum_{i,j in left cluster} sim(i,j) (why call it "II" instead of "left")
+#define SJJ 10    // sum_{i,j in right cluster} sim(i,j)
+#define SIJ 11    // sum_{i in left cluster, j in right cluster} sim(i,j)
+#define VALID 12  // boolean indicator of the "validity" of a fusion (ie whether it involves cluster that still exist)
 
 #define CHAIN(i,j) chainedL[(12*(j-1)+i-1)]
 #define CUMR(i,j,p) rcCumRight[(p*(j-1)+i-1)]
@@ -163,32 +165,35 @@ int* insertHeap_C(int *positions, double *distances, int l, int key){
 }
 
 
-// retrieve info for the right cluster to be fused
+// retrieve info for the right neighbor cluster of the fusion (via the right neighbor *fusion* of the fusion)
 int* rightCluster_C(int posMin, double *chainedL){
     int *res = malloc(5*sizeof(int));  // vector of size 5
     if (CHAIN(POSR, posMin)<0) {
         res[0] = -1;
     } else  {
-        res[0] = CHAIN(POSR, posMin);   // index of the (right) fusion in the chained list of candidate fusions
-        res[1] = CHAIN(MINCL2, res[0]); // position of the leftmost element of the fusion
-        res[2] = CHAIN(MAXCL2, res[0]); // position of the rightmost element of the fusion
-        res[3] = CHAIN(LAB2, res[0]);   // label of the fusion
-        res[4] = CHAIN(POSR, res[0]);   // index of the right element of the fusion
+        res[0] = CHAIN(POSR, posMin);   
+        res[1] = CHAIN(MINCL2, res[0]); 
+        res[2] = CHAIN(MAXCL2, res[0]); 
+        res[3] = CHAIN(LAB2, res[0]);   
+        res[4] = CHAIN(POSR, res[0]);   
     } 
     return res;
 }
 
-// retrieve info for the left cluster to be fused
+// retrieve info for the left neighbor cluster of the fusion (via the left neighbor *fusion* of the fusion)
 int* leftCluster_C(int posMin, double *chainedL){
     int *res = malloc(5*sizeof(int));  // vector of size 5
     if (CHAIN(POSL, posMin)<0){
         res[0] = -1;
     } else {  
-        res[0] = CHAIN(POSL, posMin);   // index of the (left) fusion in the chained list of candidate fusions
-        res[1] = CHAIN(MINCL1, res[0]); // position of the leftmost element of the fusion
-        res[2] = CHAIN(MAXCL1, res[0]); // position of the rightmost element of the fusion
-        res[3] = CHAIN(LAB1, res[0]);   // label of the fusion
-        res[4] = CHAIN(POSL, res[0]);   // index of the left element of the fusion
+        res[0] = CHAIN(POSL, posMin);   // index of the (left) *fusion* in the chained list of candidate fusions
+        // the left neighbor cluster is the left element of the left fusion
+        // info on the left neighbor cluster (of the left fusion):
+        res[1] = CHAIN(MINCL1, res[0]); // min position of the 
+        res[2] = CHAIN(MAXCL1, res[0]); // max position of the left neighbor cluster (of the left fusion)
+        res[3] = CHAIN(LAB1, res[0]);   // label of the  left neighbor cluster (of the left fusion)
+        // info on the left fusion (of the left fusion)
+        res[4] = CHAIN(POSL, res[0]);   // position in the chained list of the left fusion (of the left fusion)
     }
     return res;
 }
@@ -289,18 +294,20 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
             positions = deleteMin_C(positions, distances, *lHeap);
             *lHeap = *lHeap -1;
         }
-        posMin = positions[0];
-        min_cl1 = CHAIN(MINCL1, posMin);
-        max_cl1 = CHAIN(MAXCL1, posMin);
-        min_cl2 = CHAIN(MINCL2, posMin);
-        max_cl2 = CHAIN(MAXCL2, posMin);
-        gains[step-1] = distances[posMin-1];
+        posMin = positions[0];   // index of the best fusion in the chained list
+        // retrieve indices (in the set of elements to cluster) 
+        // related to the left and right clusters of the best fusion:
+        min_cl1 = CHAIN(MINCL1, posMin);  // leftmost element of the left cluster
+        max_cl1 = CHAIN(MAXCL1, posMin);  // rightmost element of the left cluster
+        min_cl2 = CHAIN(MINCL2, posMin);  // leftmost element of the right cluster
+        max_cl2 = CHAIN(MAXCL2, posMin);  // rightmost element of the right cluster
+        gains[step-1] = distances[posMin-1];  // current minimal value of the heap
         
         //remove head
         positions = deleteMin_C(positions, distances, *lHeap);
         *lHeap = *lHeap - 1;
         
-        neiL = leftCluster_C(posMin, chainedL);
+        neiL = leftCluster_C(posMin, chainedL);  // 
         neiR = rightCluster_C(posMin, chainedL);
         
         if (min_cl1==1){ // left element of the fusion is the leftmost cluster
@@ -362,10 +369,10 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
             CHAIN(MAXCL1, jj) = neiL[2];
             CHAIN(MINCL2, jj) = min_cl1;
             CHAIN(MAXCL2, jj) = max_cl2;
-            CHAIN(LAB1, jj) = neiL[3];
-            CHAIN(LAB2, jj) = step;
-            CHAIN(POSL, jj) = neiL[4];
-            CHAIN(POSR, jj) = jj+1;
+            CHAIN(LAB1, jj) = neiL[3];  // name of left cluster of the new fusion (between left of best fusion and best fusion) = name of the left fusion of the best fusion
+            CHAIN(LAB2, jj) = step;     // name of right cluster of the new fusion (between left of best fusion and best fusion) = name of the cluster created by the best fusion, ie a new name
+            CHAIN(POSL, jj) = neiL[4];  // index of fusion in chained list
+            CHAIN(POSR, jj) = jj+1;     // index of fusion in chained list
             CHAIN(SII, jj) = d1[1];
             CHAIN(SJJ, jj) = d1[2];
             CHAIN(SIJ, jj) = d1[3];
