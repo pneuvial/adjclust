@@ -288,6 +288,7 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
     sumSdiag = (float)0; // within cluster dispersion (WG)
     
     for ( step=1; step < (*p-1); step=step+1 ){
+//    for ( step=1; step < 2; step=step+1 ){  // used as a hack to retrieve the heap status after the first merge...
         while(CHAIN(VALID, positions[0])==0){
             // printf("%f\n", distances[positions[0]-1]);
             // printf("%d\n", *lHeap);
