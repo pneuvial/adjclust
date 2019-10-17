@@ -2,14 +2,8 @@ library("adjclust")
 
 context("Comparison between the results of the 'rioja' and 'adjclust' packages")
 
-check_rioja <- function() {
-  if (!require("rioja")) {
-    skip("rioja package not available")
-  }
-}
-
 test_that("rioja and adjClust with full band give identical results on toy data", {
-  check_rioja()
+  skip_if_not_installed("rioja")
   
   data("iris")
   sim <- cor(t(iris[, 1:4]))
@@ -22,7 +16,7 @@ test_that("rioja and adjClust with full band give identical results on toy data"
   dis <- as.dist(dis)
   
   fit1 <- adjClust(sim, "similarity", p-1)
-  fit2 <- chclust(dis_sq, method="coniss")
+  fit2 <- rioja::chclust(dis_sq, method="coniss")
   fit3 <- adjClust(dis, "dissimilarity", p-1)
   fit4 <- adjClust(sim, "similarity")
   

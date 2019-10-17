@@ -1,15 +1,9 @@
 library("adjclust")
 
-check_hic <- function() {
-  if (!requireNamespace("HiTC")) {
-    skip("'HiTC' package not available")
-  }
-}
-
 context("Consistency of the results of 'hicClust' across various input formats")
 
 test_that("'hicClust' gives identical results regardless of data input format", {
-  check_hic()
+  testthat::skip_if_not_installed("HiTC")
   #case1: Input as HiTC::HTCexp object
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
   
