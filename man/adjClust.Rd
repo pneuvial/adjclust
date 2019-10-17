@@ -4,11 +4,12 @@
 \alias{adjClust}
 \title{Adjacency-constrained Clustering}
 \usage{
-adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1)
+adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) -
+  1)
 }
 \arguments{
 \item{mat}{A similarity matrix or a dist object. Most sparse formats from 
-\code{\link[Matrix]{`sparseMatrix-class`}} are allowed}
+\code{\link[Matrix]{sparseMatrix}} are allowed}
 
 \item{type}{Type of matrix : similarity or dissimilarity. Defaults to 
 \code{"similarity"}}

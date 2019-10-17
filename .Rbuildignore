@@ -11,3 +11,5 @@ tests/testthat/Rplots.pdf
 ^docs$
 ^_pkgdown\.yml$
 ^notes.*\.md$
+^doc$
+^Meta$

@@ -1,3 +1,9 @@
+# Version 0.5.9 [2019-10-17]
+
+* Fixed Issue #35 (probably due to a change in the upstream snpStats package).
+* Minor updates to tests.
+* The package passes R CMD check with [0;0;0].
+
 # Version 0.5.7 [2018-09-26]
 
 * Example Hi-C data now 10x smaller (subset of the original one). The package 

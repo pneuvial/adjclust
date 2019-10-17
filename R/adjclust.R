@@ -19,7 +19,7 @@ NULL
 #' implementation in adjclust".
 #' 
 #' @param mat A similarity matrix or a dist object. Most sparse formats from 
-#' \code{\link[Matrix]{`sparseMatrix-class`}} are allowed
+#' \code{\link[Matrix]{sparseMatrix}} are allowed
 #' @param type Type of matrix : similarity or dissimilarity. Defaults to 
 #'   \code{"similarity"}
 #' @param h band width. It is assumed that the similarity between two items is 0
@@ -75,6 +75,7 @@ NULL
 #' @importFrom Matrix diag
 #' @importFrom Matrix t
 #' @importFrom Matrix isSymmetric
+#' @importFrom Matrix forceSymmetric
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
                      h = ncol(mat) - 1) {
