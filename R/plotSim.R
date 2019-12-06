@@ -73,7 +73,7 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
 
   CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist", "HTCexp", 
              "snpMatrix")
-  classcheck <- pmatch(class(mat), CLASS)
+  classcheck <- pmatch(class(mat)[1], CLASS)
   if (is.na(classcheck)) {
     stop("Input matrix class not supported")
   }
@@ -143,7 +143,7 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
   }
   
   # extract data
-  if (class(mat) == "matrix") {
+  if ("matrix" %in% class(mat)) {
     all_coords <- expand.grid(1:p, 1:p)
     all_coords <- all_coords[all_coords[ ,1] <= all_coords[ ,2], ]
     x <- all_coords[ ,1] + all_coords[ ,2]
