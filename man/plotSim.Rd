@@ -6,7 +6,7 @@
 \usage{
 plotSim(mat, type = c("similarity", "dissimilarity"),
   clustering = NULL, dendro = NULL, palette = heat.colors,
-  breaks = 10, log = TRUE, h = p - 1, stats = c("R.squared",
+  breaks = 10, log = TRUE, h = NULL, stats = c("R.squared",
   "D.prime"), main = NULL, col.clust = "darkblue", lwd.clust = 2,
   xaxis = FALSE, naxis = 10)
 }
