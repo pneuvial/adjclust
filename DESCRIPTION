@@ -42,4 +42,4 @@ Suggests:
 VignetteBuilder: knitr
 URL: https://github.com/pneuvial/adjclust
 BugReports: https://github.com/pneuvial/adjclust/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

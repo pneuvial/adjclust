@@ -4,8 +4,7 @@
 \alias{adjClust}
 \title{Adjacency-constrained Clustering}
 \usage{
-adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) -
-  1)
+adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1)
 }
 \arguments{
 \item{mat}{A similarity matrix or a dist object. Most sparse formats from 

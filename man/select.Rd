@@ -5,8 +5,13 @@
 \alias{select.chac}
 \title{Clustering selection}
 \usage{
-select(x, type = c("capushe", "bstick"), k.max = NULL, graph = FALSE,
-  pct = 0.15)
+select(
+  x,
+  type = c("capushe", "bstick"),
+  k.max = NULL,
+  graph = FALSE,
+  pct = 0.15
+)
 }
 \arguments{
 \item{x}{an object of class 'chac'}
