@@ -11,7 +11,7 @@ matL <- function(mat, h) {
 }
 
 matR <- function(mat, h) {
-  if (class(mat) == "dgCMatrix")
+  if ("dgCMatrix" %in% class(mat))
     mat <- t(mat)
   p <- ncol(mat)
   x <- rep(p:1, each = h+1)

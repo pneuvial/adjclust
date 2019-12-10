@@ -8,7 +8,9 @@
 \alias{summary.chac}
 \alias{plot.chac}
 \alias{diagnose}
+\alias{diagnose.chac}
 \alias{correct}
+\alias{correct.chac}
 \alias{cutree.chac}
 \alias{cuttree.chac}
 \title{Class chac}
@@ -21,8 +23,13 @@
 
 \method{summary}{chac}(object, ...)
 
-\method{plot}{chac}(x, y, ..., mode = c("standard", "corrected", "total-disp",
-  "within-disp", "average-disp"), nodeLabel = FALSE)
+\method{plot}{chac}(
+  x,
+  y,
+  ...,
+  mode = c("standard", "corrected", "total-disp", "within-disp", "average-disp"),
+  nodeLabel = FALSE
+)
 
 diagnose(x, graph = TRUE, verbose = TRUE)
 

@@ -18,7 +18,8 @@ NULL
 #' implementation are available in the package vignette entitled "Notes on CHAC 
 #' implementation in adjclust".
 #' 
-#' @param mat A similarity matrix or a dist object
+#' @param mat A similarity matrix or a dist object. Most sparse formats from 
+#' \code{\link[Matrix]{sparseMatrix}} are allowed
 #' @param type Type of matrix : similarity or dissimilarity. Defaults to 
 #'   \code{"similarity"}
 #' @param h band width. It is assumed that the similarity between two items is 0
@@ -74,6 +75,7 @@ NULL
 #' @importFrom Matrix diag
 #' @importFrom Matrix t
 #' @importFrom Matrix isSymmetric
+#' @importFrom Matrix forceSymmetric
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
                      h = ncol(mat) - 1) {
@@ -92,32 +94,10 @@ adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"),
 }
 
 #' @export
-adjClust.Matrix <- function(mat, type = c("similarity", "dissimilarity"), 
+adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                             h = ncol(mat) - 1) {
   if (!(isSymmetric(mat)))
     stop("Input matrix is not symmetric")
-  res <- run.adjclust(mat, type = type, h = h)
-  return(res)
-}
-
-#' @export
-adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                            h = ncol(mat) - 1) {
-  type <- match.arg(type)
-  if (type == "dissimilarity")
-    stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  res <- run.adjclust(mat, type = type, h = h)
-  return(res)
-}
-
-#' @export
-adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1) {
-  type <- match.arg(type)
-  if (!(isSymmetric(mat)))
-    stop("Input matrix is not symmetric")
-  if (type == "dissimilarity")
-    stop("'type' can only be 'similarity' with sparse Matrix inputs")
   res <- run.adjclust(mat, type = type, h = h)
   return(res)
 }
@@ -126,8 +106,41 @@ adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1) {
   type <- match.arg(type)
-  if (!(isSymmetric(mat)))
+  if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
+  } else {
+    mat <- forceSymmetric(mat)
+  }
+  res <- adjClust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  type <- match.arg(type)
+  if (type == "dissimilarity")
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  res <- run.adjclust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  if (!(isSymmetric(mat))) {
+    stop("Input matrix is not symmetric")
+  } else {
+    mat <- forceSymmetric(mat)
+  }
+  res <- adjClust(mat, type = type, h = h)
+  return(res)
+}
+
+#' @export
+adjClust.dsTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
+                               h = ncol(mat) - 1) {
+  type <- match.arg(type)
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
   res <- run.adjclust(mat, type = type, h = h)
@@ -138,11 +151,12 @@ adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1) {
   type <- match.arg(type)
-  if (!(isSymmetric(mat)))
+  if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
-  if (type == "dissimilarity")
-    stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  res <- run.adjclust(mat, type = type, h = h)
+  } else {
+    mat <- forceSymmetric(mat)
+  }
+  res <- adjClust(mat, type = type, h = h)
   return(res)
 }
 
@@ -199,26 +213,33 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h) {
   rCumR <- rowCumsums(out_matR) # p x (h+1) matrix
   rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
   
-  ## initialization (heap, D and chainedL are too large in order to avoid memory pb in C)
+  ## Initialization:
+  ##
+  maxSize <- 3*p
+  ## NB: The size of heap, D and chainedL are set to the maximum size required,
+  ## ie 3*p. This comes from: size p at initialization; at each of the p
+  ## iterations, at most 2 new merges are added (only one if the last merge
+  ## involves the first or last cluster).
+
   gains <- rep(0, p-1)
-  merge <- matrix(0, nrow = p-1, ncol = 2) # matrix of the merges
+  merge <- matrix(0, nrow = p-1, ncol = 2)  # matrix of the merges
   traceW <- matrix(0, nrow = p-1, ncol = 2) # matrix of traceW
   sd1 <- out_matL[1:(p-1),2]/2 # similarity of objects with their right neighbors
   sii <- out_matL[1:p,1] # auto-similarity of objects
     
   ## initialization of the heap
-  heap <- as.integer(rep(-1, 3*p))
+  heap <- as.integer(rep(-1, maxSize))
   lHeap <- length(heap)
   v <- 1:(p-1)
   heap[v] <- v
-  D <- rep(-1, 3*p)
+  D <- rep(-1, maxSize)
   
   ## linkage value of objects with their right neighbors
-  D[v] <- (sii[1:(p-1)] + sii[2:p]) / 2 - sd1 
+  D[v] <- (sii[v] + sii[v+1]) / 2 - sd1 
   ## initialization of the length of the Heap
   lHeap <- p-1
   ## each element contains a vector: c(cl1, cl2, label1, label2, posL, posR, valid)
-  chainedL <- matrix(-1, nrow = 12, ncol = 3*p)
+  chainedL <- matrix(-1, nrow = 12, ncol = maxSize)
   rownames(chainedL) <- c("minCl1", "maxCl1", "minCl2", "maxCl2", "lab1", 
                           "lab2", "posL", "posR", "Sii", "Sjj", "Sij", "valid")
   w <- as.integer(v + 1)
@@ -230,15 +251,14 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h) {
   chainedL[6,v] <- -w
   chainedL[7,v] <- v - 1
   chainedL[8,v] <- w
-  chainedL[9,v] <- sii[1:(p-1)]
-  chainedL[10,v] <- sii[2:p]
+  chainedL[9,v] <- sii[v]
+  chainedL[10,v] <- sii[v+1]
   chainedL[11,v] <- sd1
   chainedL[12,v] <- 1
   chainedL[7,1] <- -1
   chainedL[8,p-1] <- -1
 
   heap <- buildHeap(heap, D, lHeap)
-  
   # performing clustering  
   res <- .Call("cWardHeaps", rcCumR, rcCumL, as.integer(h), as.integer(p), 
                chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 

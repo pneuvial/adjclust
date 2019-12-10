@@ -65,7 +65,7 @@
 #'   fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), h = 3, stats = "R.squared")
 #'
 #'   # input as Matrix::dgCMatrix
-#'   ldres <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared")
+#'   ldres <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared", symmetric = TRUE)
 #'   fit3 <- snpClust(ldres, 3)
 #' }
 #'
@@ -98,6 +98,14 @@ snpClust.dgCMatrix <- function(x, h = ncol(x) - 1,
 }
 
 #' @export
+snpClust.dsCMatrix <- function(x, h = ncol(x) - 1, 
+                               stats = c("R.squared", "D.prime")) {
+  res <- run.snpClust(x, h = h, stats = stats)
+  return(res)
+}
+
+
+#' @export
 snpClust.snpStats <- function(x, h = ncol(x) - 1, 
                               stats = c("R.squared", "D.prime")) {
   if (!requireNamespace("snpStats"))
@@ -107,7 +115,7 @@ snpClust.snpStats <- function(x, h = ncol(x) - 1,
     stop("h should be strictly less than p")
   }
   stats <- match.arg(stats)
-  x <- snpStats::ld(x, stats = stats, depth = h)
+  x <- snpStats::ld(x, stats = stats, depth = h, symmetric = TRUE)
   diag(x) <- rep(1, p)
   if (any(is.na(x))) {
     ww <- which(is.na(as.matrix(x)), arr.ind = TRUE)

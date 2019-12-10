@@ -64,7 +64,7 @@ if (requireNamespace("snpStats", quietly = TRUE)) {
   fit2 <- snpClust(as.matrix(Autosomes[1:200, 1:5]), h = 3, stats = "R.squared")
 
   # input as Matrix::dgCMatrix
-  ldres <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared")
+  ldres <- snpStats::ld(Autosomes[1:200, 1:5], depth = 3, stats = "R.squared", symmetric = TRUE)
   fit3 <- snpClust(ldres, 3)
 }
 

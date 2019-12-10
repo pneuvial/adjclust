@@ -4,10 +4,22 @@
 \alias{plotSim}
 \title{Plot (dis)similarity matrix}
 \usage{
-plotSim(mat, type = c("similarity", "dissimilarity"), clustering = NULL,
-  dendro = NULL, palette = heat.colors, breaks = 10, log = TRUE, h = p
-  - 1, stats = c("R.squared", "D.prime"), main = NULL,
-  col.clust = "darkblue", lwd.clust = 2, xaxis = FALSE, naxis = 10)
+plotSim(
+  mat,
+  type = c("similarity", "dissimilarity"),
+  clustering = NULL,
+  dendro = NULL,
+  palette = heat.colors,
+  breaks = 10,
+  log = TRUE,
+  h = NULL,
+  stats = c("R.squared", "D.prime"),
+  main = NULL,
+  col.clust = "darkblue",
+  lwd.clust = 2,
+  xaxis = FALSE,
+  naxis = 10
+)
 }
 \arguments{
 \item{mat}{matrix to plot. It can be of class \code{'matrix'}, 
