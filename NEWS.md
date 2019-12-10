@@ -1,6 +1,13 @@
-# Version 0.5.9 [2019-10-17]
+# Version 0.5.9 [2019-12-10]
 
+* Clarified types of inputs handled by adjclust ('S3 methods').
+* Shortened some examples.
+* Rewrote plotSim to avoid CRAN error on devel (chose to use 'S3 methods' now).
+* Fixed a similar problem in helpers.
+* Clarified code and comments.
 * Fixed Issue #35 (probably due to a change in the upstream snpStats package).
+* Added a test on plotSim.
+* Changed test on NA in snpStats package (probably due to a change in the upstream snpStats package) and fixed Issue #43.
 * Minor updates to tests.
 * The package passes R CMD check with [0;0;0].
 
