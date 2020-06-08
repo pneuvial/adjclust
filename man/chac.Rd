@@ -11,7 +11,7 @@
 \alias{diagnose.chac}
 \alias{correct}
 \alias{correct.chac}
-\alias{cutree.chac}
+\alias{cutree_chac}
 \alias{cuttree_chac}
 \title{Class chac}
 \usage{
@@ -35,7 +35,7 @@ diagnose(x, graph = TRUE, verbose = TRUE)
 
 correct(x)
 
-cutree.chac(tree, k = NULL, h = NULL)
+cutree_chac(tree, k = NULL, h = NULL)
 }
 \arguments{
 \item{x, object, tree}{an object of class 'chac'}
@@ -82,7 +82,7 @@ an way identical to the option \code{mode = "corrected"} of the function
 field \code{method} modified from \code{adjClust} to 
 \code{adjClust-modified}.
 
-The function \code{\link{cutree.chac}} returns the clustering with 
+The function \code{\link{cutree_chac}} returns the clustering with 
 \code{k} groups or with the groups obtained by cutting the tree at height
 \code{h}. If the heights are not increasing, the cutting of the tree is based
 on the corrected heights as provided by the function \code{correct}.

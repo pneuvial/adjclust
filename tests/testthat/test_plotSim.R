@@ -11,7 +11,7 @@ test_that("'plotSim' works for 'matrix'", {
   fit1 <- adjClust(sim, "similarity")
   expect_error(plotSim(sim, "similarity", dendro = fit1), NA)
   
-  clust1 <- cutree(fit1, k = 2)
+  clust1 <- cutree_chac(fit1, k = 2)
   expect_error(
     plotSim(sim, "similarity", dendro = fit1, clustering = clust1),
     NA)
@@ -30,7 +30,7 @@ test_that("'plotSim' works for 'dgCMatrix'", {
   fit1 <- correct(fit1)
   expect_error(plotSim(sim, "dissimilarity", dendro = fit1), NA)
   
-  clust1 <- cutree(fit1, k = 2)
+  clust1 <- cutree_chac(fit1, k = 2)
   expect_error(
     plotSim(sim, "dissimilarity", dendro = fit1, clustering = clust1),
     NA)
@@ -46,7 +46,7 @@ test_that("'plotSim' works for 'dsCMatrix'", {
   fit1 <- correct(fit1)
   expect_error(plotSim(sim, "dissimilarity", dendro = fit1), NA)
   
-  clust1 <- cutree(fit1, k = 2)
+  clust1 <- cutree_chac(fit1, k = 2)
   expect_error(
     plotSim(sim, "dissimilarity", dendro = fit1, clustering = clust1),
     NA)
