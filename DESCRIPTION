@@ -42,5 +42,5 @@ Suggests:
 VignetteBuilder: knitr
 URL: https://github.com/pneuvial/adjclust
 BugReports: https://github.com/pneuvial/adjclust/issues
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 LazyData: true

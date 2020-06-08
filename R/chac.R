@@ -3,8 +3,6 @@
 #' S3 class for Constrained Hierarchical Agglomerative Clustering results
 #' 
 #' 
-#' 
-#' @exportClass chac
 #
 #' Methods for class 'chac'
 #'
@@ -264,7 +262,7 @@ correct.chac <- function(x) {
 }
 
 #' @rdname chac
-#' @aliases cuttree.chac
+#' @aliases cuttree_chac
 #' @param k an integer scalar or vector with the desired number of groups
 #' @param h numeric scalar or vector with heights where the tree should be cut.
 #' Only available when the heights are increasing

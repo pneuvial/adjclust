@@ -12,7 +12,7 @@
 \alias{correct}
 \alias{correct.chac}
 \alias{cutree.chac}
-\alias{cuttree.chac}
+\alias{cuttree_chac}
 \title{Class chac}
 \usage{
 \method{as.hclust}{chac}(x, ...)
@@ -91,6 +91,8 @@ on the corrected heights as provided by the function \code{correct}.
 S3 class for Constrained Hierarchical Agglomerative Clustering results
 }
 \details{
+Methods for class 'chac'
+
 When \code{\link{plot.chac}} is called with 
 \code{mode = "standard"}, the standard dendrogram is plotted, even though,
 due to contingency constrains, some branches are reversed (decreasing
