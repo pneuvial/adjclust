@@ -8,7 +8,7 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
                  email="pierre.neuvial@math.univ-toulouse.fr"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Vialaneix", role="aut"))
-Date: 2019-12-10
+Date: 2020-06-08
 Version: 0.5.99
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
