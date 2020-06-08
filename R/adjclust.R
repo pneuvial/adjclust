@@ -68,7 +68,6 @@ NULL
 #' plot(fit4)
 #'
 #' @export
-#' @exportClass chac
 #' 
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums

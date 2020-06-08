@@ -3,8 +3,6 @@
 #' S3 class for Constrained Hierarchical Agglomerative Clustering results
 #' 
 #' 
-#' 
-#' @exportClass chac
 #
 #' Methods for class 'chac'
 #'
@@ -264,17 +262,17 @@ correct.chac <- function(x) {
 }
 
 #' @rdname chac
-#' @aliases cuttree.chac
+#' @aliases cuttree_chac
 #' @param k an integer scalar or vector with the desired number of groups
 #' @param h numeric scalar or vector with heights where the tree should be cut.
 #' Only available when the heights are increasing
-#' @return The function \code{\link{cutree.chac}} returns the clustering with 
+#' @return The function \code{\link{cutree_chac}} returns the clustering with 
 #' \code{k} groups or with the groups obtained by cutting the tree at height
 #' \code{h}. If the heights are not increasing, the cutting of the tree is based
 #' on the corrected heights as provided by the function \code{correct}.
 #' @export
 #' 
-cutree.chac <- function(tree, k = NULL, h = NULL) {
+cutree_chac <- function(tree, k = NULL, h = NULL) {
   if (class(tree) != "chac")
     stop("'tree' must be of class 'chac'")
   
@@ -361,7 +359,7 @@ select.chac <- function(x, type = c("capushe", "bstick"), k.max = NULL,
     if (graph)
       plot(KC)
     
-    res <- cutree(x, k = as.integer(KC@model))
+    res <- cutree_chac(x, k = as.integer(KC@model))
   } else if (type == "bstick") {
     if (is.null(k.max)) k.max <- n
     disp <- rev(x$height)
@@ -383,7 +381,7 @@ select.chac <- function(x, type = c("capushe", "bstick"), k.max = NULL,
             pch = "+", col = "red")
     }
     
-    res <- cutree(x, k = KC)
+    res <- cutree_chac(x, k = KC)
   }
   return(res)
 }

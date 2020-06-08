@@ -11,8 +11,8 @@
 \alias{diagnose.chac}
 \alias{correct}
 \alias{correct.chac}
-\alias{cutree.chac}
-\alias{cuttree.chac}
+\alias{cutree_chac}
+\alias{cuttree_chac}
 \title{Class chac}
 \usage{
 \method{as.hclust}{chac}(x, ...)
@@ -35,7 +35,7 @@ diagnose(x, graph = TRUE, verbose = TRUE)
 
 correct(x)
 
-cutree.chac(tree, k = NULL, h = NULL)
+cutree_chac(tree, k = NULL, h = NULL)
 }
 \arguments{
 \item{x, object, tree}{an object of class 'chac'}
@@ -82,7 +82,7 @@ an way identical to the option \code{mode = "corrected"} of the function
 field \code{method} modified from \code{adjClust} to 
 \code{adjClust-modified}.
 
-The function \code{\link{cutree.chac}} returns the clustering with 
+The function \code{\link{cutree_chac}} returns the clustering with 
 \code{k} groups or with the groups obtained by cutting the tree at height
 \code{h}. If the heights are not increasing, the cutting of the tree is based
 on the corrected heights as provided by the function \code{correct}.
@@ -91,6 +91,8 @@ on the corrected heights as provided by the function \code{correct}.
 S3 class for Constrained Hierarchical Agglomerative Clustering results
 }
 \details{
+Methods for class 'chac'
+
 When \code{\link{plot.chac}} is called with 
 \code{mode = "standard"}, the standard dendrogram is plotted, even though,
 due to contingency constrains, some branches are reversed (decreasing

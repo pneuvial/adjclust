@@ -8,8 +8,8 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
                  email="pierre.neuvial@math.univ-toulouse.fr"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Vialaneix", role="aut"))
-Date: 2019-12-10
-Version: 0.5.9
+Date: 2020-06-08
+Version: 0.5.99
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 
@@ -42,5 +42,5 @@ Suggests:
 VignetteBuilder: knitr
 URL: https://github.com/pneuvial/adjclust
 BugReports: https://github.com/pneuvial/adjclust/issues
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 LazyData: true
