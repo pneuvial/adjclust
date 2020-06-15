@@ -7,10 +7,10 @@
 adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1)
 }
 \arguments{
-\item{mat}{A similarity matrix or a dist object. Most sparse formats from 
+\item{mat}{A similarity matrix or a dist object. Most sparse formats from
 \code{\link[Matrix]{sparseMatrix}} are allowed}
 
-\item{type}{Type of matrix : similarity or dissimilarity. Defaults to 
+\item{type}{Type of matrix : similarity or dissimilarity. Defaults to
 \code{"similarity"}}
 
 \item{h}{band width. It is assumed that the similarity between two items is 0
@@ -18,13 +18,13 @@ when these items are at a distance of more than band width h. Default value
 is \code{ncol(mat)-1}}
 }
 \value{
-An object of class \code{\link{chac}} which describes the tree 
-produced by the clustering process. The object a list with the same elements 
-as an object of class \code{\link{chac}} (\code{merge}, \code{height}, 
-\code{order}, \code{labels}, \code{call}, \code{method}, \code{dist.method}),
-and an extra element \code{mat}: the data on which the clustering is 
-performed, possibly after pre-transformations described in the vignette 
-entitled "Notes on CHAC implementation in adjclust".
+An object of class \code{\link{chac}} which describes the tree
+  produced by the clustering process. The object a list with the same
+  elements as an object of class \code{\link{chac}} (\code{merge},
+  \code{height}, \code{order}, \code{labels}, \code{call}, \code{method},
+  \code{dist.method}), and an extra element \code{mat}: the data on which the
+  clustering is performed, possibly after pre-transformations described in
+  the vignette entitled "Notes on CHAC implementation in adjclust".
 }
 \description{
 Adjacency-constrained hierarchical agglomerative clustering
@@ -36,18 +36,18 @@ constrained so as only adjacent clusters are merged. These methods are useful
 in various application fields, including ecology (Quaternary data) and
 bioinformatics (e.g., in Genome-Wide Association Studies (GWAS)).
 
-This function is a fast implementation of the method that takes advantage of 
-sparse similarity matrices (i.e., that have 0 entries outside of a diagonal 
-band of width \code{h}). The method is fully described in (Dehman, 2015) and 
-based on a kernel version of the algorithm. The different options for the 
-implementation are available in the package vignette entitled "Notes on CHAC 
+This function is a fast implementation of the method that takes advantage of
+sparse similarity matrices (i.e., that have 0 entries outside of a diagonal
+band of width \code{h}). The method is fully described in (Dehman, 2015) and
+based on a kernel version of the algorithm. The different options for the
+implementation are available in the package vignette entitled "Notes on CHAC
 implementation in adjclust".
 }
 \examples{
 sim <- matrix(
 c(1.0, 0.1, 0.2, 0.3,
   0.1, 1.0 ,0.4 ,0.5,
-  0.2, 0.4, 1.0, 0.6, 
+  0.2, 0.4, 1.0, 0.6,
   0.3, 0.5, 0.6, 1.0), nrow = 4)
 
 ## similarity, full width
@@ -71,12 +71,18 @@ plot(fit4)
 
 }
 \references{
-Dehman A. (2015) \emph{Spatial Clustering of Linkage 
-  Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
+Dehman A. (2015) \emph{Spatial Clustering of Linkage
+  Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis,
   Universite Paris Saclay.
+
+Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
+  (2019). \emph{Adjacency-constrained hierarchical clustering of a band
+  similarity matrix with application to genomics}, Algorithms for Molecular
+  Biology 14(22)"
 }
 \seealso{
-\code{\link{snpClust}} to cluster SNPs based on linkage disequilibrium
+\code{\link{snpClust}} to cluster SNPs based on linkage
+  disequilibrium
 
 \code{\link{hicClust}} to cluster Hi-C data
 }

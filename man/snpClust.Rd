@@ -77,6 +77,11 @@ Dehman A. (2015) \emph{Spatial Clustering of Linkage
 Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a
   blockwise approach in variable selection using linkage disequilibrium
   information. *BMC Bioinformatics* 16:148.
+
+Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
+  (2019). \emph{Adjacency-constrained hierarchical clustering of a band
+  similarity matrix with application to genomics}, Algorithms for Molecular
+  Biology 14(22)"
 }
 \seealso{
 \code{\link{adjClust}} \code{\link[snpStats:ld]{ld}}
