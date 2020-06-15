@@ -1,7 +1,8 @@
 # Version 0.5.99 [2020-06-08]
 
-* removed exportation of S3 classes
-* changed cutree into a simple function 'cutree_chac' rather than a method (because stats::cutree is not a method)
+* Updated citation in DESCRIPTION and man files (almob paper) and added a CITATION file.
+* removed exportation of S3 classes.
+* changed cutree into a simple function 'cutree_chac' rather than a method (because stats::cutree is not a method).
 
 # Version 0.5.9 [2019-12-10]
 

@@ -39,6 +39,12 @@
 #' @references Dehman, A. Ambroise, C. and Neuvial, P. (2015). Performance of a
 #'   blockwise approach in variable selection using linkage disequilibrium
 #'   information. *BMC Bioinformatics* 16:148.
+#'   
+#' @references Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
+#'   (2019). \emph{Adjacency-constrained hierarchical clustering of a band
+#'   similarity matrix with application to genomics}, Algorithms for Molecular
+#'   Biology 14(22)"
+#'
 #'
 #' @details If \code{x} is of class
 #'   \code{\link[snpStats:SnpMatrix-class]{SnpMatrix}} or \code{\link{matrix}},

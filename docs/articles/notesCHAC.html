@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Implementation notes for the `adjclust` package • adjclust</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Implementation notes for the `adjclust` package">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="adjclust">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adjclust</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.99</span>
       </span>
     </div>
 
@@ -70,7 +70,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/pneuvial/adjclust">
+  <a href="https://github.com/pneuvial/adjclust/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -88,10 +88,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Implementation notes for the <code>adjclust</code> package</h1>
+      <h1 data-toc-skip>Implementation notes for the <code>adjclust</code> package</h1>
                         <h4 class="author">Pierre Neuvial, Nathalie Villa-Vialaneix</h4>
             
-            <h4 class="date">2019-12-10</h4>
+            <h4 class="date">2020-06-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/pneuvial/adjclust/blob/master/vignettes/notesCHAC.Rmd"><code>vignettes/notesCHAC.Rmd</code></a></small>
       <div class="hidden name"><code>notesCHAC.Rmd</code></div>
@@ -114,9 +114,9 @@
 <a href="#basic-implementation-of-chac-in-adjclust" class="anchor"></a>Basic implementation of CHAC in <code>adjclust</code>
 </h2>
 <p>The basic implementation of <code>adjclust</code> takes, as an input, a kernel <span class="math inline">\(k\)</span> which is supposed to be symmetric and positive (in the kernel sense). If your data are under this format, then the constrained clustering can be performed with</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/adjClust.html">adjClust</a></span>(k, <span class="dt">type =</span> <span class="st">"similarity"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/adjClust.html">adjClust</a></span>(<span class="no">k</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"similarity"</span>)</pre></body></html></div>
 <p>or with</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/adjClust.html">adjClust</a></span>(k, <span class="dt">type =</span> <span class="st">"similarity"</span>, <span class="dt">h =</span> h)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/adjClust.html">adjClust</a></span>(<span class="no">k</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"similarity"</span>, <span class="kw">h</span> <span class="kw">=</span> <span class="no">h</span>)</pre></body></html></div>
 <p>if, in addition, the kernel <span class="math inline">\(k\)</span> is supposed to have only null entries outside of a diagonal of size <code>h</code>.</p>
 <p>The implementation is the one described in [1].</p>
 </div>
@@ -165,9 +165,9 @@
   \end{array} \right. .
 \]</span> By definition, such an <span class="math inline">\(s\)</span> is normalized and any choice for <span class="math inline">\((a_i)_{i=1,\ldots,n}\)</span> yields the same clustering (since they all correspond to the same <em>ad-hoc</em> dissimilarity). The arbitrary choice <span class="math inline">\(a_i = 1\)</span> for all <span class="math inline">\(i=1,\ldots,n\)</span> has thus been made.</p>
 <p>The basic and the sparse implementations are both available with, respectively,</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/adjClust.html">adjClust</a></span>(d, <span class="dt">type =</span> <span class="st">"dissimilarity"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/adjClust.html">adjClust</a></span>(<span class="no">d</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"dissimilarity"</span>)</pre></body></html></div>
 <p>and</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/adjClust.html">adjClust</a></span>(d, <span class="dt">type =</span> <span class="st">"dissimilarity"</span>, <span class="dt">h =</span> h)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/adjClust.html">adjClust</a></span>(<span class="no">d</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"dissimilarity"</span>, <span class="kw">h</span> <span class="kw">=</span> <span class="no">h</span>)</pre></body></html></div>
 </div>
 </div>
 </div>
@@ -234,41 +234,22 @@ I(C) = \sum_{i \in C} d^2(i, g_C).
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li>
-<a href="#notes-on-relations-between-similarity-and-dissimilarity-implementation">Notes on relations between similarity and dissimilarity implementation</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#basic-implementation-of-chac-in-adjclust">Basic implementation of CHAC in <code>adjclust</code></a></li>
-      <li><a href="#more-advanced-used-for-kernel-or-similarity-matrices">More advanced used for kernel or similarity matrices</a></li>
-      </ul>
-</li>
-      <li>
-<a href="#options-for-displaying-the-dendrogram">Options for displaying the dendrogram</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#mode-corrected"><code>mode = "corrected"</code></a></li>
-      <li><a href="#mode-total-disp"><code>mode = "total-disp"</code></a></li>
-      <li><a href="#mode-within-disp"><code>mode = "within-disp"</code></a></li>
-      <li><a href="#mode-average-disp"><code>mode = "average-disp"</code></a></li>
-      </ul>
-</li>
-      <li><a href="#relations-with-hclust-and-rioja">Relations with ‘hclust’ and ‘rioja’</a></li>
-      <li><a href="#references">References</a></li>
-      </ul>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, Michel Koskas, <a href="https://www.math.univ-toulouse.fr/~pneuvial/">Pierre Neuvial</a>, Guillem Rigaill, Nathalie Vialaneix.</p>
+  <p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu">Nathalie Vialaneix</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
