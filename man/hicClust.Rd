@@ -59,9 +59,10 @@ res3 <- hicClust(system.file("extdata", "sample.txt", package = "adjclust"))
 
 }
 \references{
-Dehman A. (2015) \emph{Spatial Clustering of Linkage 
-  Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
-  Universite Paris Saclay.
+Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
+  (2019). \emph{Adjacency-constrained hierarchical clustering of a band
+  similarity matrix with application to genomics}, Algorithms for Molecular
+  Biology 14(22)"
 
 Servant N. \emph{et al} (2012). \emph{HiTC : Exploration of 
   High-Throughput 'C' experiments. Bioinformatics}.
