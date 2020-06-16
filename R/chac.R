@@ -10,7 +10,7 @@
 #' @param x,object,tree an object of class 'chac'
 #' @param y not used
 #' @param ... for \code{\link{plot}}, arguments passed to the function 
-#' \code{\link[stats]{plot.dendrogram}}. Default values for \code{type} and
+#' \code{\link{plot.dendrogram}}. Default values for \code{type} and
 #' \code{leaflab} are respectively set to \code{"triangle"} and \code{"none"}
 NULL
 

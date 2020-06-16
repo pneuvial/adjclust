@@ -29,7 +29,7 @@
 #'   
 #' @return An object of class \code{\link{chac}}.
 #'   
-#' @seealso \code{\link{adjClust}} \code{\link[HiTC:HTCexp]{HTCexp}}
+#' @seealso \code{\link{adjClust}} \code{\link[HiTC]{HTCexp}}
 #'   
 #' @references Dehman A. (2015) \emph{Spatial Clustering of Linkage 
 #'   Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis, 
