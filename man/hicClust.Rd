@@ -68,5 +68,5 @@ Servant N. \emph{et al} (2012). \emph{HiTC : Exploration of
   High-Throughput 'C' experiments. Bioinformatics}.
 }
 \seealso{
-\code{\link{adjClust}} \code{\link[HiTC:HTCexp]{HTCexp}}
+\code{\link{adjClust}} \code{\link[HiTC]{HTCexp}}
 }

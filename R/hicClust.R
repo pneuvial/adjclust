@@ -29,7 +29,7 @@
 #'   
 #' @return An object of class \code{\link{chac}}.
 #'   
-#' @seealso \code{\link{adjClust}} \code{\link[HiTC:HTCexp]{HTCexp}}
+#' @seealso \code{\link{adjClust}} \code{\link[HiTC]{HTCexp}}
 #'   
 #' @references Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
 #'   (2019). \emph{Adjacency-constrained hierarchical clustering of a band
