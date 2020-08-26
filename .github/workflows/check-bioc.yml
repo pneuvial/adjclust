@@ -32,11 +32,11 @@
 on:
   push:
     branches:
-      - master
+      - develop
       - 'RELEASE_*'
   pull_request:
     branches:
-      - master
+      - develop
       - 'RELEASE_*'
 
 name: R-CMD-check-bioc
