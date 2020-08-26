@@ -18,7 +18,7 @@
 #' superimposed over the heatmap.
 #' @param dendro \code{\link{chac}} object as provided, e.g., by the function
 #' \code{\link{adjClust}} (or any of the other wrappers).
-#' @param palette color palette. Default to \code{\link[grDevices]{heat.colors}}
+#' @param palette color palette. Default to \code{\link{heat.colors}}
 #' @param breaks number of breaks used to set colors from the palette. Those
 #' are based on the quantiles of the matrix entries and for skewed distributions
 #' the actual number used to set the palette can be lower than \code{breaks}.
