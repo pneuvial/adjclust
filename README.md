@@ -2,6 +2,8 @@
 # adjclust: Adjacency-constrained clustering
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/adjclust)](https://cran.r-project.org/package=adjclust)
+[![R build
+status](https://github.com/pneuvial/adjclust/workflows/R-CMD-check/badge.svg)](https://github.com/pneuvial/adjclust/actions)
 [![Travis Build
 Status](https://travis-ci.org/pneuvial/adjclust.svg?branch=develop)](https://travis-ci.org/pneuvial/adjclust)
 [![AppVeyor Build
@@ -76,9 +78,9 @@ image(ld.ceph, lwd = 0)
 ``` r
 
 fit <- snpClust(geno, stats = "R.squared", h = h)
-#> Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity
-#> to be smaller than or equal to 1
-#> Note: 132 merges with non increasing heights.
+#> Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to
+#> be smaller than or equal to 1
+#> Note: 133 merges with non increasing heights.
 plot(fit)
 #> Warning in plot.chac(fit): 
 #> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
