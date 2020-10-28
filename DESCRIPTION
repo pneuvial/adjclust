@@ -38,6 +38,7 @@ Suggests:
     snpStats,
     BiocGenerics
 Remotes:
+    bioc::release/rtracklayer,
     bioc::release/HiTC,
     bioc::release/snpStats,
     bioc::release/BiocGenerics
