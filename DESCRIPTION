@@ -37,7 +37,7 @@ Suggests:
     HiTC,
     snpStats,
     BiocGenerics
-Remotes: 
+Remotes:
     bioc::release/HiTC,
     bioc::release/snpStats,
     bioc::release/BiocGenerics
