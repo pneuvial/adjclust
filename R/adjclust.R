@@ -75,18 +75,15 @@ NULL
 #'
 #' @export
 #'
-#' @importFrom matrixStats rowCumsums
-#' @importFrom matrixStats colCumsums
+#' @importFrom sparseMatrixStats rowCumsums colCumsums
 #' @importFrom Matrix diag
 #' @importFrom Matrix t
-#' @importFrom Matrix isSymmetric
-#' @importFrom Matrix forceSymmetric
-
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
                      h = ncol(mat) - 1) {
   UseMethod("adjClust")
 }
 
+#' @importFrom Matrix isSymmetric forceSymmetric
 #' @export
 adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"), 
                             h = ncol(mat) - 1) {
@@ -103,7 +100,8 @@ adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                             h = ncol(mat) - 1) {
   if (!(isSymmetric(mat)))
     stop("Input matrix is not symmetric")
-  res <- run.adjclust(mat, type = type, h = h)
+  # RcppArmadillo functions don't support dsyMatrix, so convert to matrix
+  res <- run.adjclust( as.matrix(mat), type = type, h = h)
   return(res)
 }
 
@@ -176,7 +174,9 @@ adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"),
   return(res)
 }
 
-run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h) {
+#' @importFrom methods is
+#' @import RcppArmadillo Rcpp
+run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h, strictCheck=FALSE){
   # sanity checks
   type <- match.arg(type)
   if (!(nrow(mat) == ncol(mat)))
@@ -201,22 +201,39 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h) {
     mat <- 1 - 0.5*(mat^2)
   }
   
-  res_cc <- checkCondition(mat)
-  if (is.numeric(res_cc)) {
-    message(paste("Note: modifying similarity to ensure positive heights...
-      added", res_cc, "to diagonal (merges will not be affected)"))
-    mat <- mat + diag(rep(res_cc, ncol(mat)))
+  if( strictCheck ){
+    # this check is *very* expensive for > 10K features
+    # disabled by default
+    res_cc <- checkCondition(mat)
+    if (is.numeric(res_cc)) {
+      message(paste("Note: modifying similarity to ensure positive heights...
+        added", res_cc, "to diagonal (merges will not be affected)"))
+      mat <- mat + diag(rep(res_cc, ncol(mat)))
+    }
   }
   
-  out_matL <- matL(mat, h)
-  out_matR <- matR(mat, h)
+  # out_matL <- matL(mat, h)
+  # out_matR <- matR(mat, h)
+
+  # Use Rcpp version of matR and matL defined in this package
+  # instead of the adjclust:::matR and adjclust:::matL which are much slower
+  if(is(mat, "sparseMatrix") ){   
+    out_matL <- matL_sparse(mat, h)
+    out_matR <- matR_sparse(mat, h)
+  }else{   
+    out_matL <- matL_full(mat, h)
+    out_matR <- matR_full(mat, h)
+  }
   
   ## computing pencils
   rCumL <- rowCumsums(out_matL) # p x (h+1) matrix
   rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
+  rm(rCumL) # free memory as soon as it is not needed
     
   rCumR <- rowCumsums(out_matR) # p x (h+1) matrix
   rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
+  rm(out_matR)
+  rm(rCumR)
   
   ## Initialization:
   ##
@@ -231,6 +248,7 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h) {
   traceW <- matrix(0, nrow = p-1, ncol = 2) # matrix of traceW
   sd1 <- out_matL[1:(p-1),2]/2 # similarity of objects with their right neighbors
   sii <- out_matL[1:p,1] # auto-similarity of objects
+  rm(out_matL)
     
   ## initialization of the heap
   heap <- as.integer(rep(-1, maxSize))
@@ -269,6 +287,10 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h) {
                chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
                PACKAGE = "adjclust")
     
+  # free memory as soon as it is not needed
+  rm(rcCumL)
+  rm(rcCumR)
+
   # formatting outputs (as 'hclust') and checking if decreasing heights are present
   height <- gains
   if (is.null(rownames(mat))) {

@@ -6,9 +6,10 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Pierre", "Neuvial", role=c("aut", "cre"), 
                  email="pierre.neuvial@math.univ-toulouse.fr"),
              person("Guillem", "Rigaill", role="aut"),
-             person("Nathalie", "Vialaneix", role="aut"))
-Date: 2020-06-08
-Version: 0.5.99
+             person("Nathalie", "Vialaneix", role="aut"),             
+             person("Gabriel", "Hoffman", role="aut"))
+Date: 2021-06-11
+Version: 0.6.00
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 
@@ -19,13 +20,15 @@ Description: Implements a constrained version of hierarchical agglomerative
     their genomic distance. Taking advantage of this feature, the implemented 
     algorithm is time and memory efficient. This algorithm is described in 
     Ambroise et al (2019) <https://almob.biomedcentral.com/articles/10.1186/s13015-019-0157-4>.
-Depends: R(>= 2.10.0)
+Depends: R(>= 4.0.0)
 Imports:
     stats,
     graphics,
     grDevices,
+    Rcpp (>= 1.0.6),
+    RcppArmadillo,
     Matrix,
-    matrixStats,
+    sparseMatrixStats,
     methods,
     utils,
     capushe
@@ -50,3 +53,6 @@ URL: https://github.com/pneuvial/adjclust
 BugReports: https://github.com/pneuvial/adjclust/issues
 RoxygenNote: 7.1.1
 LazyData: true
+LinkingTo: 
+    Rcpp, 
+    RcppArmadillo
