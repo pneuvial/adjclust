@@ -153,7 +153,7 @@ arma::mat matR_full(const arma::mat & Csq, const int & h) {
 
 
 // [[Rcpp::export]]
-arma::mat matR_full_rowCumsums(const arma::mat & Csq, const int & h) {
+arma::mat matR_full_rowCumsums(const arma::SpMat<double> & Csq, const int & h) {
 	               
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);

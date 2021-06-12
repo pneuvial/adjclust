@@ -212,6 +212,7 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h, strict
     }
   }
   
+  # Original, uses R code
   # out_matL <- matL(mat, h)
   # out_matR <- matR(mat, h)
 
