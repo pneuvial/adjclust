@@ -54,6 +54,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// matR_full_rowCumsums
+arma::mat matR_full_rowCumsums(const arma::mat& Csq, const int& h);
+RcppExport SEXP _adjclust_matR_full_rowCumsums(SEXP CsqSEXP, SEXP hSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Csq(CsqSEXP);
+    Rcpp::traits::input_parameter< const int& >::type h(hSEXP);
+    rcpp_result_gen = Rcpp::wrap(matR_full_rowCumsums(Csq, h));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP cWardHeaps(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP percDown(SEXP, SEXP, SEXP, SEXP);
@@ -63,6 +75,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adjclust_matL_full", (DL_FUNC) &_adjclust_matL_full, 2},
     {"_adjclust_matR_sparse", (DL_FUNC) &_adjclust_matR_sparse, 2},
     {"_adjclust_matR_full", (DL_FUNC) &_adjclust_matR_full, 2},
+    {"_adjclust_matR_full_rowCumsums", (DL_FUNC) &_adjclust_matR_full_rowCumsums, 2},
     {"cWardHeaps", (DL_FUNC) &cWardHeaps, 11},
     {"percDown",   (DL_FUNC) &percDown,    4},
     {NULL, NULL, 0}

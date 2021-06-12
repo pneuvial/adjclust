@@ -17,3 +17,7 @@ matR_full <- function(Csq, h) {
     .Call(`_adjclust_matR_full`, Csq, h)
 }
 
+matR_full_rowCumsums <- function(Csq, h) {
+    .Call(`_adjclust_matR_full_rowCumsums`, Csq, h)
+}
+

@@ -149,3 +149,44 @@ arma::mat matR_full(const arma::mat & Csq, const int & h) {
 
 	return out;
 }
+
+
+
+// [[Rcpp::export]]
+arma::mat matR_full_rowCumsums(const arma::mat & Csq, const int & h) {
+	               
+	int p = Csq.n_rows;
+	arma::mat out(p, h+1, arma::fill::zeros);
+
+	#pragma omp parallel for if(parallelism_enabled)    
+	for( int i=0; i<p; i++){
+		
+		int k = 0;
+		double value;
+		
+		for( int j=i; j>=std::max(i-h, (int) 0); j--){
+
+		  value = Csq(i,j);
+
+		  if(k == 0){
+		    out(p-i-1,k) = value;
+		  }else{
+		  	// set value while computing cumulative row sum
+		  	out(p-i-1,k) = out(p-i-1,k-1) + 2.0*value;
+		  }
+		  k++;
+		}
+
+		// finish cumsum
+		while(k < h+1){			
+		  	out(p-i-1,k) = out(p-i-1,k-1);
+		  	k++;
+		}
+	}
+
+	return out;
+}
+
+
+
+
