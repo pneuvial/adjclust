@@ -216,24 +216,40 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h, strict
   # out_matL <- matL(mat, h)
   # out_matR <- matR(mat, h)
 
-  # Use Rcpp version of matR and matL defined in this package
-  # instead of the adjclust:::matR and adjclust:::matL which are much slower
-  if(is(mat, "sparseMatrix") ){   
-    out_matL <- matL_sparse(mat, h)
-    out_matR <- matR_sparse(mat, h)
-  }else{   
-    out_matL <- matL_full(mat, h)
-    out_matR <- matR_full(mat, h)
-  }
+  # # Use Rcpp version of matR and matL defined in this package
+  # # instead of the adjclust:::matR and adjclust:::matL which are much slower
+  # if(is(mat, "sparseMatrix") ){   
+  #   out_matL <- matL_sparse(mat, h)
+  #   out_matR <- matR_sparse(mat, h)
+  # }else{   
+  #   out_matL <- matL_full(mat, h)
+  #   out_matR <- matR_full(mat, h)
+  # }
   
-  ## computing pencils
-  rCumL <- rowCumsums(out_matL) # p x (h+1) matrix
-  rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
-  rm(rCumL) # free memory as soon as it is not needed
+  # ## computing pencils
+  # rCumL <- rowCumsums(out_matL) # p x (h+1) matrix
+  # rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
+  # rm(rCumL) # free memory as soon as it is not needed
     
-  rCumR <- rowCumsums(out_matR) # p x (h+1) matrix
+  # rCumR <- rowCumsums(out_matR) # p x (h+1) matrix
+  # rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
+  # rm(out_matR)
+  # # rm(rCumR)
+
+  if(is(mat, "sparseMatrix") ){   
+    rCumL <- matL_sparse_rowCumsums(mat, h)
+    rCumR <- matR_sparse_rowCumsums(mat, h)
+    out_matL <- matL_sparse(mat, 2)
+  }else{   
+    rCumL <- matL_full_rowCumsums(mat, h)
+    rCumR <- matR_full_rowCumsums(mat, h)
+    out_matL <- matL_full(mat, 2)
+  }
+
+  rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
+  rm(rCumL)
+
   rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
-  rm(out_matR)
   rm(rCumR)
   
   ## Initialization:

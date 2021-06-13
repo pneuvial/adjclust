@@ -9,12 +9,24 @@ matL_full <- function(Csq, h) {
     .Call(`_adjclust_matL_full`, Csq, h)
 }
 
+matL_sparse_rowCumsums <- function(Csq, h) {
+    .Call(`_adjclust_matL_sparse_rowCumsums`, Csq, h)
+}
+
+matL_full_rowCumsums <- function(Csq, h) {
+    .Call(`_adjclust_matL_full_rowCumsums`, Csq, h)
+}
+
 matR_sparse <- function(Csq, h) {
     .Call(`_adjclust_matR_sparse`, Csq, h)
 }
 
 matR_full <- function(Csq, h) {
     .Call(`_adjclust_matR_full`, Csq, h)
+}
+
+matR_sparse_rowCumsums <- function(Csq, h) {
+    .Call(`_adjclust_matR_sparse_rowCumsums`, Csq, h)
 }
 
 matR_full_rowCumsums <- function(Csq, h) {
