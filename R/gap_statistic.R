@@ -1,3 +1,13 @@
+# Gabriel Hoffman
+# June 14, 2021
+#
+# Compute GAP statistic
+
+# CITE: 
+# https://web.stanford.edu/%7Ehastie/Papers/gap.pdf
+# https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0556-6
+
+#  Compute the within cluster sum of suqares for each one,
 
 #' Compute GAP statistic for each cluster number
 #' 
@@ -13,7 +23,6 @@
 #'   \item df_approx - data.frame storing results for each value of k
 #'   \item n_clusters - number of clusters use p-value cutoff
 #' }
-
 #'
 #' @importFrom MASS fitdistr
 #' @importFrom stats approxfun cutree
