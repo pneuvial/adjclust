@@ -39,7 +39,7 @@ gap_statistic = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	# this increase memory usage, but sames substantial time
 	clustersMat = cutree(hcl, k=k_array)
 	rownames(clustersMat) = c() # reduces memory usage
-
+	
 	# for each number of cluster k
 	W = mclapply(k_array, function(k){
 		# message(k)
