@@ -68,14 +68,16 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	d = d[d>0] # only keep values greater than zero
 	momAlpha <- (mean(d)^2)/var(d)
 	momBeta <- var(d)/mean(d)
-	suppressWarnings({
-	fit = fitdistr(d, "gamma", start=list(shape=momAlpha, rate=momBeta))$estimate 
-	})
+
+	# gamma log likelihood
+	f = function(x){
+		- sum(dgamma(d, shape= x[1], rate=x[2], log=TRUE))
+	}
+	fit = optim( c(momAlpha, momBeta), f, lower=c(1e-6, 1e-6), method="L-BFGS-B")
 
 	# evalute p-values based on the distribution of d values
 	# assume that most d values are drawn from the null
-	df_approx$pValues = 0
-	df_approx$pValues[-1] = pgamma(d, shape=fit[1], rate=fit[2], lower.tail=FALSE)
+	df_approx$pValues = pgamma(df_approx$d, shape=fit$par[1], rate=fit$par[2], lower.tail=FALSE)
 
 	# Compute the last cluster with p-value less than the cutoff
 	n_clusters = max(cumsum(df_approx$pValues < p.value))
