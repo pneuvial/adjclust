@@ -332,7 +332,7 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 
 			// Evalute sum of all matrix elements
 			double total = 0;
-			for(arma::sp_mat::iterator it = C_sub.begin(); it != C_sub.end();; ++it){
+			for(arma::sp_mat::iterator it = C_sub.begin(); it != C_sub.end(); ++it){
 				total += (*it);
 			}
 			result[cluster(i-1)-1] = total;
