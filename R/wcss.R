@@ -59,11 +59,11 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 
 		# Compute sum of squares within each cluster,
 		# then divide by the size of each clutsers
-		W = diag(crossprod((hcl$data %*% dsgn), dsgn)) / tab
+		W = diag(crossprod(C %*% dsgn, dsgn)) / tab
 
 		# Since hcl$data is a *similarity* matrix
-		ncol(hcl$data) - sum(W)
-	})
+		ncol(C) - sum(W)
+	}, C=hcl$data)
 	
 	# create data.frame 
 	df = data.frame(k = k_array, W = unlist(W))
