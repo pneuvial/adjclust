@@ -32,7 +32,7 @@ Imports:
     MASS,
     methods,
     utils,
-    future.apply,
+    parallel,
     Rdpack,
     capushe
 Suggests:

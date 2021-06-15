@@ -31,7 +31,7 @@
 #' @importFrom stats pgamma var
 #' @importFrom Matrix sparse.model.matrix crossprod diag
 #' @import Rdpack
-#' @importFrom parallel parApply
+#' @importFrom parallel mclapply
 #' @export
 wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 
@@ -45,6 +45,8 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	
 	# Convert matrix to list for easier parallel processing
  	clustersLst = lapply(seq_len(ncol(clustersMat)), function(i) clustersMat[,i] )
+
+ 	C = NULL # Pass R CMD check
 
 	# for each number of cluster k
 	W = mclapply( clustersLst, function(clustVec){
