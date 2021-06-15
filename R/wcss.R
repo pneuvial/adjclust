@@ -92,9 +92,12 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 
 	# fit gamma distribution to differences
 	d = df_approx$d[-1]
+	d = d[d>0] # only keep values greater than zero
 	momAlpha <- (mean(d)^2)/var(d)
 	momBeta <- var(d)/mean(d)
+	suppressWarnings({
 	fit = fitdistr(d, "gamma", start=list(shape=momAlpha, rate=momBeta))$estimate 
+	})
 
 	# evalute p-values based on the distribution of d values
 	# assume that most d values are drawn from the null
