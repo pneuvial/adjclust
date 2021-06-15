@@ -41,38 +41,8 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	# compute multiple cuts at the same time
 	# this increase memory usage, but sames substantial time
 	clustersMat = cutree(hcl, k=k_array)
-	rownames(clustersMat) = c() # reduces memory usage
 	
-	# # Convert matrix to list for easier parallel processing
- # 	clustersLst = lapply(seq_len(ncol(clustersMat)), function(i) clustersMat[,i] )
- # 	rm(clustersMat)
-
- # 	C = NULL # Pass R CMD check
-
-	# # for each number of cluster k
-	# W = mclapply( clustersLst, function(clustVec){
-	# 	# Create a data.frame storing the cluster assigments for k clusters
-	# 	# Include a level 0, that is removed later
-	# 	df = data.frame(A = factor(clustVec, levels=c(0:max(clustVec))))
-
-	# 	# Create a sparse model matrix, and drop the 0th level
-	# 	# This ensures tha twhen k=1, this still works as expected
-	# 	dsgn = sparse.model.matrix(~0+., df)[,-1,drop=FALSE] 
-
-	# 	# count the number of entries in each cluster
-	# 	tab = table(clustVec)
-
-	# 	# Compute sum of squares within each cluster,
-	# 	# then divide by the size of each clutsers
-	# 	W = diag(crossprod(C %*% dsgn, dsgn)) / tab
-
-	# 	# Since hcl$data is a *similarity* matrix
-	# 	ncol(C) - sum(W)
-	# }, C=hcl$data, mc.cores=mc.cores)
-	
-	# create data.frame 
-	# df = data.frame(k = k_array, W = unlist(W))
-
+	# Evaluate within-cluster sum of squares
 	W = WCSS(hcl$data, clustersMat)
 
 	df = data.frame(k = k_array, W = W)
