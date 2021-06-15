@@ -1,17 +1,11 @@
 # Gabriel Hoffman
 # June 14, 2021
 #
-# Compute GAP statistic
+# Compute within cluster sum of squares
 
-# CITE: 
-# https://web.stanford.edu/%7Ehastie/Papers/gap.pdf
-# https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0556-6
-
-#  Compute the within cluster sum of suqares for each one,
-
-#' Compute GAP statistic for each cluster number
+#' Compute within-clstuer sum of squares
 #' 
-#' Compute GAP statistic for each cluster number
+#' Compute within-clstuer sum of squares for many values of cluster number.
 #'
 #' @param hcl hierarchical clustering result, where \code{hcl$data} is a similarity matrix
 #' @param k_array array storing the number of clusters where the GAP statistic is evaluated.  All missing integer within \code{range(k_array)} are estimated using a linear interpretation of the GAP statistic.
@@ -21,16 +15,25 @@
 #' @return
 #' \itemize{
 #'   \item df_approx - data.frame storing results for each value of k
-#'   \item n_clusters - number of clusters use p-value cutoff
+#'   \item n_clusters - number of clusters using p-value cutoff
 #' }
+#'
+#' @details
+#' The Within-Cluster Sum of Squares is computed for many values of cluster number, k.    Since evaluating the WCSS for each k is expensive, the WCSS for missing values of k are filled in using a linear interpolation. WCSS is used as to evaluted the number of clusters in the data, and is part of the GAP score \insertCite{tibshirani2001estimating}{adjclust}.  Here we adapted the score to be used for similarity matrices \insertCite{dehman2015performance}{adjclust}.
+#'
+#' @references
+#' \insertRef{dehman2015performance}{adjclust}
+#'
+#' \insertRef{tibshirani2001estimating}{adjclust}
 #'
 #' @importFrom MASS fitdistr
 #' @importFrom stats approxfun cutree
 #' @importFrom parallel mclapply
 #' @importFrom stats pgamma var
 #' @importFrom Matrix sparse.model.matrix crossprod diag
+#' @import Rdpack
 #' @export
-gap_statistic = function(hcl, k_array, p.value=0.001, mc.cores=1){
+wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 
 	# make sure k values are unique and sorted
 	k_array = sort(unique(k_array))
@@ -71,7 +74,7 @@ gap_statistic = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	}
 
 	# since evaluating each value of k is expensice,
-	# interpolate for vales of k that are skipped 
+	# interpolate for values of k that are skipped 
 	f = approxfun(df$k, df$W)
 	kmax = max(df$k)
 	df_approx = data.frame(k = 1:kmax, W = f(1:kmax))
