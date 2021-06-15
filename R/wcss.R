@@ -38,6 +38,9 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	# make sure k values are unique and sorted
 	k_array = sort(unique(k_array))
 
+	# number of clusters limited to be <= number of features
+	k_array = k_array[k_array <= length(hcl$labels)]
+
 	# compute multiple cuts at the same time
 	# this increase memory usage, but sames substantial time
 	clustersMat = cutree(hcl, k=k_array)
