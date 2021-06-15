@@ -354,7 +354,7 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 // [[Rcpp::export]]
 NumericVector WCSS(const arma::SpMat<double> & C, const NumericMatrix & clusterMat){
 
-	NumericVector result(clusterMat.ncol());
+	std::vector<double> result(clusterMat.ncol());
 
 	#pragma omp parallel for if(parallelism_enabled)  
 	for(int j=0; j<clusterMat.ncol(); j++){
@@ -368,7 +368,7 @@ NumericVector WCSS(const arma::SpMat<double> & C, const NumericMatrix & clusterM
 		result[j] = sum(res);
 	}
 
-	return result;
+	return wrap(result);
 }
 
 
