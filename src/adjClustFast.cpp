@@ -340,8 +340,6 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 			}
 			result[cluster(i-1)-1] = total;
 			baseline = i+1;
-		}else{
-			Rcpp::Rcout << std::endl;
 		}
 	}
 
