@@ -102,6 +102,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// wcss_single
+NumericVector wcss_single(const arma::SpMat<double>& C, const NumericVector& cluster);
+RcppExport SEXP _adjclust_wcss_single(SEXP CSEXP, SEXP clusterSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::SpMat<double>& >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type cluster(clusterSEXP);
+    rcpp_result_gen = Rcpp::wrap(wcss_single(C, cluster));
+    return rcpp_result_gen;
+END_RCPP
+}
+// WCSS
+NumericVector WCSS(const arma::SpMat<double>& C, const NumericMatrix& clusterMat);
+RcppExport SEXP _adjclust_WCSS(SEXP CSEXP, SEXP clusterMatSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::SpMat<double>& >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type clusterMat(clusterMatSEXP);
+    rcpp_result_gen = Rcpp::wrap(WCSS(C, clusterMat));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP cWardHeaps(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP percDown(SEXP, SEXP, SEXP, SEXP);
@@ -115,6 +139,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adjclust_matR_full", (DL_FUNC) &_adjclust_matR_full, 2},
     {"_adjclust_matR_sparse_rowCumsums", (DL_FUNC) &_adjclust_matR_sparse_rowCumsums, 2},
     {"_adjclust_matR_full_rowCumsums", (DL_FUNC) &_adjclust_matR_full_rowCumsums, 2},
+    {"_adjclust_wcss_single", (DL_FUNC) &_adjclust_wcss_single, 2},
+    {"_adjclust_WCSS", (DL_FUNC) &_adjclust_WCSS, 2},
     {"cWardHeaps", (DL_FUNC) &cWardHeaps, 11},
     {"percDown",   (DL_FUNC) &percDown,    4},
     {NULL, NULL, 0}

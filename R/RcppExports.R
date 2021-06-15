@@ -33,3 +33,11 @@ matR_full_rowCumsums <- function(Csq, h) {
     .Call(`_adjclust_matR_full_rowCumsums`, Csq, h)
 }
 
+wcss_single <- function(C, cluster) {
+    .Call(`_adjclust_wcss_single`, C, cluster)
+}
+
+WCSS <- function(C, clusterMat) {
+    .Call(`_adjclust_WCSS`, C, clusterMat)
+}
+
