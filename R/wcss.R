@@ -28,10 +28,10 @@
 #'
 #' @importFrom MASS fitdistr
 #' @importFrom stats approxfun cutree
-#' @importFrom parallel mclapply
 #' @importFrom stats pgamma var
 #' @importFrom Matrix sparse.model.matrix crossprod diag
 #' @import Rdpack
+#' @import future.apply
 #' @export
 wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 
@@ -44,19 +44,18 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	rownames(clustersMat) = c() # reduces memory usage
 	
 	# for each number of cluster k
-	W = mclapply(k_array, function(k){
-		# message(k)
+	W = future_apply(clustersMat, 2, function(clustVec){
 
 		# Create a data.frame storing the cluster assigments for k clusters
 		# Include a level 0, that is removed later
-		df = data.frame(A = factor(clustersMat[,colnames(clustersMat)==k,drop=FALSE], levels=c(0:k)))
+		df = data.frame(A = factor(clustVec, levels=c(0:max(clustVec))))
 
 		# Create a sparse model matrix, and drop the 0th level
 		# This ensures tha twhen k=1, this still works as expected
 		dsgn = sparse.model.matrix(~0+., df)[,-1,drop=FALSE] 
 
 		# count the number of entries in each cluster
-		tab = table(clustersMat[,colnames(clustersMat)==k])
+		tab = table(clustVec)
 
 		# Compute sum of squares within each cluster,
 		# then divide by the size of each clutsers
@@ -64,7 +63,7 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 
 		# Since hcl$data is a *similarity* matrix
 		ncol(hcl$data) - sum(W)
-	}, mc.cores=mc.cores)
+	})
 	
 	# create data.frame 
 	df = data.frame(k = k_array, W = unlist(W))
