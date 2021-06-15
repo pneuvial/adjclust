@@ -48,7 +48,7 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	# Evaluate within-cluster sum of squares
 	W = WCSS(hcl$data, clustersMat)
 
-	df = data.frame(k = k_array, W = W)
+	df = data.frame(k = k_array, W = length(hcl$labels) - W)
 
 	if( !any(df$W > 0) ){
 		stop("Cannot interpolate when all W values are 0.")

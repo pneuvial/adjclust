@@ -311,6 +311,7 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 	NumericVector result(max(cluster));
 
 	int baseline = 0;
+	double n_features;
 
 	// for each feature 
 	for(int i=0; i<cluster.length(); i++){
@@ -327,15 +328,21 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 		// if current and previous features belong to different features
 		if( flag ){
 
-			// get submatrix corrsponding to this cluster
-			arma::SpMat<double> C_sub = C.submat(baseline, baseline, i, i);
-
-			// Evalute sum of all matrix elements
 			double total = 0;
-			for(arma::sp_mat::iterator it = C_sub.begin(); it != C_sub.end(); ++it){
-				total += (*it);
+			if( baseline == i){
+				total = C(i,i);
+			}else{
+				// get submatrix corrsponding to this cluster
+				arma::SpMat<double> C_sub = C.submat(baseline, baseline, i, i);
+
+				// Evalute sum of all matrix elements
+				for(arma::sp_mat::iterator it = C_sub.begin(); it != C_sub.end(); ++it){
+					total += (*it);
+				}
 			}
-			result[cluster(i-1)-1] = total;
+			// total sum of squares divided by number of features in the group
+			n_features = (i - baseline + 1);
+			result[cluster(i)-1] = (total - n_features) / n_features;
 			baseline = i+1;
 		}
 	}
