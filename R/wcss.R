@@ -31,7 +31,7 @@
 #' @importFrom stats pgamma var
 #' @importFrom Matrix sparse.model.matrix crossprod diag
 #' @import Rdpack
-#' @import future.apply
+#' @importFrom parallel parApply
 #' @export
 wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 
@@ -43,9 +43,11 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	clustersMat = cutree(hcl, k=k_array)
 	rownames(clustersMat) = c() # reduces memory usage
 	
-	# for each number of cluster k
-	W = future_apply(clustersMat, 2, function(clustVec){
+	# Convert matrix to list for easier parallel processing
+ 	clustersLst = lapply(seq_len(ncol(clustersMat)), function(i) clustersMat[,i] )
 
+	# for each number of cluster k
+	W = mclapply( clustersLst, function(clustVec){
 		# Create a data.frame storing the cluster assigments for k clusters
 		# Include a level 0, that is removed later
 		df = data.frame(A = factor(clustVec, levels=c(0:max(clustVec))))
@@ -63,7 +65,7 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 
 		# Since hcl$data is a *similarity* matrix
 		ncol(C) - sum(W)
-	}, C=hcl$data)
+	}, C=hcl$data, mc.cores=mc.cores)
 	
 	# create data.frame 
 	df = data.frame(k = k_array, W = unlist(W))
