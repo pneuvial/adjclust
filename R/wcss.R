@@ -58,7 +58,7 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	# interpolate for values of k that are skipped 
 	f = approxfun(df$k, df$W)
 	kmax = max(df$k)
-	df_approx = data.frame(k = 1:kmax, W = f(1:kmax))
+	df_approx = data.frame(k = min(df$k):kmax, W = f(min(df$k):kmax))
 	df_approx$d = c(0,-diff(df_approx$W) / diff(df_approx$k))
 	df_approx$Interpolated = TRUE
 	df_approx$Interpolated[df_approx$k %in% k_array] = FALSE
