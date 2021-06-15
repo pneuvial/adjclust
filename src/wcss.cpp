@@ -10,10 +10,17 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 	NumericVector result(max(cluster));
 
 	int baseline = 0;
+
+	// for each feature 
 	for(int i=1; i<cluster.length(); i++){
-		if( cluster(i) != cluster(i-1) | i+1 == cluster.length() ){
+
+		// if current and previous features belong to different features
+		if( (cluster(i) != cluster(i-1)) | (i+1 == cluster.length()) ){
+
+			// get submatrix corrsponding to this cluster
 			arma::SpMat<double> C_sub = C.submat(baseline, baseline, i, i);
 
+			// Evalute sum of all matrix elements
 			arma::sp_mat::iterator start = C_sub.begin();
 			arma::sp_mat::iterator end = C_sub.end();
 

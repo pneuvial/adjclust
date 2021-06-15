@@ -73,7 +73,7 @@ wcss = function(hcl, k_array, p.value=0.001, mc.cores=1){
 	# create data.frame 
 	# df = data.frame(k = k_array, W = unlist(W))
 
-	W = adjclust:::WCSS(hcl$data, clustersMat)
+	W = WCSS(hcl$data, clustersMat)
 
 	df = data.frame(k = k_array, W = W)
 
