@@ -313,13 +313,22 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 	int baseline = 0;
 
 	// for each feature 
-	for(int i=1; i<cluster.length(); i++){
+	for(int i=0; i<cluster.length(); i++){
+
+		// Split conditions 
+		// if the first condition is TRUE, then cluster(i+1) causes overflow
+		bool flag=FALSE;
+		if( i+1 == cluster.length() ){
+			flag = TRUE;
+		}else if( cluster(i) != cluster(i+1) ){
+			flag = TRUE;
+		}
 
 		// if current and previous features belong to different features
-		if( (cluster(i) != cluster(i-1)) | (i+1 == cluster.length()) ){
+		if( flag ){
 
 			// get submatrix corrsponding to this cluster
-			arma::SpMat<double> C_sub = C.submat(baseline, baseline, i-1, i-1);
+			arma::SpMat<double> C_sub = C.submat(baseline, baseline, i, i);
 
 			// Evalute sum of all matrix elements
 			arma::sp_mat::iterator start = C_sub.begin();
@@ -330,7 +339,9 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 				total += (*it);
 			}
 			result[cluster(i-1)-1] = total;
-			baseline = i;
+			baseline = i+1;
+		}else{
+			Rcpp::Rcout << std::endl;
 		}
 	}
 
