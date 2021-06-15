@@ -319,7 +319,7 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 		if( (cluster(i) != cluster(i-1)) | (i+1 == cluster.length()) ){
 
 			// get submatrix corrsponding to this cluster
-			arma::SpMat<double> C_sub = C.submat(baseline, baseline, i, i);
+			arma::SpMat<double> C_sub = C.submat(baseline, baseline, i-1, i-1);
 
 			// Evalute sum of all matrix elements
 			arma::sp_mat::iterator start = C_sub.begin();
