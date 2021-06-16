@@ -360,8 +360,10 @@ NumericVector WCSS(const arma::SpMat<double> & C, const NumericMatrix & clusterM
 	#pragma omp parallel for shared(result) if(parallelism_enabled)
 	for(int j=0; j<clusterMat.ncol(); j++){
 
+		NumericVector v;
+
 		#pragma omp atomic
-		NumericVector v(clusterMat(_,j));
+		v = clusterMat(_,j);
 
 		// for each number of clusters, compute within-cluster sum of squares
 		double Total = sum( wcss_single(C, v) );
