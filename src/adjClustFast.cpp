@@ -359,7 +359,7 @@ NumericVector WCSS(const arma::SpMat<double> & C, const NumericMatrix & clusterM
 
 	NumericVector v = clusterMat(_,1);
 
-	#pragma omp parallel for shared(result) if(parallelism_enabled)
+	#pragma omp parallel for if(parallelism_enabled)
 	for(int j=0; j<clusterMat.ncol(); j++){
 
 
