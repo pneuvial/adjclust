@@ -368,7 +368,7 @@ NumericVector WCSS(const arma::SpMat<double> & C, const NumericMatrix & clusterM
 		// for each number of clusters, compute within-cluster sum of squares
 		// double Total = sum( wcss_single(C, v) );
 
-		Total = 10;
+		double Total = 10;
 		result[j] = Total;
 	}
 
