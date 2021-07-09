@@ -248,11 +248,18 @@ correct.chac <- function(x) {
     to_add <- data.frame(res_diagnose$number,
                          add = res_diagnose$pheight - res_diagnose$height)
     to_add$add <- 1.0001 * to_add$add
-    to_add <- apply(to_add, 1, function(acol) {
-      c(rep(0, acol[1] - 1), rep(acol[2], length(x$height) - acol[1] + 1))
-    })
-    to_add <- rowSums(to_add)
-    x$height <- x$height + to_add
+
+    # this uses a lot of memory is and very slow for > 20K features
+    # to_add <- apply(to_add, 1, function(acol) {
+    #   c(rep(0, acol[1] - 1), rep(acol[2], length(x$height) - acol[1] + 1))
+    # })
+    # to_add <- rowSums(to_add)
+    # x$height <- x$height + to_add
+
+    # this is much simpler and gives exactly the same result
+    value = rep(0,length(x$height))
+    value[to_add[,1]] = to_add[,2]
+    x$height <- x$height + cumsum(value)
     
     x$method <- "adjClust-corrected"
     return(x) } else {

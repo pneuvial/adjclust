@@ -80,6 +80,7 @@ extract_values.default <- function(mat) {
   all_coords <- all_coords[all_coords[ ,1] <= all_coords[ ,2], ]
   x <- all_coords[ ,1] + all_coords[ ,2]
   y <- (all_coords[ ,2] - all_coords[ ,1]) + 1
+
   values <- mat[upper.tri(mat, diag = TRUE)]
   
   return(list("p" = p, "x" = x, "y" = y, "values" = values))

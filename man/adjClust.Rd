@@ -4,7 +4,12 @@
 \alias{adjClust}
 \title{Adjacency-constrained Clustering}
 \usage{
-adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1)
+adjClust(
+  mat,
+  type = c("similarity", "dissimilarity"),
+  h = ncol(mat) - 1,
+  strictCheck = TRUE
+)
 }
 \arguments{
 \item{mat}{A similarity matrix or a dist object. Most sparse formats from
@@ -16,6 +21,8 @@ adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1)
 \item{h}{band width. It is assumed that the similarity between two items is 0
 when these items are at a distance of more than band width h. Default value
 is \code{ncol(mat)-1}}
+
+\item{strictCheck}{(default TRUE). Can be disabled to avoid computationally expensive check with > 10K features.}
 }
 \value{
 An object of class \code{\link{chac}} which describes the tree

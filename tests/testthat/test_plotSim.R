@@ -1,4 +1,5 @@
 library("adjclust")
+library("Matrix")
 
 context("Check plotSim plots for all types of input")
 
