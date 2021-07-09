@@ -25,6 +25,7 @@ NULL
 #' @param h band width. It is assumed that the similarity between two items is 0
 #'   when these items are at a distance of more than band width h. Default value
 #'   is \code{ncol(mat)-1}
+#' @param strictCheck (default TRUE). Can be disabled to avoid computationally expensive check with > 10K features.
 #'
 #' @return An object of class \code{\link{chac}} which describes the tree
 #'   produced by the clustering process. The object a list with the same
@@ -79,104 +80,104 @@ NULL
 #' @importFrom Matrix diag
 #' @importFrom Matrix t
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
-                     h = ncol(mat) - 1) {
+                     h = ncol(mat) - 1, strictCheck=TRUE) {
   UseMethod("adjClust")
 }
 
 #' @importFrom Matrix isSymmetric forceSymmetric
 #' @export
 adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                            h = ncol(mat) - 1) {
+                            h = ncol(mat) - 1, strictCheck=TRUE) {
   if (!is.numeric(mat))
     stop("Input matrix is not numeric")
   if (!(isSymmetric(mat)))
     stop("Input matrix is not symmetric")
-  res <- run.adjclust(mat, type = type, h = h)
+  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
   return(res)
 }
 
 #' @export
 adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                            h = ncol(mat) - 1) {
+                            h = ncol(mat) - 1, strictCheck=TRUE) {
   if (!(isSymmetric(mat)))
     stop("Input matrix is not symmetric")
   # RcppArmadillo functions don't support dsyMatrix, so convert to matrix
-  res <- run.adjclust( as.matrix(mat), type = type, h = h)
+  res <- run.adjclust( as.matrix(mat), type = type, h = h, strictCheck = strictCheck)
   return(res)
 }
 
 #' @export
 adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1) {
+                               h = ncol(mat) - 1, strictCheck=TRUE) {
   type <- match.arg(type)
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
   } else {
     mat <- forceSymmetric(mat)
   }
-  res <- adjClust(mat, type = type, h = h)
+  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
   return(res)
 }
 
 #' @export
 adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1) {
+                               h = ncol(mat) - 1, strictCheck=TRUE) {
   type <- match.arg(type)
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  res <- run.adjclust(mat, type = type, h = h)
+  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
   return(res)
 }
 
 #' @export
 adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1) {
+                               h = ncol(mat) - 1, strictCheck=TRUE) {
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
   } else {
     mat <- forceSymmetric(mat)
   }
-  res <- adjClust(mat, type = type, h = h)
+  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
   return(res)
 }
 
 #' @export
 adjClust.dsTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1) {
+                               h = ncol(mat) - 1, strictCheck=TRUE) {
   type <- match.arg(type)
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  res <- run.adjclust(mat, type = type, h = h)
+  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
   return(res)
 }
 
 #' @export
 adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1) {
+                               h = ncol(mat) - 1, strictCheck=TRUE) {
   type <- match.arg(type)
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
   } else {
     mat <- forceSymmetric(mat)
   }
-  res <- adjClust(mat, type = type, h = h)
+  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
   return(res)
 }
 
 #' @export
 adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"), 
-                          h = ncol(mat) - 1) {
+                          h = ncol(mat) - 1, strictCheck=TRUE) {
   type <- match.arg(type)
   if (type != "dissimilarity")
     message("Note: input class is 'dist' so 'type' is supposed to be 'dissimilarity'")
   mat <- as.matrix(mat)
-  res <- adjClust.matrix(mat, type = "dissimilarity", h = h)
+  res <- adjClust.matrix(mat, type = "dissimilarity", h = h, strictCheck = strictCheck)
   return(res)
 }
 
 #' @importFrom methods is
 #' @import RcppArmadillo Rcpp
-run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h, strictCheck=FALSE){
+run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h, strictCheck=TRUE){
   # sanity checks
   type <- match.arg(type)
   if (!(nrow(mat) == ncol(mat)))
