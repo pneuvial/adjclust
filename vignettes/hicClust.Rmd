@@ -82,7 +82,7 @@ The output is of class `chac`. In particular, it can be plotted as a dendrogram
 silently relying on the function `plot.dendrogram`:
 
 ```{r dendro}
-plot(fitB)
+plot(fitB, mode = "corrected")
 ```
 
 Moreover, the output contains an element named `merge` which describes the 
