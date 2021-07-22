@@ -1,14 +1,8 @@
+# Version 0.6.02 [2021-07-22]
 
-# Version 0.6.02 [2021-07-09]
- * Update by Gabriel Hoffman
- * Big increase in speed by using RcppArmadillo.  Combine matL() + rowCumsums() and  matR() + rowCumsums() in their own C++ functions. This also allowed using OpenMP to distribute this work across multiple CPU cores. This gives a dramatic performance improvement on a 48 core Linux machine. But OpenMP is not enabled by default on OSX. I'm not sure about Windows.
- * reduces memory usage by freeing matrices once they are no longer need
- * option to disable expensive checking code (strictCheck = TRUE by default)
- * optimized some code in correct.chac() that was a memory bottleneck.
- * Updated DESCRIPTION with new dependencies
-
-
-
+* Increase in speed by code optimization and by using RcppArmadillo (update by Gabriel Hoffman), at least for linux machines (uses OpenMP)
+* reduces memory usage (update by Gabriel Hoffman)
+* option to disable expensive checking code (strictCheck = TRUE by default, update by Gabriel Hoffman)
 
 # Version 0.5.99 [2020-06-08]
 
