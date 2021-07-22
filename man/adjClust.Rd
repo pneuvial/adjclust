@@ -22,7 +22,9 @@ adjClust(
 when these items are at a distance of more than band width h. Default value
 is \code{ncol(mat)-1}}
 
-\item{strictCheck}{(default TRUE). Can be disabled to avoid computationally expensive check with > 10K features.}
+\item{strictCheck}{Logical (default to \code{TRUE}) to systematically check 
+default of positivity in input similarities. Can be disabled to avoid 
+computationally expensive checks when the number of features is large.}
 }
 \value{
 An object of class \code{\link{chac}} which describes the tree
