@@ -9,7 +9,7 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Nathalie", "Vialaneix", role="aut"),             
              person("Gabriel", "Hoffman", role="aut"))
 Date: 2021-07-22
-Version: 0.6.02
+Version: 0.6.2
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 
@@ -20,7 +20,7 @@ Description: Implements a constrained version of hierarchical agglomerative
     their genomic distance. Taking advantage of this feature, the implemented 
     algorithm is time and memory efficient. This algorithm is described in 
     Ambroise et al (2019) <https://almob.biomedcentral.com/articles/10.1186/s13015-019-0157-4>.
-Depends: R(>= 4.0.0)
+Depends: R (>= 4.0.0)
 Imports:
     stats,
     graphics,
@@ -39,12 +39,9 @@ Suggests:
     rioja,
     HiTC,
     snpStats,
-    BiocGenerics
-Remotes:
-    bioc::release/rtracklayer,
-    bioc::release/HiTC,
-    bioc::release/snpStats,
-    bioc::release/BiocGenerics
+    BiocGenerics,
+    HiTC,
+    snpStats
 biocViews:
     Clustering,
     FeatureExtraction
