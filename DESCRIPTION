@@ -39,9 +39,7 @@ Suggests:
     rioja,
     HiTC,
     snpStats,
-    BiocGenerics,
-    HiTC,
-    snpStats
+    BiocGenerics
 biocViews:
     Clustering,
     FeatureExtraction
