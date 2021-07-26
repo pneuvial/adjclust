@@ -8,7 +8,7 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Vialaneix", role="aut"),             
              person("Gabriel", "Hoffman", role="aut"))
-Date: 2021-07-22
+Date: 2021-07-26
 Version: 0.6.2
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
@@ -52,5 +52,3 @@ LinkingTo:
     RcppArmadillo
 Encoding: UTF-8
 Language: en-US
-
-

@@ -1,4 +1,4 @@
-# Version 0.6.02 [2021-07-22]
+# Version 0.6.2 [2021-07-26]
 
 * Increase in speed by code optimization and by using RcppArmadillo (update by Gabriel Hoffman), at least for linux machines (uses OpenMP)
 * reduces memory usage (update by Gabriel Hoffman)

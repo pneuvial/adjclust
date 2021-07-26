@@ -180,7 +180,7 @@ adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"),
 }
 
 #' @importFrom methods is
-#' @import RcppArmadillo Rcpp
+#' @import Rcpp
 run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h, 
                          strictCheck = TRUE) {
   # sanity checks
