@@ -4,6 +4,8 @@
 * Cleanup: move res_adjclust_0.3.0.rda from data/ to inst/extdata/
 * Cleanup: remove useless data entries from pkgdown index, and add missing ones
 * Update docs (using pkgdown)
+* Move site to dedicated branch (release with `pkgdown::deploy_to_branch()`)
+* Add inst/CITATION and add Randriamihamison et al 2020
 
 # Version 0.6.2 [2021-07-22]
 

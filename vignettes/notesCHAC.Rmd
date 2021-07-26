@@ -252,7 +252,6 @@ Euclidean case, even for constrained clusterings). Hence,
 merges and the slot ```height``` of the first is the cumulative sum of the slot 
 ```height``` of the second.
 
-
 # References
 
 [1] Dehman A. (2015). 
