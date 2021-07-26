@@ -206,22 +206,22 @@ visually increasing dendrogram.
 This option represents the dendrogram using the total dispersion (that is the
 objective function) at every level of the clustering. It can easily be proved
 that the total dispersion is equal to ESS$_t = \sum_{t' \leq t} m_{t'}$ and that
-this quantity is always non decreasing. This is the quantity recommanded by [2]
+this quantity is always non decreasing. This is the quantity recommended by [2]
 to display the dendrogram.
 
 ## `mode = "within-disp"`
 
 This option represents a cluster specific criterion by using the within cluster
 dispersion of the two clusters being merged at every given step of the 
-algorithm. It can be proved that this quantity is also non decreasing but it is
-also very dependant of the cluster size, leading to flattened dendrogram in
+algorithm. It can be proved that this quantity is also non decreasing, but it is
+depends strongly on the cluster size, leading to flattened dendrogram in
 most cases.
 
 ## `mode = "average-disp"`
 
 This last option addresses the problem of the dependency to cluster sizes posed
 by the previous method (`"within-disp"`) by using the average within-cluster
-dispersion of the two clusters being merged at avery given step of the 
+dispersion of the two clusters being merged at every given step of the 
 algorithm. This criterion is also a cluster specific one but does not guaranty
 the absence of reversals in heights.
 
@@ -229,7 +229,7 @@ the absence of reversals in heights.
 # Relations with 'hclust' and 'rioja'
 
 As documented in [4], the call to ```hclust(..., method = "Ward.D")``` 
-implicitely supposes that ```...``` is a *squared* distance matrix. As explained
+implicitly assumes that ```...``` is a *squared* distance matrix. As explained
 above, we did not make such an assumption so 
 ```hclust(d^2, method = "Ward.D")``` and 
 ```adjClust(d, method = "dissimilarity")``` give identical results when the 
@@ -262,7 +262,7 @@ constrained cluster analysis by the method of incremental sum of squares.
 *Computers & Geosciences*, **13**(1), 13-35.
 
 [3] Miyamoto S., Abe R., Endo Y., Takeshita J. (2015) Ward method of 
-hierarchical clustering for non-Eclidean similarity measures. In: *Proceedings
+hierarchical clustering for non-Euclidean similarity measures. In: *Proceedings
 of the VIIth International Conference of Soft Computing and Pattern 
 Recognition* (SoCPaR 2015).
 

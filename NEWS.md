@@ -37,8 +37,8 @@ clustering
 
 # Version 0.5.6 [2018-02-08]
 
-* changed dependencies to bioconductor packages 'HiTC' and 'snpStats' into 
-Suggest and conditionnaly used them
+* changed dependencies to Bioconductor packages 'HiTC' and 'snpStats' into 
+Suggest and conditionally used them
 
 # Version 0.5.5 [2018-01-30]
 
@@ -66,7 +66,7 @@ choices for the height.
 * Added tests for: equivalence with 'hclust',  comparing sum of heights and 
    pseudo inertia, plots, non-increasing heights, cutree (#14).
 * Fixed #13 (man).
-* Fixed #15 (Cutree with decreasing merges).
+* Fixed #15 (cutree with decreasing merges).
 * Fixed #3 (Non-positive 'gains').
 * Using BiocStyle::html_document2 as a temporary fix for vignette 
   compilation errors.
@@ -120,7 +120,7 @@ choices for the height.
 
 * Removed 'adjClustBand': main entry points are now 'HeapHop' and 'adjClustBand_heap'.
 * Updated test scripts and LD vignette accordingly.
-* Added Travis CI and Appveyor support.
+* Added Travis CI and AppVeyor support.
 
 # Version 0.2.*
 

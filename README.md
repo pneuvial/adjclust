@@ -52,7 +52,7 @@ plot(fit)
 
 ![](man/figures/README-adjClust-1.png)<!-- -->
 
-The result is of class `chac`. It can be plotted as a dendogram (as
+The result is of class `chac`. It can be plotted as a dendrogram (as
 shown above). Successive merge and heights of clustering can be obtained
 by `fit$merge` and `fit$height` respectively.
 
@@ -99,11 +99,12 @@ plotSim(as.matrix(ld.ceph), clustering = sel_clust, dendro = fit)
 
 `hicClust` performs adjacency-constrained HAC for specific application
 of Hi-C data analysis. A minimal example is given below. See [Hi-C
-Vignette](vignettes/hicClust.Rmd) for
-details.
+Vignette](vignettes/hicClust.Rmd) for details.
 
 ``` r
 library("HiTC")
+#> Warning: package 'BiocGenerics' was built under R version 4.0.5
+#> Warning: package 'GenomeInfoDb' was built under R version 4.0.5
 ```
 
 ``` r

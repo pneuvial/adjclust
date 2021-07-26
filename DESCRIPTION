@@ -26,7 +26,6 @@ Imports:
     graphics,
     grDevices,
     Rcpp (>= 1.0.6),
-    RcppArmadillo,
     Matrix,
     sparseMatrixStats,
     methods,
@@ -50,5 +49,8 @@ RoxygenNote: 7.1.1
 LazyData: true
 LinkingTo: 
     Rcpp, 
-    RcppArmadillo  
+    RcppArmadillo
+Encoding: UTF-8
+Language: en-US
+
 
