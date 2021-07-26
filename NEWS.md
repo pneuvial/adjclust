@@ -1,3 +1,7 @@
+# Version 0.6.3.9000 [2021-07-27]
+
+* Update URL in DESCRIPTION
+
 # Version 0.6.3 [2021-07-26]
 
 * Fix issues for CRAN submission: RcppArmadillo moved to LinkingTo, version number
