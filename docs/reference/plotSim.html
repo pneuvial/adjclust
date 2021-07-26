@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Adjacency-constrained Clustering of Hi-C contact maps — hicClust • adjclust</title>
+<title>Plot (dis)similarity matrix — plotSim • adjclust</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Adjacency-constrained Clustering of Hi-C contact maps — hicClust" />
-<meta property="og:description" content="Adjacency-constrained hierarchical agglomerative clustering of Hi-C contact
-maps" />
+<meta property="og:title" content="Plot (dis)similarity matrix — plotSim" />
+<meta property="og:description" content="Heatmap of the (dis)similarity matrix" />
 
 
 
@@ -130,90 +129,136 @@ maps" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Adjacency-constrained Clustering of Hi-C contact maps</h1>
-    <small class="dont-index">Source: <a href='https://github.com/pneuvial/adjclust/blob/master/R/hicClust.R'><code>R/hicClust.R</code></a></small>
-    <div class="hidden name"><code>hicClust.Rd</code></div>
+    <h1>Plot (dis)similarity matrix</h1>
+    <small class="dont-index">Source: <a href='https://github.com/pneuvial/adjclust/blob/master/R/plotSim.R'><code>R/plotSim.R</code></a></small>
+    <div class="hidden name"><code>plotSim.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Adjacency-constrained hierarchical agglomerative clustering of Hi-C contact
-maps</p>
+    <p>Heatmap of the (dis)similarity matrix</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hicClust</span><span class='op'>(</span><span class='va'>x</span>, h <span class='op'>=</span> <span class='cn'>NULL</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>plotSim</span><span class='op'>(</span>
+  <span class='va'>mat</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"similarity"</span>, <span class='st'>"dissimilarity"</span><span class='op'>)</span>,
+  clustering <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dendro <span class='op'>=</span> <span class='cn'>NULL</span>,
+  palette <span class='op'>=</span> <span class='va'>heat.colors</span>,
+  breaks <span class='op'>=</span> <span class='fl'>10</span>,
+  log <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  h <span class='op'>=</span> <span class='cn'>NULL</span>,
+  stats <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"R.squared"</span>, <span class='st'>"D.prime"</span><span class='op'>)</span>,
+  main <span class='op'>=</span> <span class='cn'>NULL</span>,
+  col.clust <span class='op'>=</span> <span class='st'>"darkblue"</span>,
+  lwd.clust <span class='op'>=</span> <span class='fl'>2</span>,
+  xaxis <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  naxis <span class='op'>=</span> <span class='fl'>10</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>either: 1. A pxp contact sparse or dense matrix (classes matrix,
-Matrix, dscMatrix, dgTMatrix, dgCMatrix, dgeMatrix). Its entries are the 
-number of counts of physical interactions observed between all pairs of loci. 
-2. An object of class HiTC::HTCexp. The corresponding Hi-C data is stored as 
-a Matrix::dsCMatrix object in the intdata slot. 3. A text file path with one 
-line per pair of loci for which an interaction has been observed (in the 
-format: locus1&lt;tab&gt;locus2&lt;tab&gt;signal) or a matrix or data frame with similar
-data (3 columns).</p></td>
+      <th>mat</th>
+      <td><p>matrix to plot. It can be of class <code>'matrix'</code>, 
+<code>'dgCMatrix'</code>, <code>'dsCMatrix'</code>, <code>'dist'</code>, <code>'HTCexp'</code>,
+<code>'snpMatrix'</code>.</p></td>
     </tr>
     <tr>
-      <th>h</th>
-      <td><p>band width. If not provided, <code>h</code> is set to default value `p-1`.</p></td>
+      <th>type</th>
+      <td><p>input matrix type. Can be either <code>"similarity"</code> or 
+<code>"dissimilarity"</code> (kernels are supposed to be of type 
+<code>"similarity"</code>).</p></td>
+    </tr>
+    <tr>
+      <th>clustering</th>
+      <td><p>vector of length the number of rows (columns) of the 
+matrix that contains a contiguity constrained clustering (as provided by
+<code><a href='select.html'>select</a></code> for instance). If supplied the clustering is 
+superimposed over the heatmap.</p></td>
+    </tr>
+    <tr>
+      <th>dendro</th>
+      <td><p><code><a href='chac.html'>chac</a></code> object as provided, e.g., by the function
+<code><a href='adjClust.html'>adjClust</a></code> (or any of the other wrappers).</p></td>
+    </tr>
+    <tr>
+      <th>palette</th>
+      <td><p>color palette. Default to <code><a href='https://rdrr.io/r/grDevices/palettes.html'>heat.colors</a></code></p></td>
+    </tr>
+    <tr>
+      <th>breaks</th>
+      <td><p>number of breaks used to set colors from the palette. Those
+are based on the quantiles of the matrix entries and for skewed distributions
+the actual number used to set the palette can be lower than <code>breaks</code>.</p></td>
     </tr>
     <tr>
       <th>log</th>
-      <td><p>logical. Whether to log-transform the count data. Default to 
-<code>FALSE</code>.</p></td>
+      <td><p>logical. Should the breaks be based on log-scaled values of the
+matrix entries. Default to <code>TRUE</code>.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>further arguments to be passed to <code><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></code> 
-function when <code>x</code> is a text file name. If not provided, the text file 
-is supposed to be separated by tabulations, with no header.</p></td>
+      <th>h</th>
+      <td><p>if <code>mat</code> is of class <code>"snpMatrix"</code>, band parameter used to
+compute the linkage disequilibrium (see <code><a href='https://rdrr.io/pkg/snpStats/man/ld.html'>ld</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>stats</th>
+      <td><p>if <code>mat</code> is of class <code>"snpMatrix"</code>, type of linkage
+disequilibrium measure (see <code><a href='https://rdrr.io/pkg/snpStats/man/ld.html'>ld</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>main</th>
+      <td><p>graphic title.</p></td>
+    </tr>
+    <tr>
+      <th>col.clust</th>
+      <td><p>color for the borders of the clusters (if <code>clustering</code>
+is provided).</p></td>
+    </tr>
+    <tr>
+      <th>lwd.clust</th>
+      <td><p>line width for the borders of the clusters (if 
+<code>clustering</code> is provided).</p></td>
+    </tr>
+    <tr>
+      <th>xaxis</th>
+      <td><p>logical. Should a x-axis be displayed? Default to <code>FALSE</code></p></td>
+    </tr>
+    <tr>
+      <th>naxis</th>
+      <td><p>number of breaks to display on the x-axis. For 
+<code>HTCexp</code> objects, the axis is displayed in terms of Mpb and for the 
+other types of input, it is displayed in terms of bin number. Default to 
+<code>10</code>.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>An object of class <code><a href='chac.html'>chac</a></code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Adjacency-constrained hierarchical agglomerative clustering (HAC) is HAC in
-which each observation is associated to a position, and the clustering is 
-constrained so as only adjacent clusters are merged. Genomic regions (loci)
-are clustered according to information provided by high-throughput
-conformation capture data (Hi-C).</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
-  (2019). <em>Adjacency-constrained hierarchical clustering of a band
-  similarity matrix with application to genomics</em>, Algorithms for Molecular
-  Biology 14(22)"</p>
-<p>Servant N. <em>et al</em> (2012). <em>HiTC : Exploration of 
-  High-Throughput 'C' experiments. Bioinformatics</em>.</p>
+    <p>This function produces a heatmap for the used (dis)similarity matrix that 
+can be used as a diagnostic plot to check the consistency between the 
+obtained clustering and the original (dis)similarity</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='adjClust.html'>adjClust</a></code></p></div>
+    <div class='dont-index'><p><code><a href='select.html'>select</a></code>, <code><a href='adjClust.html'>adjClust</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># input as HiTC::HTCexp object</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='st'>"HiTC"</span>, quietly <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"hic_imr90_40_XX.rda"</span>, package <span class='op'>=</span> <span class='st'>"adjclust"</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='va'>res1</span> <span class='op'>&lt;-</span> <span class='fu'>hicClust</span><span class='op'>(</span><span class='va'>hic_imr90_40_XX</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='op'>}</span>
+  <span class='fu'>plotSim</span><span class='op'>(</span><span class='va'>hic_imr90_40_XX</span><span class='op'>)</span>
+  
+  <span class='co'># with a constrained clustering</span>
+  <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='hicClust.html'>hicClust</a></span><span class='op'>(</span><span class='va'>hic_imr90_40_XX</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='va'>selected.capushe</span> <span class='op'>&lt;-</span> <span class='fu'><a href='select.html'>select</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
+  <span class='fu'>plotSim</span><span class='op'>(</span><span class='va'>hic_imr90_40_XX</span>, clustering <span class='op'>=</span> <span class='va'>selected.capushe</span>, xaxis <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='fu'>plotSim</span><span class='op'>(</span><span class='va'>hic_imr90_40_XX</span>, clustering <span class='op'>=</span> <span class='va'>selected.capushe</span>, dendro <span class='op'>=</span> <span class='va'>res</span><span class='op'>)</span>
+<span class='op'>}</span><span class='op'>}</span>
 
-<span class='co'># input as Matrix::dsCMatrix contact map</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>mat</span> <span class='op'>&lt;-</span> <span class='fu'>HiTC</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/HiTC/man/HTCexp-class.html'>intdata</a></span><span class='op'>(</span><span class='va'>hic_imr90_40_XX</span><span class='op'>)</span> 
-<span class='va'>res2</span> <span class='op'>&lt;-</span> <span class='fu'>hicClust</span><span class='op'>(</span><span class='va'>mat</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-<span class='co'># input as text file</span>
-<span class='va'>res3</span> <span class='op'>&lt;-</span> <span class='fu'>hicClust</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"sample.txt"</span>, package <span class='op'>=</span> <span class='st'>"adjclust"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='input'>
-</div></pre>
+<span class='fu'>plotSim</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>dist</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>[</span> ,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Note: input class is 'dist' so 'type' is supposed to be 'dissimilarity'</span></div><div class='img'><img src='plotSim-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

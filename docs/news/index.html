@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adjclust</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.99</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -111,7 +111,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/pneuvial/adjclust/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -132,9 +132,30 @@
       <small>Source: <a href='https://github.com/pneuvial/adjclust/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="version-0-6-3-2021-07-26" class="section level1">
+<h1 class="page-header" data-toc-text="0.6.3">
+<a href="#version-0-6-3-2021-07-26" class="anchor"></a>Version 0.6.3 [2021-07-26]<small> Unreleased </small>
+</h1>
+<ul>
+<li>Fix issues for CRAN submission: RcppArmadillo moved to LinkingTo, version number</li>
+<li>Cleanup: move res_adjclust_0.3.0.rda from data/ to inst/extdata/</li>
+<li>Cleanup: remove useless data entries from pkgdown index</li>
+<li>Update docs (using pkgdown)</li>
+</ul>
+</div>
+    <div id="version-0-6-2-2021-07-22" class="section level1">
+<h1 class="page-header" data-toc-text="0.6.2">
+<a href="#version-0-6-2-2021-07-22" class="anchor"></a>Version 0.6.2 [2021-07-22]<small> Unreleased </small>
+</h1>
+<ul>
+<li>Increase in speed by code optimization and by using RcppArmadillo (update by Gabriel Hoffman), at least for linux machines (uses OpenMP)</li>
+<li>reduces memory usage (update by Gabriel Hoffman)</li>
+<li>option to disable expensive checking code (strictCheck = TRUE by default, update by Gabriel Hoffman)</li>
+</ul>
+</div>
     <div id="version-0-5-99-2020-06-08" class="section level1">
 <h1 class="page-header" data-toc-text="0.5.99">
-<a href="#version-0-5-99-2020-06-08" class="anchor"></a>Version 0.5.99 [2020-06-08]<small> Unreleased </small>
+<a href="#version-0-5-99-2020-06-08" class="anchor"></a>Version 0.5.99 [2020-06-08]<small> 2020-06-18 </small>
 </h1>
 <ul>
 <li>Updated citation in DESCRIPTION and man files (almob paper) and added a CITATION file.</li>
@@ -177,7 +198,7 @@
 <a href="#version-0-5-6-2018-02-08" class="anchor"></a>Version 0.5.6 [2018-02-08]<small> 2018-02-08 </small>
 </h1>
 <ul>
-<li>changed dependencies to bioconductor packages ‘HiTC’ and ‘snpStats’ into Suggest and conditionnaly used them</li>
+<li>changed dependencies to Bioconductor packages ‘HiTC’ and ‘snpStats’ into Suggest and conditionally used them</li>
 </ul>
 </div>
     <div id="version-0-5-5-2018-01-30" class="section level1">
@@ -211,7 +232,7 @@
 <li>Removed non-standard fields in the output of ‘adjclust’ (<a href='https://github.com/pneuvial/adjclust/issues/13'>#13</a>).</li>
 <li>Added tests for: equivalence with ‘hclust’, comparing sum of heights and pseudo inertia, plots, non-increasing heights, cutree (<a href='https://github.com/pneuvial/adjclust/issues/14'>#14</a>).</li>
 <li>Fixed <a href='https://github.com/pneuvial/adjclust/issues/13'>#13</a> (man).</li>
-<li>Fixed <a href='https://github.com/pneuvial/adjclust/issues/15'>#15</a> (Cutree with decreasing merges).</li>
+<li>Fixed <a href='https://github.com/pneuvial/adjclust/issues/15'>#15</a> (cutree with decreasing merges).</li>
 <li>Fixed <a href='https://github.com/pneuvial/adjclust/issues/3'>#3</a> (Non-positive ‘gains’).</li>
 <li>Using BiocStyle::html_document2 as a temporary fix for vignette compilation errors.</li>
 </ul>
@@ -289,7 +310,7 @@
 <ul>
 <li>Removed ‘adjClustBand’: main entry points are now ‘HeapHop’ and ‘adjClustBand_heap’.</li>
 <li>Updated test scripts and LD vignette accordingly.</li>
-<li>Added Travis CI and Appveyor support.</li>
+<li>Added Travis CI and AppVeyor support.</li>
 </ul>
 </div>
     <div id="version-0-2-" class="section level1">
@@ -351,11 +372,11 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='http://www.math-evry.cnrs.fr/members/cambroise/'>Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href='https://www.math.univ-toulouse.fr/~pneuvial/'>Pierre Neuvial</a>, Guillem Rigaill, <a href='http://www.nathalievialaneix.eu'>Nathalie Vialaneix</a>.</p>
+  <p>Developed by <a href='http://www.math-evry.cnrs.fr/members/cambroise/'>Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href='https://www.math.univ-toulouse.fr/~pneuvial/'>Pierre Neuvial</a>, Guillem Rigaill, <a href='http://www.nathalievialaneix.eu'>Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

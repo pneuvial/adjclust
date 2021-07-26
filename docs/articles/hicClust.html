@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adjclust</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.99</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -71,7 +71,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/pneuvial/adjclust/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Clustering of Hi-C contact maps</h1>
                         <h4 class="author">Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix</h4>
             
-            <h4 class="date">2020-06-15</h4>
+            <h4 class="date">2021-07-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/pneuvial/adjclust/blob/master/vignettes/hicClust.Rmd"><code>vignettes/hicClust.Rmd</code></a></small>
       <div class="hidden name"><code>hicClust.Rmd</code></div>
@@ -100,12 +100,14 @@
 
     
     
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># this vignette is not created if HiTC is not installed</span>
-<span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="st">"HiTC"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)) {
-  <span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">opts_chunk</a></span>$<span class="fu">set</span>(<span class="kw">eval</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-}</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># this vignette is not created if HiTC is not installed</span>
+<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st">"HiTC"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>eval <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<pre><code>## Warning: le package 'BiocGenerics' a été compilé avec la version R 4.0.5</code></pre>
 <pre><code>## 
-## Attaching package: 'BiocGenerics'</code></pre>
+## Attachement du package : 'BiocGenerics'</code></pre>
 <pre><code>## The following objects are masked from 'package:parallel':
 ## 
 ##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
@@ -121,28 +123,33 @@
 ##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
 ##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
 ##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
-##     union, unique, unsplit, which, which.max, which.min</code></pre>
+##     union, unique, unsplit, which.max, which.min</code></pre>
 <pre><code>## 
-## Attaching package: 'S4Vectors'</code></pre>
+## Attachement du package : 'S4Vectors'</code></pre>
 <pre><code>## The following object is masked from 'package:base':
 ## 
 ##     expand.grid</code></pre>
+<pre><code>## Warning: le package 'GenomeInfoDb' a été compilé avec la version R 4.0.5</code></pre>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>Hi-C is a sequencing-based molecular assay designed to measure intra and interchromosomal interactions between the DNA molecule. In particular, the identification of Topologically-Associated Domains (TADs), that is, of regions of the genome in which physical interactions are frequent, provides insight into the three-dimensional organization of a genome [1].</p>
+<p>Hi-C is a sequencing-based molecular assay designed to measure intra and inter-chromosomal interactions between the DNA molecule. In particular, the identification of Topologically-Associated Domains (TADs), that is, of regions of the genome in which physical interactions are frequent, provides insight into the three-dimensional organization of a genome [1].</p>
 <p>Hi-C data are in the form of two-dimensional <em>contact maps</em>, <em>i.e.</em>, matrices whose <span class="math inline">\(i,j\)</span> entry quantifies the intensity of the physical interaction between two genome regions <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> at the DNA level. In this vignette, we demonstrate the use of <code><a href="../reference/hicClust.html">adjclust::hicClust</a></code> to perform adjacency-constrained hierarchical agglomerative clustering (HAC) of Hi-C contact maps. The output of this function is a dendrogram, which can be cut to identify TADs. The algorithm used for adjacency-constrained (HAC) is described in the third chapter of [2].</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"adjclust"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/pneuvial/adjclust">"adjclust"</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div id="loading-and-displaying-a-sample-hi-c-contact-map" class="section level1">
 <h1 class="hasAnchor">
 <a href="#loading-and-displaying-a-sample-hi-c-contact-map" class="anchor"></a>Loading and displaying a sample Hi-C contact map</h1>
 <p>The data set <code>hic_imr90_40_XX</code> is an object of class <code>HTCexp</code> which has been obtained from the <code>HiTC</code> package [3]. It is a contact map corresponding to the first 500 x 500 bins on chromosome X vs chromosome X.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"hic_imr90_40_XX.rda"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"adjclust"</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hic_imr90_40_XX.rda"</span>, package <span class="op">=</span> <span class="st">"adjclust"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>The script used to create this map can be found by executing the following command:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"system/create_hic_chrXchrX.R"</span>, <span class="kw">package</span><span class="kw">=</span><span class="st">"adjclust"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"system/create_hic_chrXchrX.R"</span>, package<span class="op">=</span><span class="st">"adjclust"</span><span class="op">)</span></code></pre></div>
 <p>Now we have a look at the data.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="kw pkg">HiTC</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/mapC.html">mapC</a></span>(<span class="no">hic_imr90_40_XX</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">HiTC</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/mapC.html">mapC</a></span><span class="op">(</span><span class="va">hic_imr90_40_XX</span><span class="op">)</span></code></pre></div>
 <p><img src="hicClust_files/figure-html/mapHiC-1.png" width="700"></p>
 </div>
 <div id="using-hicclust" class="section level1">
@@ -150,27 +157,30 @@
 <a href="#using-hicclust" class="anchor"></a>Using <code>hicClust</code>
 </h1>
 <p><code>hicClust</code> operates directly on objects of class <code>HTCexp</code></p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/hicClust.html">hicClust</a></span>(<span class="no">hic_imr90_40_XX</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hicClust.html">hicClust</a></span><span class="op">(</span><span class="va">hic_imr90_40_XX</span><span class="op">)</span></code></pre></div>
 <pre><code>## Note: 137 merges with non increasing heights.</code></pre>
 <p>It is also possible to work on binned data. Below we choose a bin size of <span class="math inline">\(5 \times 10^5\)</span>:</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">binned</span> <span class="kw">&lt;-</span> <span class="kw pkg">HiTC</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/binningC.html">binningC</a></span>(<span class="no">hic_imr90_40_XX</span>, <span class="kw">binsize</span> <span class="kw">=</span> <span class="fl">1e5</span>)
-<span class="kw pkg">HiTC</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/mapC.html">mapC</a></span>(<span class="no">binned</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">binned</span> <span class="op">&lt;-</span> <span class="fu">HiTC</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/binningC.html">binningC</a></span><span class="op">(</span><span class="va">hic_imr90_40_XX</span>, binsize <span class="op">=</span> <span class="fl">1e5</span><span class="op">)</span>
+<span class="fu">HiTC</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/mapC.html">mapC</a></span><span class="op">(</span><span class="va">binned</span><span class="op">)</span></code></pre></div>
 <p><img src="hicClust_files/figure-html/binning-1.png" width="700"></p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">fitB</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/hicClust.html">hicClust</a></span>(<span class="no">binned</span>)
-<span class="no">fitB</span></pre></body></html></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fitB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hicClust.html">hicClust</a></span><span class="op">(</span><span class="va">binned</span><span class="op">)</span>
+<span class="va">fitB</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## run.adjclust(mat = mat, type = type, h = h)
+## run.adjclust(mat = mat, type = type, h = h, strictCheck = strictCheck)
 ## 
 ## Cluster method   : hicClust 
 ## Number of objects: 205</code></pre>
 <p>The output is of class <code>chac</code>. In particular, it can be plotted as a dendrogram silently relying on the function <code>plot.dendrogram</code>:</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">fitB</span>)</pre></body></html></div>
-<pre><code>## Warning in plot.chac(fitB): 
-## Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.</code></pre>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fitB</span>, mode <span class="op">=</span> <span class="st">"corrected"</span><span class="op">)</span></code></pre></div>
 <p><img src="hicClust_files/figure-html/dendro-1.png" width="700"></p>
 <p>Moreover, the output contains an element named <code>merge</code> which describes the successive merges of the clustering, and an element <code>gains</code> which gives the improvement in the criterion optimized by the clustering at each successive merge.</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">fitB</span>$<span class="no">merge</span>, <span class="no">fitB</span>$<span class="no">gains</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">fitB</span><span class="op">$</span><span class="va">merge</span>, <span class="va">fitB</span><span class="op">$</span><span class="va">gains</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##      [,1] [,2]
 ## [1,]   -3   -4
 ## [2,]   -2    1
@@ -194,8 +204,9 @@
 <div id="session-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-information" class="anchor"></a>Session information</h1>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
-<pre><code>## R version 4.0.0 alpha (2020-04-05 r78150)
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## R version 4.0.3 (2020-10-10)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
 ## Running under: macOS Mojave 10.14.6
 ## 
@@ -204,41 +215,45 @@
 ## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] en_US.UTF-8/fr_FR.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] fr_FR.UTF-8/fr_FR.UTF-8/fr_FR.UTF-8/C/fr_FR.UTF-8/fr_FR.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
 ## [8] methods   base     
 ## 
 ## other attached packages:
-## [1] adjclust_0.5.99      HiTC_1.32.0          GenomicRanges_1.40.0
-## [4] GenomeInfoDb_1.24.0  IRanges_2.22.2       S4Vectors_0.26.1    
-## [7] BiocGenerics_0.34.0 
+## [1] adjclust_0.6.3       HiTC_1.34.0          GenomicRanges_1.42.0
+## [4] GenomeInfoDb_1.26.7  IRanges_2.24.1       S4Vectors_0.28.1    
+## [7] BiocGenerics_0.36.1 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.4                  compiler_4.0.0             
-##  [3] RColorBrewer_1.1-2          XVector_0.28.0             
-##  [5] bitops_1.0-6                tools_4.0.0                
-##  [7] zlibbioc_1.34.0             digest_0.6.25              
-##  [9] evaluate_0.14               memoise_1.1.0              
-## [11] lattice_0.20-41             rlang_0.4.5                
-## [13] Matrix_1.2-18               DelayedArray_0.14.0        
-## [15] rstudioapi_0.11             yaml_2.2.1                 
-## [17] pkgdown_1.5.1               xfun_0.12                  
-## [19] GenomeInfoDbData_1.2.3      rtracklayer_1.47.0         
-## [21] stringr_1.4.0               knitr_1.28                 
-## [23] desc_1.2.0                  Biostrings_2.56.0          
-## [25] fs_1.3.2                    rprojroot_1.3-2            
-## [27] grid_4.0.0                  Biobase_2.48.0             
-## [29] R6_2.4.1                    BiocParallel_1.22.0        
-## [31] XML_3.99-0.3                rmarkdown_2.1              
-## [33] magrittr_1.5                matrixStats_0.56.0         
-## [35] GenomicAlignments_1.24.0    Rsamtools_2.4.0            
-## [37] backports_1.1.5             htmltools_0.4.0            
-## [39] MASS_7.3-51.5               SummarizedExperiment_1.18.1
-## [41] assertthat_0.2.1            capushe_1.1.1              
-## [43] stringi_1.4.6               RCurl_1.98-1.2             
-## [45] crayon_1.3.4</code></pre>
+##  [1] SummarizedExperiment_1.20.0 capushe_1.1.1              
+##  [3] xfun_0.24                   bslib_0.2.5.1              
+##  [5] lattice_0.20-44             htmltools_0.5.1.1          
+##  [7] rtracklayer_1.50.0          yaml_2.2.1                 
+##  [9] XML_3.99-0.6                rlang_0.4.11               
+## [11] pkgdown_1.6.1               jquerylib_0.1.4            
+## [13] BiocParallel_1.24.1         RColorBrewer_1.1-2         
+## [15] matrixStats_0.59.0          GenomeInfoDbData_1.2.4     
+## [17] stringr_1.4.0               zlibbioc_1.36.0            
+## [19] MatrixGenerics_1.2.1        Biostrings_2.58.0          
+## [21] ragg_1.1.3                  memoise_2.0.0              
+## [23] evaluate_0.14               Biobase_2.50.0             
+## [25] knitr_1.33                  fastmap_1.1.0              
+## [27] highr_0.9                   Rcpp_1.0.7                 
+## [29] cachem_1.0.5                DelayedArray_0.16.3        
+## [31] desc_1.3.0                  jsonlite_1.7.2             
+## [33] XVector_0.30.0              systemfonts_1.0.2          
+## [35] fs_1.5.0                    Rsamtools_2.6.0            
+## [37] textshaping_0.3.5           digest_0.6.27              
+## [39] stringi_1.7.3               rprojroot_2.0.2            
+## [41] grid_4.0.3                  tools_4.0.3                
+## [43] bitops_1.0-7                magrittr_2.0.1             
+## [45] sass_0.4.0                  RCurl_1.98-1.3             
+## [47] crayon_1.4.1                MASS_7.3-54                
+## [49] Matrix_1.3-4                sparseMatrixStats_1.2.1    
+## [51] rmarkdown_2.9               R6_2.5.0                   
+## [53] GenomicAlignments_1.26.0    compiler_4.0.3</code></pre>
 </div>
   </div>
 
@@ -253,11 +268,11 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu">Nathalie Vialaneix</a>.</p>
+  <p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu">Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -73,7 +73,7 @@ Nucleotide Polymorphisms based on Linkage Disequilibrium" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adjclust</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.99</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ Nucleotide Polymorphisms based on Linkage Disequilibrium" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -113,7 +113,7 @@ Nucleotide Polymorphisms based on Linkage Disequilibrium" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/pneuvial/adjclust/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,7 +140,7 @@ Nucleotide Polymorphisms based on Linkage Disequilibrium" />
 Nucleotide Polymorphisms based on Linkage Disequilibrium</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snpClust</span>(<span class='no'>x</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>x</span>) - <span class='fl'>1</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"R.squared"</span>, <span class='st'>"D.prime"</span>))</pre>
+    <pre class="usage"><span class='fu'>snpClust</span><span class='op'>(</span><span class='va'>x</span>, h <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>, stats <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"R.squared"</span>, <span class='st'>"D.prime"</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -209,19 +209,20 @@ missing values are returned.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## a very small example</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span>(<span class='st'>"snpStats"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) {
-  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>testdata</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"snpStats"</span>)
+<span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span><span class='op'>(</span><span class='st'>"snpStats"</span>, quietly <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>testdata</span>, package <span class='op'>=</span> <span class='st'>"snpStats"</span><span class='op'>)</span>
 
   <span class='co'># input as snpStats::SnpMatrix</span>
-  <span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
+  <span class='va'>fit1</span> <span class='op'>&lt;-</span> <span class='fu'>snpClust</span><span class='op'>(</span><span class='va'>Autosomes</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>200</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span>, h <span class='op'>=</span> <span class='fl'>3</span>, stats <span class='op'>=</span> <span class='st'>"R.squared"</span><span class='op'>)</span>
 
   <span class='co'># input as base::matrix</span>
-  <span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>]), <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>)
+  <span class='va'>fit2</span> <span class='op'>&lt;-</span> <span class='fu'>snpClust</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>Autosomes</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>200</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span><span class='op'>)</span>, h <span class='op'>=</span> <span class='fl'>3</span>, stats <span class='op'>=</span> <span class='st'>"R.squared"</span><span class='op'>)</span>
 
   <span class='co'># input as Matrix::dgCMatrix</span>
-  <span class='no'>ldres</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>snpStats</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/snpStats/man/ld.html'>ld</a></span>(<span class='no'>Autosomes</span>[<span class='fl'>1</span>:<span class='fl'>200</span>, <span class='fl'>1</span>:<span class='fl'>5</span>], <span class='kw'>depth</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"R.squared"</span>, <span class='kw'>symmetric</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>snpClust</span>(<span class='no'>ldres</span>, <span class='fl'>3</span>)
-}</div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='output co'>#&gt; <span class='message'>Note: forcing the diagonal of the LD similarity matrix to be 1</span></div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='input'>
+  <span class='va'>ldres</span> <span class='op'>&lt;-</span> <span class='fu'>snpStats</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/snpStats/man/ld.html'>ld</a></span><span class='op'>(</span><span class='va'>Autosomes</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>200</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span>, depth <span class='op'>=</span> <span class='fl'>3</span>, stats <span class='op'>=</span> <span class='st'>"R.squared"</span>, symmetric <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='va'>fit3</span> <span class='op'>&lt;-</span> <span class='fu'>snpClust</span><span class='op'>(</span><span class='va'>ldres</span>, <span class='fl'>3</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='output co'>#&gt; <span class='message'>Note: forcing the diagonal of the LD similarity matrix to be 1</span></div><div class='output co'>#&gt; <span class='message'>Note: 1 merges with non increasing heights.</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -234,11 +235,11 @@ missing values are returned.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='http://www.math-evry.cnrs.fr/members/cambroise/'>Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href='https://www.math.univ-toulouse.fr/~pneuvial/'>Pierre Neuvial</a>, Guillem Rigaill, <a href='http://www.nathalievialaneix.eu'>Nathalie Vialaneix</a>.</p>
+  <p>Developed by <a href='http://www.math-evry.cnrs.fr/members/cambroise/'>Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href='https://www.math.univ-toulouse.fr/~pneuvial/'>Pierre Neuvial</a>, Guillem Rigaill, <a href='http://www.nathalievialaneix.eu'>Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

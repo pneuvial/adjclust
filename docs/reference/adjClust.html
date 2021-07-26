@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adjclust</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.99</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -112,7 +112,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/pneuvial/adjclust/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,7 +138,12 @@
     <p>Adjacency-constrained hierarchical agglomerative clustering</p>
     </div>
 
-    <pre class="usage"><span class='fu'>adjClust</span>(<span class='no'>mat</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"similarity"</span>, <span class='st'>"dissimilarity"</span>), <span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>mat</span>) - <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>adjClust</span><span class='op'>(</span>
+  <span class='va'>mat</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"similarity"</span>, <span class='st'>"dissimilarity"</span><span class='op'>)</span>,
+  h <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>mat</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,
+  strictCheck <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,6 +163,12 @@
       <td><p>band width. It is assumed that the similarity between two items is 0
 when these items are at a distance of more than band width h. Default value
 is <code>ncol(mat)-1</code></p></td>
+    </tr>
+    <tr>
+      <th>strictCheck</th>
+      <td><p>Logical (default to <code>TRUE</code>) to systematically check 
+default of positivity in input similarities. Can be disabled to avoid 
+computationally expensive checks when the number of features is large.</p></td>
     </tr>
     </table>
 
@@ -199,27 +210,31 @@ implementation in adjclust".</p>
 <p><code><a href='hicClust.html'>hicClust</a></code> to cluster Hi-C data</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>sim</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(
-<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1.0</span>, <span class='fl'>0.1</span>, <span class='fl'>0.2</span>, <span class='fl'>0.3</span>,
+    <pre class="examples"><div class='input'><span class='va'>sim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span>
+<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1.0</span>, <span class='fl'>0.1</span>, <span class='fl'>0.2</span>, <span class='fl'>0.3</span>,
   <span class='fl'>0.1</span>, <span class='fl'>1.0</span> ,<span class='fl'>0.4</span> ,<span class='fl'>0.5</span>,
   <span class='fl'>0.2</span>, <span class='fl'>0.4</span>, <span class='fl'>1.0</span>, <span class='fl'>0.6</span>,
-  <span class='fl'>0.3</span>, <span class='fl'>0.5</span>, <span class='fl'>0.6</span>, <span class='fl'>1.0</span>), <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>4</span>)
+  <span class='fl'>0.3</span>, <span class='fl'>0.5</span>, <span class='fl'>0.6</span>, <span class='fl'>1.0</span><span class='op'>)</span>, nrow <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>
 
 <span class='co'>## similarity, full width</span>
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>sim</span>, <span class='st'>"similarity"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit1</span>)</div><div class='img'><img src='adjClust-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>fit1</span> <span class='op'>&lt;-</span> <span class='fu'>adjClust</span><span class='op'>(</span><span class='va'>sim</span>, <span class='st'>"similarity"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fit1</span><span class='op'>)</span>
+</div><div class='img'><img src='adjClust-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## similarity, h &lt; p-1</span>
-<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>sim</span>, <span class='st'>"similarity"</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit2</span>)</div><div class='img'><img src='adjClust-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>fit2</span> <span class='op'>&lt;-</span> <span class='fu'>adjClust</span><span class='op'>(</span><span class='va'>sim</span>, <span class='st'>"similarity"</span>, h <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fit2</span><span class='op'>)</span>
+</div><div class='img'><img src='adjClust-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## dissimilarity</span>
-<span class='no'>dist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>as.dist</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='fl'>2</span>-(<span class='fl'>2</span>*<span class='no'>sim</span>)))
+<span class='va'>dist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>as.dist</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>-</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>*</span><span class='va'>sim</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## dissimilarity, full width</span>
-<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>dist</span>, <span class='st'>"dissimilarity"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit3</span>)</div><div class='img'><img src='adjClust-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>fit3</span> <span class='op'>&lt;-</span> <span class='fu'>adjClust</span><span class='op'>(</span><span class='va'>dist</span>, <span class='st'>"dissimilarity"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fit3</span><span class='op'>)</span>
+</div><div class='img'><img src='adjClust-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## dissimilarity, h &lt; p-1</span>
-<span class='no'>fit4</span> <span class='kw'>&lt;-</span> <span class='fu'>adjClust</span>(<span class='no'>dist</span>, <span class='st'>"dissimilarity"</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit4</span>)</div><div class='img'><img src='adjClust-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>fit4</span> <span class='op'>&lt;-</span> <span class='fu'>adjClust</span><span class='op'>(</span><span class='va'>dist</span>, <span class='st'>"dissimilarity"</span>, h <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fit4</span><span class='op'>)</span>
+</div><div class='img'><img src='adjClust-4.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -232,11 +247,11 @@ implementation in adjclust".</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='http://www.math-evry.cnrs.fr/members/cambroise/'>Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href='https://www.math.univ-toulouse.fr/~pneuvial/'>Pierre Neuvial</a>, Guillem Rigaill, <a href='http://www.nathalievialaneix.eu'>Nathalie Vialaneix</a>.</p>
+  <p>Developed by <a href='http://www.math-evry.cnrs.fr/members/cambroise/'>Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href='https://www.math.univ-toulouse.fr/~pneuvial/'>Pierre Neuvial</a>, Guillem Rigaill, <a href='http://www.nathalievialaneix.eu'>Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

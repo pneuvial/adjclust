@@ -1,6 +1,9 @@
 # Version 0.6.3 [2021-07-26]
 
 * Fix issues for CRAN submission: RcppArmadillo moved to LinkingTo, version number
+* Cleanup: move res_adjclust_0.3.0.rda from data/ to inst/extdata/
+* Cleanup: remove useless data entries from pkgdown index, and add missing ones
+* Update docs (using pkgdown)
 
 # Version 0.6.2 [2021-07-22]
 

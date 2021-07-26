@@ -9,13 +9,11 @@ reference:
   - title: "Methods for class 'chac'"
     contents:
       - chac
-  - title: "Data objects"
+  - title: "Other functions"
     contents:
-      - hic_imr90_40_XX
-      - res_adjclust_0.3.0
-    exclude: 
-      - prevfit
-      
+      - plotSim
+      - select
+
 authors:
   Christophe Ambroise:
     href: http://www.math-evry.cnrs.fr/members/cambroise/
