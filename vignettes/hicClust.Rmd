@@ -21,7 +21,7 @@ if (!require("HiTC", quietly = TRUE)) {
 # Introduction
 
 Hi-C is a sequencing-based molecular assay designed to measure intra and 
-interchromosomal interactions between the DNA molecule.  In particular, the 
+inter-chromosomal interactions between the DNA molecule.  In particular, the 
 identification of Topologically-Associated Domains (TADs), that is, of regions 
 of the genome in which physical interactions are frequent, provides insight 
 into the three-dimensional organization of a genome [1]. 
@@ -82,7 +82,7 @@ The output is of class `chac`. In particular, it can be plotted as a dendrogram
 silently relying on the function `plot.dendrogram`:
 
 ```{r dendro}
-plot(fitB)
+plot(fitB, mode = "corrected")
 ```
 
 Moreover, the output contains an element named `merge` which describes the 

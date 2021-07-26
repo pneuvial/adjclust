@@ -2,6 +2,8 @@
 # adjclust: Adjacency-constrained clustering
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/adjclust)](https://cran.r-project.org/package=adjclust)
+[![R build
+status](https://github.com/pneuvial/adjclust/workflows/R-CMD-check/badge.svg)](https://github.com/pneuvial/adjclust/actions)
 [![Travis Build
 Status](https://travis-ci.org/pneuvial/adjclust.svg?branch=develop)](https://travis-ci.org/pneuvial/adjclust)
 [![AppVeyor Build
@@ -50,7 +52,7 @@ plot(fit)
 
 ![](man/figures/README-adjClust-1.png)<!-- -->
 
-The result is of class `chac`. It can be plotted as a dendogram (as
+The result is of class `chac`. It can be plotted as a dendrogram (as
 shown above). Successive merge and heights of clustering can be obtained
 by `fit$merge` and `fit$height` respectively.
 
@@ -76,9 +78,9 @@ image(ld.ceph, lwd = 0)
 ``` r
 
 fit <- snpClust(geno, stats = "R.squared", h = h)
-#> Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity
-#> to be smaller than or equal to 1
-#> Note: 132 merges with non increasing heights.
+#> Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to
+#> be smaller than or equal to 1
+#> Note: 133 merges with non increasing heights.
 plot(fit)
 #> Warning in plot.chac(fit): 
 #> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
@@ -97,11 +99,12 @@ plotSim(as.matrix(ld.ceph), clustering = sel_clust, dendro = fit)
 
 `hicClust` performs adjacency-constrained HAC for specific application
 of Hi-C data analysis. A minimal example is given below. See [Hi-C
-Vignette](vignettes/hicClust.Rmd) for
-details.
+Vignette](vignettes/hicClust.Rmd) for details.
 
 ``` r
 library("HiTC")
+#> Warning: package 'BiocGenerics' was built under R version 4.0.5
+#> Warning: package 'GenomeInfoDb' was built under R version 4.0.5
 ```
 
 ``` r

@@ -37,11 +37,10 @@ library("adjclust")
 
 # Loading and displaying genotype data
 
-The begining of this vignette closely follows the "LD vignette" of the SnpStats 
+The beginning of this vignette closely follows the "LD vignette" of the SnpStats 
 package [1]. First, we load genotype data.
 
 ```{r loadData, results="hide", message=FALSE}
-library("matrixStats")
 data("ld.example", package = "snpStats")
 ```
 

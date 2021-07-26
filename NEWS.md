@@ -1,3 +1,18 @@
+# Version 0.6.3 [2021-07-26]
+
+* Fix issues for CRAN submission: RcppArmadillo moved to LinkingTo, version number
+* Cleanup: move res_adjclust_0.3.0.rda from data/ to inst/extdata/
+* Cleanup: remove useless data entries from pkgdown index, and add missing ones
+* Update docs (using pkgdown)
+* Move site to dedicated branch (release with `pkgdown::deploy_to_branch()`)
+* Add inst/CITATION and add Randriamihamison et al 2020
+
+# Version 0.6.2 [2021-07-22]
+
+* Increase in speed by code optimization and by using RcppArmadillo (update by Gabriel Hoffman), at least for linux machines (uses OpenMP)
+* reduces memory usage (update by Gabriel Hoffman)
+* option to disable expensive checking code (strictCheck = TRUE by default, update by Gabriel Hoffman)
+
 # Version 0.5.99 [2020-06-08]
 
 * Updated citation in DESCRIPTION and man files (almob paper) and added a CITATION file.
@@ -31,8 +46,8 @@ clustering
 
 # Version 0.5.6 [2018-02-08]
 
-* changed dependencies to bioconductor packages 'HiTC' and 'snpStats' into 
-Suggest and conditionnaly used them
+* changed dependencies to Bioconductor packages 'HiTC' and 'snpStats' into 
+Suggest and conditionally used them
 
 # Version 0.5.5 [2018-01-30]
 
@@ -60,7 +75,7 @@ choices for the height.
 * Added tests for: equivalence with 'hclust',  comparing sum of heights and 
    pseudo inertia, plots, non-increasing heights, cutree (#14).
 * Fixed #13 (man).
-* Fixed #15 (Cutree with decreasing merges).
+* Fixed #15 (cutree with decreasing merges).
 * Fixed #3 (Non-positive 'gains').
 * Using BiocStyle::html_document2 as a temporary fix for vignette 
   compilation errors.
@@ -114,7 +129,7 @@ choices for the height.
 
 * Removed 'adjClustBand': main entry points are now 'HeapHop' and 'adjClustBand_heap'.
 * Updated test scripts and LD vignette accordingly.
-* Added Travis CI and Appveyor support.
+* Added Travis CI and AppVeyor support.
 
 # Version 0.2.*
 

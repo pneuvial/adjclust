@@ -25,9 +25,9 @@
 #' @param log logical. Should the breaks be based on log-scaled values of the
 #' matrix entries. Default to \code{TRUE}.
 #' @param h if \code{mat} is of class \code{"snpMatrix"}, band parameter used to
-#' compute the linkage desiquilibrium (see \code{\link[snpStats]{ld}}).
+#' compute the linkage disequilibrium (see \code{\link[snpStats]{ld}}).
 #' @param stats if \code{mat} is of class \code{"snpMatrix"}, type of linkage
-#' desiquilibrium measure (see \code{\link[snpStats]{ld}}).
+#' disequilibrium measure (see \code{\link[snpStats]{ld}}).
 #' @param main graphic title.
 #' @param col.clust color for the borders of the clusters (if \code{clustering}
 #' is provided).
@@ -80,6 +80,7 @@ extract_values.default <- function(mat) {
   all_coords <- all_coords[all_coords[ ,1] <= all_coords[ ,2], ]
   x <- all_coords[ ,1] + all_coords[ ,2]
   y <- (all_coords[ ,2] - all_coords[ ,1]) + 1
+
   values <- mat[upper.tri(mat, diag = TRUE)]
   
   return(list("p" = p, "x" = x, "y" = y, "values" = values))

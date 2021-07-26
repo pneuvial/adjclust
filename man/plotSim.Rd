@@ -48,10 +48,10 @@ the actual number used to set the palette can be lower than \code{breaks}.}
 matrix entries. Default to \code{TRUE}.}
 
 \item{h}{if \code{mat} is of class \code{"snpMatrix"}, band parameter used to
-compute the linkage desiquilibrium (see \code{\link[snpStats]{ld}}).}
+compute the linkage disequilibrium (see \code{\link[snpStats]{ld}}).}
 
 \item{stats}{if \code{mat} is of class \code{"snpMatrix"}, type of linkage
-desiquilibrium measure (see \code{\link[snpStats]{ld}}).}
+disequilibrium measure (see \code{\link[snpStats]{ld}}).}
 
 \item{main}{graphic title.}
 

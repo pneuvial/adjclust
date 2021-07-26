@@ -55,7 +55,7 @@ table(select.clust)
 
 }
 \references{
-Baudy, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 
+Baudry, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 
 overview and implementation. \emph{Statistics and Computing}, \strong{22}(2),
 355-470.
 MacArthur, R.H. (1957) On the relative abundance of bird species. 

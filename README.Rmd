@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # adjclust: Adjacency-constrained clustering
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/adjclust)](https://cran.r-project.org/package=adjclust)
+[![R build status](https://github.com/pneuvial/adjclust/workflows/R-CMD-check/badge.svg)](https://github.com/pneuvial/adjclust/actions)
 [![Travis Build Status](https://travis-ci.org/pneuvial/adjclust.svg?branch=develop)](https://travis-ci.org/pneuvial/adjclust)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=develop&svg=true)](https://ci.appveyor.com/project/pneuvial/adjclust)
 [![Coverage Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg)](https://codecov.io/github/pneuvial/adjclust/branch/develop)
@@ -50,7 +51,7 @@ fit <- adjClust(sim, "similarity", h)
 plot(fit)
 ```
 
-The result is of class `chac`. It can be plotted as a dendogram (as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
+The result is of class `chac`. It can be plotted as a dendrogram (as shown above). Successive merge and heights of clustering can be obtained by `fit$merge` and `fit$height` respectively.
 
 ## `snpClust` 
 

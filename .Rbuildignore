@@ -12,4 +12,8 @@ tests/testthat/Rplots.pdf
 ^_pkgdown\.yml$
 ^notes.*\.md$
 ^doc$
+^local$
 ^Meta$
+^\.github$
+^issues$
+^CRAN-RELEASE$

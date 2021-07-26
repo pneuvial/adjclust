@@ -1,0 +1,62 @@
+citHeader("To cite package 'adjclust' in publications, please use:")
+
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
+vers <- paste("R package version", meta$Version)
+
+citEntry(entry="Manual",
+         title = "adjclust: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix",
+         author = personList(as.person("Christophe Ambroise"),
+                            as.person("Shubham Chaturvedi"),
+                            as.person("Alia Dehman"),
+                            as.person("Pierre Neuvial"),
+                            as.person("Guillem Rigaill"),
+                            as.person("Nathalie Vialaneix")),
+         year = year,
+         note = vers,
+	 url =  "https://CRAN.R-project.org/package=adjclust",
+
+         textVersion =
+         paste("Christophe Ambroise, Alia Dehman, Pierre Neuvial, Guillem Rigaill, and Nathalie Vialaneix (",
+               year,
+               "). adjclust: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix.",
+               vers, ". https://CRAN.R-project.org/package=adjclust.", sep=""))
+
+
+citEntry(entry = "Article",
+  title        = "Adjacency-constrained hierarchical clustering of a band similarity matrix with application to genomics",
+  author       = personList(as.person("Christophe Ambroise"),
+                   as.person("Alia Dehman"),
+                   as.person("Pierre Neuvial"),
+                   as.person("Guillem Rigaill"),
+                   as.person("Nathalie Vialaneix")),
+  journal      = "Algorithms for Molecular Biology",
+  year         = "2019",
+  volume       = "14",
+  number       = "22",
+  url          = "https://almob.biomedcentral.com/articles/10.1186/s13015-019-0157-4",
+
+  textVersion  =
+  paste("Christophe Ambroise, Alia Dehman, Pierre Neuvial, Guillem Rigaill, and Nathalie Vialaneix.",
+        "Adjacency-constrained hierarchical clustering of a band similarity matrix with application to genomics.",
+        "Algorithms for Molecular Biology (2019) 14:22.",
+        "URL https://almob.biomedcentral.com/articles/10.1186/s13015-019-0157-4")
+)
+
+citEntry(entry = "Article",
+  title        = "Applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints",
+  author       = personList(as.person("Nathanaël Randriamihamison"),
+                   as.person("Nathalie Vialaneix"),
+                   as.person("Pierre Neuvial")),
+  journal      = "Journal of Classification",
+  year         = "2020",
+  volume       = "38",
+  issue        = "2",
+  pages        = "363–389",
+  url          = "https://link.springer.com/article/10.1007/s00357-020-09377-y",
+
+  textVersion  =
+  paste("Nathanaël Randriamihamison, Nathalie Vialaneix and Pierre Neuvial.",
+        "Applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints.",
+        "Journal of Classification (2020) 38, 363-389.",
+        "URL https://link.springer.com/article/10.1007/s00357-020-09377-y")
+)

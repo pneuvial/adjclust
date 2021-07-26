@@ -248,17 +248,17 @@ correct.chac <- function(x) {
     to_add <- data.frame(res_diagnose$number,
                          add = res_diagnose$pheight - res_diagnose$height)
     to_add$add <- 1.0001 * to_add$add
-    to_add <- apply(to_add, 1, function(acol) {
-      c(rep(0, acol[1] - 1), rep(acol[2], length(x$height) - acol[1] + 1))
-    })
-    to_add <- rowSums(to_add)
-    x$height <- x$height + to_add
+
+    value <- rep(0, length(x$height))
+    value[to_add[, 1]] <- to_add[,2]
+    x$height <- x$height + cumsum(value)
     
     x$method <- "adjClust-corrected"
-    return(x) } else {
-      warning("No reversal. Returned nothing.")
-      invisible(NULL)
-    }
+    return(x) 
+  } else {
+    warning("No reversal. Returned nothing.")
+    invisible(NULL)
+  }
 }
 
 #' @rdname chac
@@ -310,7 +310,7 @@ cutree_chac <- function(tree, k = NULL, h = NULL) {
 #' @importFrom capushe DDSE
 #' @importFrom capushe Djump
 #' @importFrom graphics lines
-#' @references Baudy, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 
+#' @references Baudry, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 
 #' overview and implementation. \emph{Statistics and Computing}, \strong{22}(2),
 #' 355-470.
 #' MacArthur, R.H. (1957) On the relative abundance of bird species. 
