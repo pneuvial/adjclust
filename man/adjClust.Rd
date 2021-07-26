@@ -22,8 +22,8 @@ adjClust(
 when these items are at a distance of more than band width h. Default value
 is \code{ncol(mat)-1}}
 
-\item{strictCheck}{Logical (default to \code{TRUE}) to systematically check 
-default of positivity in input similarities. Can be disabled to avoid 
+\item{strictCheck}{Logical (default to \code{TRUE}) to systematically check
+default of positivity in input similarities. Can be disabled to avoid
 computationally expensive checks when the number of features is large.}
 }
 \value{
@@ -88,6 +88,11 @@ Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
   (2019). \emph{Adjacency-constrained hierarchical clustering of a band
   similarity matrix with application to genomics}, Algorithms for Molecular
   Biology 14(22)"
+
+Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020).
+\emph{Applicability and interpretability of Ward’s hierarchical agglomerative
+clustering with or without contiguity constraints}, Journal of Classification
+38, 1-27."
 }
 \seealso{
 \code{\link{snpClust}} to cluster SNPs based on linkage
