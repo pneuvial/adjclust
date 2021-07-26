@@ -25,9 +25,9 @@ NULL
 #' @param h band width. It is assumed that the similarity between two items is 0
 #'   when these items are at a distance of more than band width h. Default value
 #'   is \code{ncol(mat)-1}
-#' @param strictCheck Logical (default to \code{TRUE}) to systematically check 
-#' default of positivity in input similarities. Can be disabled to avoid 
-#' computationally expensive checks when the number of features is large.
+#' @param strictCheck Logical (default to \code{TRUE}) to systematically check
+#'   default of positivity in input similarities. Can be disabled to avoid
+#'   computationally expensive checks when the number of features is large.
 #'
 #' @return An object of class \code{\link{chac}} which describes the tree
 #'   produced by the clustering process. The object a list with the same
@@ -49,6 +49,12 @@ NULL
 #'   (2019). \emph{Adjacency-constrained hierarchical clustering of a band
 #'   similarity matrix with application to genomics}, Algorithms for Molecular
 #'   Biology 14(22)"
+#'
+#' @references Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020).
+#' \emph{Applicability and interpretability of Ward’s hierarchical agglomerative
+#' clustering with or without contiguity constraints}, Journal of Classification
+#' 38, 1-27."
+#'
 #'
 #' @examples
 #' sim <- matrix(

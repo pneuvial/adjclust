@@ -272,7 +272,7 @@ Recognition* (SoCPaR 2015).
 clustering method: which algorithms implement Ward's criterion? *Journal of
 Classification*, **31**, 274-295.
 
-[5] Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020). Applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints. Journal of Classification, 1-27.
+[5] Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020). Applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints. *Journal of Classification* **38**, 1-27.
 
 [6] Ward, J.H. (1963) Hierarchical grouping to optimize an objective function.
 *Journal of the American Statistical Association*, **58**(301), 236-244.
