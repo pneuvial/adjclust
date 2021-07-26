@@ -89,7 +89,7 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Implementation notes for the <code>adjclust</code> package</h1>
-                        <h4 class="author">Pierre Neuvial, Nathalie Villa-Vialaneix</h4>
+                        <h4 class="author">Pierre Neuvial, Nathanaël Randriamihamison, Nathalie Vialaneix</h4>
             
             <h4 class="date">2021-07-26</h4>
       
@@ -105,7 +105,8 @@
 <li><p>the first part aims at clarifying relations between dissimilarity and similarity methods for hierarchical agglomerative clustering (HAC) and at explaining implementation choices in <code>adjclust</code>;</p></li>
 <li><p>the second part describes the different types of dendrograms that are implemented in <code>plot.chac</code>.</p></li>
 </ul>
-<p>In this document, we suppose given <span class="math inline">\(n\)</span> objects, <span class="math inline">\(\{1, \ldots, n\}\)</span> that have to be clustered using adjacency-constrained HAC (CHAC), that is, in such a way that only adjacent objects/clusters can be merged.</p>
+<p>In this document, we assume to be given <span class="math inline">\(n\)</span> objects, <span class="math inline">\(\{1, \ldots, n\}\)</span> that have to be clustered using adjacency-constrained HAC (CHAC), that is, in such a way that only adjacent objects/clusters can be merged.</p>
+<p>We refer to [5] for a comprehensive treatment of the applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints.</p>
 <div id="notes-on-relations-between-similarity-and-dissimilarity-implementation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#notes-on-relations-between-similarity-and-dissimilarity-implementation" class="anchor"></a>Notes on relations between similarity and dissimilarity implementation</h1>
@@ -180,7 +181,7 @@
 <a href="#options-for-displaying-the-dendrogram" class="anchor"></a>Options for displaying the dendrogram</h1>
 <p>In this section, we suppose given an Euclidean distance <span class="math inline">\(d\)</span> between objects (even though the results described in this section are not specific to this case, they are described more easily using this framework). Ward’s criterion, that is implemented in <code>adjclust</code> aims at minimizing the Error Sum of Squares (ESS) which is equal to: <span class="math display">\[
   \mbox{ESS}(\mathcal{C}) = \sum_{C \in \mathcal{C}} \sum_{i \in C} d^2(i, g_C)
-\]</span> where <span class="math inline">\(\mathcal{C}\)</span> is the clustering and <span class="math inline">\(g_C = \frac{1}{\mu_C} \sum_{i \in C} i\)</span> is the center of gravity of the cluster <span class="math inline">\(C\)</span> with <span class="math inline">\(\mu_C\)</span> elements [5]. In the sequel, we will denote:</p>
+\]</span> where <span class="math inline">\(\mathcal{C}\)</span> is the clustering and <span class="math inline">\(g_C = \frac{1}{\mu_C} \sum_{i \in C} i\)</span> is the center of gravity of the cluster <span class="math inline">\(C\)</span> with <span class="math inline">\(\mu_C\)</span> elements [6]. In the sequel, we will denote:</p>
 <ul>
 <li><p><em>within-cluster dispersion</em> which, for a given cluster <span class="math inline">\(C\)</span>, is equal to <span class="math display">\[
 I(C) = \sum_{i \in C} d^2(i, g_C).
@@ -234,7 +235,8 @@ I(C) = \sum_{i \in C} d^2(i, g_C).
 <p>[2] Grimm, E.C. (1987) CONISS: a fortran 77 program for stratigraphically constrained cluster analysis by the method of incremental sum of squares. <em>Computers &amp; Geosciences</em>, <strong>13</strong>(1), 13-35.</p>
 <p>[3] Miyamoto S., Abe R., Endo Y., Takeshita J. (2015) Ward method of hierarchical clustering for non-Euclidean similarity measures. In: <em>Proceedings of the VIIth International Conference of Soft Computing and Pattern Recognition</em> (SoCPaR 2015).</p>
 <p>[4] Murtagh, F. and Legendre, P. (2014) Ward’s hierarchical agglomerative clustering method: which algorithms implement Ward’s criterion? <em>Journal of Classification</em>, <strong>31</strong>, 274-295.</p>
-<p>[5] Ward, J.H. (1963) Hierarchical grouping to optimize an objective function. <em>Journal of the American Statistical Association</em>, <strong>58</strong>(301), 236-244.</p>
+<p>[5] Randriamihamison, N., Vialaneix, N., &amp; Neuvial, P. (2020). Applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints. <em>Journal of Classification</em> <strong>38</strong>, 1-27.</p>
+<p>[6] Ward, J.H. (1963) Hierarchical grouping to optimize an objective function. <em>Journal of the American Statistical Association</em>, <strong>58</strong>(301), 236-244.</p>
 </div>
   </div>
 
