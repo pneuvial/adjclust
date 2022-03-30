@@ -1,6 +1,8 @@
-# Version 0.6.3.9000 [2021-07-27]
+# Version 0.6.4 [2022-03-30]
 
 * Update URL in DESCRIPTION
+* Fixed bug in tests due to recent upgrade of Matrix
+* Slightly improved vignettes and references here and there
 
 # Version 0.6.3 [2021-07-26]
 

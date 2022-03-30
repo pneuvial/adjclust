@@ -87,12 +87,12 @@ Dehman A. (2015) \emph{Spatial Clustering of Linkage
 Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
   (2019). \emph{Adjacency-constrained hierarchical clustering of a band
   similarity matrix with application to genomics}, Algorithms for Molecular
-  Biology 14(22)"
+  Biology 14(22).
 
 Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020).
 \emph{Applicability and interpretability of Ward’s hierarchical agglomerative
 clustering with or without contiguity constraints}, Journal of Classification
-38, 1-27."
+38, 1-27.
 }
 \seealso{
 \code{\link{snpClust}} to cluster SNPs based on linkage
