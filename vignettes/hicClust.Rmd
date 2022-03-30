@@ -1,6 +1,6 @@
 ---
 title: "Clustering of Hi-C contact maps"
-author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix"
+author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Vialaneix"
 date: "`r Sys.Date()`"
 output: 
   html_document:
@@ -12,7 +12,7 @@ vignette: >
 ---
 
 ```{r skipNoHITC}
-# this vignette is not created if HiTC is not installed
+# IMPORTANT: this vignette can not be created if HiTC is not installed
 if (!require("HiTC", quietly = TRUE)) {
   knitr::opts_chunk$set(eval = FALSE)
 }
@@ -24,7 +24,7 @@ Hi-C is a sequencing-based molecular assay designed to measure intra and
 inter-chromosomal interactions between the DNA molecule.  In particular, the 
 identification of Topologically-Associated Domains (TADs), that is, of regions 
 of the genome in which physical interactions are frequent, provides insight 
-into the three-dimensional organization of a genome [1]. 
+into the three-dimensional organization of a genome [2]. 
 
 Hi-C data are in the form of two-dimensional *contact maps*, *i.e.*, matrices 
 whose $i,j$ entry quantifies the intensity of the physical interaction between 
@@ -32,16 +32,17 @@ two genome regions $i$ and $j$ at the DNA level. In this vignette, we
 demonstrate the use of `adjclust::hicClust` to perform adjacency-constrained 
 hierarchical agglomerative clustering (HAC) of Hi-C contact maps. The output of 
 this function is a dendrogram, which can be cut to identify TADs. The algorithm 
-used for adjacency-constrained (HAC) is described in the third chapter of [2].
+used for adjacency-constrained (HAC) is described in [3,4].
 
-```{r loadLib, message = FALSE}
+```{r loadLib, message=FALSE}
 library("adjclust")
 ```
 
 # Loading and displaying a sample Hi-C contact map
 
 The data set `hic_imr90_40_XX` is an object of class `HTCexp` which has been 
-obtained from the `HiTC` package [3]. It is a contact map corresponding to the first 500 x 500 bins on chromosome X vs chromosome X. 
+obtained from the `HiTC` package [4]. It is a contact map corresponding to the 
+first 500 x 500 bins on chromosome X vs chromosome X. 
 
 
 ```{r loadData}
@@ -50,7 +51,7 @@ load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
 
 The script used to create this map can be found by executing the following command:
 
-```{r create-data-script, eval=FALSE}
+```{r create-data-script}
 system.file("system/create_hic_chrXchrX.R", package="adjclust")
 ```
 
@@ -64,7 +65,7 @@ HiTC::mapC(hic_imr90_40_XX)
 
 `hicClust` operates directly on objects of class `HTCexp`
 
-```{r hicClust-HTCexp}
+```{r hicClust-HTCexp, message=FALSE}
 fit <- hicClust(hic_imr90_40_XX)
 ```
 
@@ -73,9 +74,12 @@ $5 \times 10^5$:
 
 ```{r binning, message=FALSE}
 binned <- HiTC::binningC(hic_imr90_40_XX, binsize = 1e5)
-HiTC::mapC(binned)
 fitB <- hicClust(binned)
 fitB
+```
+
+```{r plotBinned, message=FALSE}
+HiTC::mapC(binned)
 ```
 
 The output is of class `chac`. In particular, it can be plotted as a dendrogram
@@ -102,14 +106,18 @@ plain text files. These types of input are also accepted as first argument to
 
 # References
 
-[1] Dixon J.R., *et al* (2012). Topological domains in mammalian genomes 
+[1] Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N. (2019). 
+Adjacency-constrained hierarchical clustering of a band similarity matrix with 
+application to genomics. *Algorithms for Molecular Biology*, **14**, 22.
+
+[2] Dixon J.R., *et al* (2012). Topological domains in mammalian genomes 
 identified by analysis of chromatin interactions. *Nature*, **485**(7398), 376.
 
-[2] Dehman A. (2015). 
-[Spatial clustering of linkage disequilibrium blocks for genome-wide association studies](https://tel.archives-ouvertes.fr/tel-01288568/). 
-Phd Thesis, Université Paris Saclay.
+[3] Randriamihamison N., Vialaneix N., and Neuvial P. (2021). Applicability and
+interpretability of Ward's hierarchical agglomerative clustering with or without
+contiguity constraints. *Journal of Classification*, **38**, 363–389.
 
-[3] Servant N., *et al* (2012). HiTC: Exploration of High-Throughput 'C' 
+[4] Servant N., *et al* (2012). HiTC: Exploration of High-Throughput 'C' 
 experiments. *Bioinformatics*, **28**(21), 2843-2844.
 
 # Session information

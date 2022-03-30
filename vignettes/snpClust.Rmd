@@ -1,6 +1,6 @@
 ---
 title: "Inferring Linkage Disequilibrium blocks from genotypes"
-author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix"
+author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Vialaneix"
 date: "`r Sys.Date()`"
 output: 
   html_document:
@@ -12,7 +12,7 @@ vignette: >
 ---
 
 ```{r skipNoSNPSTATS}
-# this vignette is not created if snpStats is not installed
+# IMPORTANT: this vignette is not created if snpStats is not installed
 if (!require("snpStats")) {
   knitr::opts_chunk$set(eval = FALSE)
 }
@@ -25,11 +25,11 @@ package. `snpClust` performs adjacency-constrained hierarchical clustering of
 single nucleotide polymorphisms (SNPs), where the similarity between SNPs is 
 defined by linkage disequilibrium (LD).
 
-This function implements the algorithm described in the third chapter of [2]. It
-is an extension of the algorithm described in [3]. Denoting by $p$ the number of
-SNPs to cluster and assuming that the similarity between SNPs whose indices are 
-more distant than $h$, its time complexity is $O(p (\log(p) + h))$, and its 
-space complexity is $O(hp)$.
+This function implements the algorithm described in [1]. It is an extension of
+the algorithm described in [3,4]. Denoting by $p$ the number of SNPs to cluster
+and assuming that the similarity between SNPs whose indices are more distant
+than $h$, its time complexity is $O(p (\log(p) + h))$, and its space complexity
+is $O(hp)$.
 
 ```{r loadLib, message=FALSE}
 library("adjclust")
@@ -38,7 +38,7 @@ library("adjclust")
 # Loading and displaying genotype data
 
 The beginning of this vignette closely follows the "LD vignette" of the SnpStats 
-package [1]. First, we load genotype data.
+package [2]. First, we load genotype data.
 
 ```{r loadData, results="hide", message=FALSE}
 data("ld.example", package = "snpStats")
@@ -131,16 +131,20 @@ fitM <- snpClust(geno, h, stats = "R.squared")
 
 # References
 
-[1] Clayton D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods.
-R package version 1.20.0
+[1] Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N. (2019). 
+Adjacency-constrained hierarchical clustering of a band similarity matrix with 
+application to genomics. *Algorithms for Molecular Biology*, **14**, 22.
 
-[2] Dehman A. (2015). 
-[Spatial clustering of linkage disequilibrium blocks for genome-wide association studies](https://tel.archives-ouvertes.fr/tel-01288568/). 
-Phd Thesis, Université Paris Saclay.
+[2] Clayton D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods.
+R package version 1.20.0
 
 [3] Dehman A., Ambroise C., Neuvial P. (2015). Performance of a blockwise 
 approach in variable selection using linkage disequilibrium information. *BMC 
 Bioinformatics*, **16**, 148.
+
+[4] Randriamihamison N., Vialaneix N., and Neuvial P. (2021). Applicability and
+interpretability of Ward's hierarchical agglomerative clustering with or without
+contiguity constraints. *Journal of Classification*, **38**, 363–389.
 
 # Session information
 
