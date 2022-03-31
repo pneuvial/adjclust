@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,18 +40,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">adjclust</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -77,7 +73,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/pneuvial/adjclust/">
+  <a href="https://github.com/pneuvial/adjclust/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -94,52 +90,52 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="adjclust-adjacency-constrained-clustering" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#adjclust-adjacency-constrained-clustering" class="anchor"></a>adjclust: Adjacency-constrained clustering</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="adjclust-adjacency-constrained-clustering">adjclust: Adjacency-constrained clustering<a class="anchor" aria-label="anchor" href="#adjclust-adjacency-constrained-clustering"></a>
+</h1></div>
 
 <p><code>adjclust</code> is a package that provides methods to perform adjacency-constrained hierarchical agglomerative clustering. Adjacency-constrained hierarchical agglomerative clustering is hierarchical agglomerative clustering (HAC) in which each observation is associated to a position, and the clustering is constrained so as only adjacent clusters are merged. It is useful in bioinformatics (e.g. Genome Wide Association Studies or Hi-C data analysis).</p>
 <p><code>adjclust</code> provides three user level functions: <code>adjClust</code>, <code>snpClust</code> and <code>hicClust</code>, which are briefly explained below.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>You can install adjclust from github with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"pneuvial/adjclust"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"pneuvial/adjclust"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="adjclust" class="section level2">
-<h2 class="hasAnchor">
-<a href="#adjclust" class="anchor"></a><code>adjClust</code>
+<div class="section level2">
+<h2 id="adjclust">
+<code>adjClust</code><a class="anchor" aria-label="anchor" href="#adjclust"></a>
 </h2>
 <p><code>adjClust</code> performs adjacency-constrained HAC for standard and sparse, similarity and dissimilarity matrices and <code>dist</code> objects. <code>Matrix::dgCMatrix</code> and <code>Matrix::dsCMatrix</code> are the supported sparse matrix classes. Let’s look at a basic example</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/pneuvial/adjclust">"adjclust"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://pneuvial.github.io/adjclust/">"adjclust"</a></span><span class="op">)</span>
 
-<span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>,
+<span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>,
                 <span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>,
                 <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">1.0</span>, <span class="fl">0.6</span>,
                 <span class="fl">0.1</span>, <span class="fl">0.2</span> ,<span class="fl">0.6</span> ,<span class="fl">1.0</span><span class="op">)</span>, nrow<span class="op">=</span><span class="fl">4</span><span class="op">)</span>
 <span class="va">h</span> <span class="op">&lt;-</span> <span class="fl">3</span>
 <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/adjClust.html">adjClust</a></span><span class="op">(</span><span class="va">sim</span>, <span class="st">"similarity"</span>, <span class="va">h</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-adjClust-1.png"><!-- --></p>
 <p>The result is of class <code>chac</code>. It can be plotted as a dendrogram (as shown above). Successive merge and heights of clustering can be obtained by <code>fit$merge</code> and <code>fit$height</code> respectively.</p>
 </div>
-<div id="snpclust" class="section level2">
-<h2 class="hasAnchor">
-<a href="#snpclust" class="anchor"></a><code>snpClust</code>
+<div class="section level2">
+<h2 id="snpclust">
+<code>snpClust</code><a class="anchor" aria-label="anchor" href="#snpclust"></a>
 </h2>
 <p><code>snpClust</code> performs adjacency-constrained HAC for specific application of Genome Wide Association Studies (GWAS). A minimal example is given below. See <a href="vignettes/snpClust.Rmd">GWAS Vignette</a> for details.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"snpStats"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"snpStats"</span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: survival</span>
 <span class="co">#&gt; Loading required package: Matrix</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"ld.example"</span>, package <span class="op">=</span> <span class="st">"snpStats"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ld.example"</span>, package <span class="op">=</span> <span class="st">"snpStats"</span><span class="op">)</span>
 <span class="va">geno</span> <span class="op">&lt;-</span> <span class="va">ceph.1mb</span><span class="op">[</span>, <span class="op">-</span><span class="fl">316</span><span class="op">]</span>  <span class="co">## drop one SNP leading to one missing LD value</span>
 <span class="va">h</span> <span class="op">&lt;-</span> <span class="fl">100</span>
-<span class="va">ld.ceph</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/snpStats/man/ld.html">ld</a></span><span class="op">(</span><span class="va">geno</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span>, depth <span class="op">=</span> <span class="va">h</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">ld.ceph</span>, lwd <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<span class="va">ld.ceph</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/snpStats/man/ld.html" class="external-link">ld</a></span><span class="op">(</span><span class="va">geno</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span>, depth <span class="op">=</span> <span class="va">h</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">ld.ceph</span>, lwd <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-snpClust-1.png"><!-- --></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -147,112 +143,116 @@
 <span class="co">#&gt; Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to</span>
 <span class="co">#&gt; be smaller than or equal to 1</span>
 <span class="co">#&gt; Note: 133 merges with non increasing heights.</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; Warning in plot.chac(fit): </span>
 <span class="co">#&gt; Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.</span></code></pre></div>
 <p><img src="reference/figures/README-snpClust-2.png"><!-- --></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sel_clust</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/select.html">select</a></span><span class="op">(</span><span class="va">fit</span>, <span class="st">"bs"</span><span class="op">)</span>
-<span class="fu"><a href="reference/plotSim.html">plotSim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">ld.ceph</span><span class="op">)</span>, clustering <span class="op">=</span> <span class="va">sel_clust</span>, dendro <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="reference/plotSim.html">plotSim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">ld.ceph</span><span class="op">)</span>, clustering <span class="op">=</span> <span class="va">sel_clust</span>, dendro <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-snpClust-3.png"><!-- --></p>
 </div>
-<div id="hicclust" class="section level2">
-<h2 class="hasAnchor">
-<a href="#hicclust" class="anchor"></a><code>hicClust</code>
+<div class="section level2">
+<h2 id="hicclust">
+<code>hicClust</code><a class="anchor" aria-label="anchor" href="#hicclust"></a>
 </h2>
 <p><code>hicClust</code> performs adjacency-constrained HAC for specific application of Hi-C data analysis. A minimal example is given below. See <a href="vignettes/hicClust.Rmd">Hi-C Vignette</a> for details.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"HiTC"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"HiTC"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: package 'BiocGenerics' was built under R version 4.0.5</span>
 <span class="co">#&gt; Warning: package 'GenomeInfoDb' was built under R version 4.0.5</span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hic_imr90_40_XX.rda"</span>, package <span class="op">=</span> <span class="st">"adjclust"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">binned</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/binningC.html">binningC</a></span><span class="op">(</span><span class="va">hic_imr90_40_XX</span>, binsize <span class="op">=</span> <span class="fl">5e5</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hic_imr90_40_XX.rda"</span>, package <span class="op">=</span> <span class="st">"adjclust"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">binned</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/binningC.html" class="external-link">binningC</a></span><span class="op">(</span><span class="va">hic_imr90_40_XX</span>, binsize <span class="op">=</span> <span class="fl">5e5</span><span class="op">)</span>
 <span class="co">#&gt; Bin size 'xgi' =500488 [1x500488]</span>
 <span class="co">#&gt; Bin size 'ygi' =500488 [1x500488]</span>
-<span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/mapC.html">mapC</a></span><span class="op">(</span><span class="va">binned</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/mapC.html" class="external-link">mapC</a></span><span class="op">(</span><span class="va">binned</span><span class="op">)</span>
 <span class="co">#&gt; minrange= 104  - maxrange= 36776.8</span></code></pre></div>
 <p><img src="reference/figures/README-hicClust-1.png"><!-- --></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">fitB</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hicClust.html">hicClust</a></span><span class="op">(</span><span class="va">binned</span><span class="op">)</span>
 <span class="co">#&gt; Note: 5 merges with non increasing heights.</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fitB</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fitB</span><span class="op">)</span>
 <span class="co">#&gt; Warning in plot.chac(fitB): </span>
 <span class="co">#&gt; Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.</span></code></pre></div>
 <p><img src="reference/figures/README-hicClust-2.png"><!-- --></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/plotSim.html">plotSim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/HTCexp-class.html">intdata</a></span><span class="op">(</span><span class="va">binned</span><span class="op">)</span>, dendro <span class="op">=</span> <span class="va">fitB</span><span class="op">)</span> <span class="co"># default: log scale for colors</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="reference/plotSim.html">plotSim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/HiTC/man/HTCexp-class.html" class="external-link">intdata</a></span><span class="op">(</span><span class="va">binned</span><span class="op">)</span>, dendro <span class="op">=</span> <span class="va">fitB</span><span class="op">)</span> <span class="co"># default: log scale for colors</span></code></pre></div>
 <p><img src="reference/figures/README-hicClust-3.png"><!-- --></p>
 </div>
-<div id="credits" class="section level2">
-<h2 class="hasAnchor">
-<a href="#credits" class="anchor"></a>Credits</h2>
-<p>Version 0.4.0 of this package was completed by Shubham Chaturvedi as a part of the <a href="https://summerofcode.withgoogle.com/projects/#4961904920363008">Google Summer of Code 2017</a> program.</p>
+<div class="section level2">
+<h2 id="credits">Credits<a class="anchor" aria-label="anchor" href="#credits"></a>
+</h2>
+<p>Version 0.4.0 of this package was completed by Shubham Chaturvedi as a part of the <a href="https://summerofcode.withgoogle.com/projects/#4961904920363008" class="external-link">Google Summer of Code 2017</a> program.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=adjclust">https://​cloud.r-project.org/​package=adjclust</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/pneuvial/adjclust/">https://​github.com/​pneuvial/​adjclust/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/pneuvial/adjclust/issues">https://​github.com/​pneuvial/​adjclust/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=adjclust" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/pneuvial/adjclust/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/pneuvial/adjclust/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
+
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing adjclust</a></li>
+<li><a href="authors.html#citation">Citing adjclust</a></li>
 </ul>
 </div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="http://www.math-evry.cnrs.fr/members/cambroise/">Christophe Ambroise</a> <br><small class="roles"> Author </small>  </li>
+<a href="http://www.math-evry.cnrs.fr/members/cambroise/" class="external-link">Christophe Ambroise</a> <br><small class="roles"> Author </small>  </li>
 <li>Shubham Chaturvedi <br><small class="roles"> Author </small>  </li>
 <li>Alia Dehman <br><small class="roles"> Author </small>  </li>
 <li>
-<a href="https://www.math.univ-toulouse.fr/~pneuvial/">Pierre Neuvial</a> <br><small class="roles"> Author, maintainer </small>  </li>
+<a href="https://www.math.univ-toulouse.fr/~pneuvial/" class="external-link">Pierre Neuvial</a> <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Guillem Rigaill <br><small class="roles"> Author </small>  </li>
 <li>
-<a href="http://www.nathalievialaneix.eu">Nathalie Vialaneix</a> <br><small class="roles"> Author </small>  </li>
+<a href="http://www.nathalievialaneix.eu" class="external-link">Nathalie Vialaneix</a> <br><small class="roles"> Author </small>  </li>
 <li>Gabriel Hoffman <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=adjclust"><img src="http://www.r-pkg.org/badges/version/adjclust" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://github.com/pneuvial/adjclust/actions"><img src="https://github.com/pneuvial/adjclust/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://travis-ci.org/pneuvial/adjclust"><img src="https://travis-ci.org/pneuvial/adjclust.svg?branch=develop" alt="Travis Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/pneuvial/adjclust"><img src="https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=develop&amp;svg=true" alt="AppVeyor Build Status"></a></li>
-<li><a href="https://codecov.io/github/pneuvial/adjclust/branch/develop"><img src="https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg" alt="Coverage Status"></a></li>
+<li><a href="https://cran.r-project.org/package=adjclust" class="external-link"><img src="http://www.r-pkg.org/badges/version/adjclust" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://github.com/pneuvial/adjclust/actions" class="external-link"><img src="https://github.com/pneuvial/adjclust/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://travis-ci.org/pneuvial/adjclust" class="external-link"><img src="https://travis-ci.org/pneuvial/adjclust.svg?branch=develop" alt="Travis Build Status"></a></li>
+<li><a href="https://ci.appveyor.com/project/pneuvial/adjclust" class="external-link"><img src="https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=develop&amp;svg=true" alt="AppVeyor Build Status"></a></li>
+<li><a href="https://codecov.io/github/pneuvial/adjclust/branch/develop" class="external-link"><img src="https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg" alt="Coverage Status"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu">Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
+  <p></p>
+<p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/" class="external-link">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/" class="external-link">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu" class="external-link">Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -260,6 +260,8 @@
 
   
 
+
+  
 
   </body>
 </html>

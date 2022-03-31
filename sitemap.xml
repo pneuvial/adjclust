@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://pneuvial.github.io/adjclust/404.html</loc>
+  </url>
+  <url>
+    <loc>https://pneuvial.github.io/adjclust/articles/hicClust.html</loc>
+  </url>
+  <url>
+    <loc>https://pneuvial.github.io/adjclust/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://pneuvial.github.io/adjclust/articles/notesCHAC.html</loc>
+  </url>
+  <url>
+    <loc>https://pneuvial.github.io/adjclust/articles/snpClust.html</loc>
+  </url>
+  <url>
+    <loc>https://pneuvial.github.io/adjclust/authors.html</loc>
+  </url>
+  <url>
     <loc>https://pneuvial.github.io/adjclust/index.html</loc>
+  </url>
+  <url>
+    <loc>https://pneuvial.github.io/adjclust/news/index.html</loc>
   </url>
   <url>
     <loc>https://pneuvial.github.io/adjclust/reference/adjClust.html</loc>
@@ -13,6 +34,9 @@
     <loc>https://pneuvial.github.io/adjclust/reference/hicClust.html</loc>
   </url>
   <url>
+    <loc>https://pneuvial.github.io/adjclust/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://pneuvial.github.io/adjclust/reference/plotSim.html</loc>
   </url>
   <url>
@@ -20,14 +44,5 @@
   </url>
   <url>
     <loc>https://pneuvial.github.io/adjclust/reference/snpClust.html</loc>
-  </url>
-  <url>
-    <loc>https://pneuvial.github.io/adjclust/articles/hicClust.html</loc>
-  </url>
-  <url>
-    <loc>https://pneuvial.github.io/adjclust/articles/notesCHAC.html</loc>
-  </url>
-  <url>
-    <loc>https://pneuvial.github.io/adjclust/articles/snpClust.html</loc>
   </url>
 </urlset>

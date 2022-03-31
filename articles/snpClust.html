@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adjclust</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -70,7 +66,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/pneuvial/adjclust/">
+  <a href="https://github.com/pneuvial/adjclust/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -89,11 +85,11 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Inferring Linkage Disequilibrium blocks from genotypes</h1>
-                        <h4 class="author">Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix</h4>
+                        <h4 data-toc-skip class="author">Shubham Chaturvedi, Pierre Neuvial, Nathalie Vialaneix</h4>
             
-            <h4 class="date">2021-07-26</h4>
+            <h4 data-toc-skip class="date">2022-03-31</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/pneuvial/adjclust/blob/master/vignettes/snpClust.Rmd"><code>vignettes/snpClust.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/pneuvial/adjclust/blob/HEAD/vignettes/snpClust.Rmd" class="external-link"><code>vignettes/snpClust.Rmd</code></a></small>
       <div class="hidden name"><code>snpClust.Rmd</code></div>
 
     </div>
@@ -101,159 +97,165 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># this vignette is not created if snpStats is not installed</span>
-<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st">"snpStats"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>eval <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># IMPORTANT: this vignette is not created if snpStats is not installed</span>
+<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st">"snpStats"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>eval <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<pre><code>## Le chargement a nécessité le package : snpStats</code></pre>
-<pre><code>## Le chargement a nécessité le package : survival</code></pre>
-<pre><code>## Le chargement a nécessité le package : Matrix</code></pre>
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
+<pre><code><span class="co">## Loading required package: snpStats</span></code></pre>
+<pre><code><span class="co">## Loading required package: survival</span></code></pre>
+<pre><code><span class="co">## Loading required package: Matrix</span></code></pre>
+<div class="section level1">
+<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h1>
 <p>In this vignette we demonstrate the use of <code>snpClust</code> function in the <code>adjclust</code> package. <code>snpClust</code> performs adjacency-constrained hierarchical clustering of single nucleotide polymorphisms (SNPs), where the similarity between SNPs is defined by linkage disequilibrium (LD).</p>
-<p>This function implements the algorithm described in the third chapter of [2]. It is an extension of the algorithm described in [3]. Denoting by <span class="math inline">\(p\)</span> the number of SNPs to cluster and assuming that the similarity between SNPs whose indices are more distant than <span class="math inline">\(h\)</span>, its time complexity is <span class="math inline">\(O(p (\log(p) + h))\)</span>, and its space complexity is <span class="math inline">\(O(hp)\)</span>.</p>
+<p>This function implements the algorithm described in [1]. It is an extension of the algorithm described in [3,4]. Denoting by <span class="math inline">\(p\)</span> the number of SNPs to cluster and assuming that the similarity between SNPs whose indices are more distant than <span class="math inline">\(h\)</span>, its time complexity is <span class="math inline">\(O(p (\log(p) + h))\)</span>, and its space complexity is <span class="math inline">\(O(hp)\)</span>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/pneuvial/adjclust">"adjclust"</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://pneuvial.github.io/adjclust/">"adjclust"</a></span><span class="op">)</span></code></pre></div>
 </div>
-<div id="loading-and-displaying-genotype-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#loading-and-displaying-genotype-data" class="anchor"></a>Loading and displaying genotype data</h1>
-<p>The beginning of this vignette closely follows the “LD vignette” of the SnpStats package [1]. First, we load genotype data.</p>
+<div class="section level1">
+<h1 id="loading-and-displaying-genotype-data">Loading and displaying genotype data<a class="anchor" aria-label="anchor" href="#loading-and-displaying-genotype-data"></a>
+</h1>
+<p>The beginning of this vignette closely follows the “LD vignette” of the SnpStats package [2]. First, we load genotype data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"ld.example"</span>, package <span class="op">=</span> <span class="st">"snpStats"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ld.example"</span>, package <span class="op">=</span> <span class="st">"snpStats"</span><span class="op">)</span></code></pre></div>
 <p>We focus on the <code>ceph.1mb</code> data.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">geno</span> <span class="op">&lt;-</span> <span class="va">ceph.1mb</span><span class="op">[</span>, <span class="op">-</span><span class="fl">316</span><span class="op">]</span>  <span class="co">## drop one SNP leading to one missing LD value</span>
-<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">geno</span><span class="op">)</span>
-<span class="va">nSamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">geno</span><span class="op">)</span>
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">geno</span><span class="op">)</span>
+<span class="va">nSamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">geno</span><span class="op">)</span>
 <span class="va">geno</span></code></pre></div>
-<pre><code>## A SnpMatrix with  90 rows and  602 columns
-## Row names:  NA06985 ... NA12892 
-## Col names:  rs5993821 ... rs5747302</code></pre>
+<pre><code><span class="co">## A SnpMatrix with  90 rows and  602 columns</span>
+<span class="co">## Row names:  NA06985 ... NA12892 </span>
+<span class="co">## Col names:  rs5993821 ... rs5747302</span></code></pre>
 <p>These data are drawn from the International HapMap Project and concern 602 SNPs<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> over a 1Mb region of chromosome 22 in sample of 90 Europeans.</p>
 <p>We can compute and display the LD between these SNPs.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ld.ceph</span> <span class="op">&lt;-</span> <span class="fu">snpStats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/snpStats/man/ld.html">ld</a></span><span class="op">(</span><span class="va">geno</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span>, depth <span class="op">=</span> <span class="va">p</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">ld.ceph</span>, lwd <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">ld.ceph</span> <span class="op">&lt;-</span> <span class="fu">snpStats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/snpStats/man/ld.html" class="external-link">ld</a></span><span class="op">(</span><span class="va">geno</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span>, depth <span class="op">=</span> <span class="va">p</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">ld.ceph</span>, lwd <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="snpClust_files/figure-html/LD-1.png" width="700"></p>
 </div>
-<div id="adjacency-constrained-hierarchical-agglomerative-clustering" class="section level1">
-<h1 class="hasAnchor">
-<a href="#adjacency-constrained-hierarchical-agglomerative-clustering" class="anchor"></a>Adjacency-constrained Hierarchical Agglomerative Clustering</h1>
+<div class="section level1">
+<h1 id="adjacency-constrained-hierarchical-agglomerative-clustering">Adjacency-constrained Hierarchical Agglomerative Clustering<a class="anchor" aria-label="anchor" href="#adjacency-constrained-hierarchical-agglomerative-clustering"></a>
+</h1>
 <p>The <code>snpClust</code> function can handle genotype data as an input:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snpClust.html">snpClust</a></span><span class="op">(</span><span class="va">geno</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to
-## be smaller than or equal to 1</code></pre>
-<pre><code>## Note: 135 merges with non increasing heights.</code></pre>
+<pre><code><span class="co">## Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to</span>
+<span class="co">## be smaller than or equal to 1</span></code></pre>
+<pre><code><span class="co">## Note: 135 merges with non increasing heights.</span></code></pre>
 <p>Note that due to numerical errors in the LD estimation, some of the estimated LD values may be slightly larger than 1. These values are rounded to 1 internally.</p>
 <p>The above figure suggests that the LD signal is concentrated close to the diagonal. We can focus on a diagonal band with the bandwidth parameter <code>h</code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fitH</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snpClust.html">snpClust</a></span><span class="op">(</span><span class="va">geno</span>, h <span class="op">=</span> <span class="fl">100</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to
-## be smaller than or equal to 1</code></pre>
-<pre><code>## Note: 133 merges with non increasing heights.</code></pre>
+<pre><code><span class="co">## Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to</span>
+<span class="co">## be smaller than or equal to 1</span></code></pre>
+<pre><code><span class="co">## Note: 133 merges with non increasing heights.</span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fitH</span></code></pre></div>
-<pre><code>## 
-## Call:
-## run.adjclust(mat = mat, type = type, h = h, strictCheck = strictCheck)
-## 
-## Cluster method   : snpClust 
-## Number of objects: 602</code></pre>
+<pre><code><span class="co">## </span>
+<span class="co">## Call:</span>
+<span class="co">## run.adjclust(mat = mat, type = type, h = h, strictCheck = strictCheck)</span>
+<span class="co">## </span>
+<span class="co">## Cluster method   : snpClust </span>
+<span class="co">## Number of objects: 602</span></code></pre>
 </div>
-<div id="output" class="section level1">
-<h1 class="hasAnchor">
-<a href="#output" class="anchor"></a>Output</h1>
+<div class="section level1">
+<h1 id="output">Output<a class="anchor" aria-label="anchor" href="#output"></a>
+</h1>
 <p>The output of the <code>snpClust</code> is of class <code>chac</code>. In particular, it can be plotted as a dendrogram silently relying on the function <code>plot.dendrogram</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fitH</span>, type <span class="op">=</span> <span class="st">"rectangle"</span>, leaflab <span class="op">=</span> <span class="st">"perpendicular"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in plot.chac(fitH, type = "rectangle", leaflab = "perpendicular"): 
-## Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fitH</span>, type <span class="op">=</span> <span class="st">"rectangle"</span>, leaflab <span class="op">=</span> <span class="st">"perpendicular"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Warning in plot.chac(fitH, type = "rectangle", leaflab = "perpendicular"): </span>
+<span class="co">## Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.</span></code></pre>
 <p><img src="snpClust_files/figure-html/dendro-1.png" width="700"></p>
 <p>Moreover, the output contains an element named <code>merge</code> which describes the successive merges of the clustering, and an element <code>gains</code> which gives the improvement in the criterion optimized by the clustering at each successive merge.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">fitH</span><span class="op">$</span><span class="va">merge</span>, <span class="va">fitH</span><span class="op">$</span><span class="va">gains</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>##      [,1] [,2]
-## [1,]   -1   -2
-## [2,] -255 -256
-## [3,] -488 -489
-## [4,] -487    3
-## [5,] -486    4
-## [6,] -234 -235</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">fitH</span><span class="op">$</span><span class="va">merge</span>, <span class="va">fitH</span><span class="op">$</span><span class="va">gains</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##      [,1] [,2]</span>
+<span class="co">## [1,]   -1   -2</span>
+<span class="co">## [2,] -255 -256</span>
+<span class="co">## [3,] -488 -489</span>
+<span class="co">## [4,] -487    3</span>
+<span class="co">## [5,] -486    4</span>
+<span class="co">## [6,] -234 -235</span></code></pre>
 </div>
-<div id="other-types-of-input" class="section level1">
-<h1 class="hasAnchor">
-<a href="#other-types-of-input" class="anchor"></a>Other types of input</h1>
+<div class="section level1">
+<h1 id="other-types-of-input">Other types of input<a class="anchor" aria-label="anchor" href="#other-types-of-input"></a>
+</h1>
 <p>In this section we show how the <code>snpClust</code> function can also be applied directly to LD values.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">h</span> <span class="op">&lt;-</span> <span class="fl">100</span>
-<span class="va">ld.ceph</span> <span class="op">&lt;-</span> <span class="fu">snpStats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/snpStats/man/ld.html">ld</a></span><span class="op">(</span><span class="va">geno</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span>, depth <span class="op">=</span> <span class="va">h</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">ld.ceph</span>, lwd <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<span class="va">ld.ceph</span> <span class="op">&lt;-</span> <span class="fu">snpStats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/snpStats/man/ld.html" class="external-link">ld</a></span><span class="op">(</span><span class="va">geno</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span>, depth <span class="op">=</span> <span class="va">h</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">ld.ceph</span>, lwd <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="snpClust_files/figure-html/snpClust-LD-1.png" width="700"></p>
-<p>Note that we have forced the <code><a href="https://rdrr.io/pkg/snpStats/man/ld.html">snpStats::ld</a></code> function to return a symmetric matrix. We can apply <code>snpClust</code> directly to this LD matrix (of class <code>Matrix::dsCMatrix</code>):</p>
+<p>Note that we have forced the <code><a href="https://rdrr.io/pkg/snpStats/man/ld.html" class="external-link">snpStats::ld</a></code> function to return a symmetric matrix. We can apply <code>snpClust</code> directly to this LD matrix (of class <code>Matrix::dsCMatrix</code>):</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fitL</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snpClust.html">snpClust</a></span><span class="op">(</span><span class="va">ld.ceph</span>, <span class="va">h</span><span class="op">)</span></code></pre></div>
-<pre><code>## Note: forcing the diagonal of the LD similarity matrix to be 1</code></pre>
-<pre><code>## Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to
-## be smaller than or equal to 1</code></pre>
-<pre><code>## Note: 133 merges with non increasing heights.</code></pre>
-<p><code>snpClust</code> also handles inputs of class <code><a href="https://rdrr.io/r/base/matrix.html">base::matrix</a></code>:</p>
+<pre><code><span class="co">## Note: forcing the diagonal of the LD similarity matrix to be 1</span></code></pre>
+<pre><code><span class="co">## Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to</span>
+<span class="co">## be smaller than or equal to 1</span></code></pre>
+<pre><code><span class="co">## Note: 133 merges with non increasing heights.</span></code></pre>
+<p><code>snpClust</code> also handles inputs of class <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">base::matrix</a></code>:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gmat</span> <span class="op">&lt;-</span> <span class="fu">as</span><span class="op">(</span><span class="va">geno</span>, <span class="st">"matrix"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">gmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/methods/as.html" class="external-link">as</a></span><span class="op">(</span><span class="va">geno</span>, <span class="st">"matrix"</span><span class="op">)</span>
 <span class="va">fitM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snpClust.html">snpClust</a></span><span class="op">(</span><span class="va">geno</span>, <span class="va">h</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Note: 133 merges with non increasing heights.</code></pre>
+<pre><code><span class="co">## Note: 133 merges with non increasing heights.</span></code></pre>
 </div>
-<div id="references" class="section level1">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
-<p>[1] Clayton D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods. R package version 1.20.0</p>
-<p>[2] Dehman A. (2015). <a href="https://tel.archives-ouvertes.fr/tel-01288568/">Spatial clustering of linkage disequilibrium blocks for genome-wide association studies</a>. Phd Thesis, Université Paris Saclay.</p>
+<div class="section level1">
+<h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h1>
+<p>[1] Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N. (2019). Adjacency-constrained hierarchical clustering of a band similarity matrix with application to genomics. <em>Algorithms for Molecular Biology</em>, <strong>14</strong>, 22.</p>
+<p>[2] Clayton D. (2015). snpStats: SnpMatrix and XSnpMatrix classes and methods. R package version 1.20.0</p>
 <p>[3] Dehman A., Ambroise C., Neuvial P. (2015). Performance of a blockwise approach in variable selection using linkage disequilibrium information. <em>BMC Bioinformatics</em>, <strong>16</strong>, 148.</p>
+<p>[4] Randriamihamison N., Vialaneix N., and Neuvial P. (2021). Applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints. <em>Journal of Classification</em>, <strong>38</strong>, 363–389.</p>
 </div>
-<div id="session-information" class="section level1">
-<h1 class="hasAnchor">
-<a href="#session-information" class="anchor"></a>Session information</h1>
+<div class="section level1">
+<h1 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
+</h1>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## R version 4.0.3 (2020-10-10)
-## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Mojave 10.14.6
-## 
-## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
-## 
-## locale:
-## [1] fr_FR.UTF-8/fr_FR.UTF-8/fr_FR.UTF-8/C/fr_FR.UTF-8/fr_FR.UTF-8
-## 
-## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
-## 
-## other attached packages:
-## [1] adjclust_0.6.3  snpStats_1.40.0 Matrix_1.3-4    survival_3.2-11
-## 
-## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.7              highr_0.9               bslib_0.2.5.1          
-##  [4] compiler_4.0.3          jquerylib_0.1.4         MatrixGenerics_1.2.1   
-##  [7] tools_4.0.3             zlibbioc_1.36.0         digest_0.6.27          
-## [10] jsonlite_1.7.2          evaluate_0.14           memoise_2.0.0          
-## [13] lattice_0.20-44         rlang_0.4.11            yaml_2.2.1             
-## [16] parallel_4.0.3          pkgdown_1.6.1           xfun_0.24              
-## [19] fastmap_1.1.0           stringr_1.4.0           knitr_1.33             
-## [22] desc_1.3.0              fs_1.5.0                sass_0.4.0             
-## [25] systemfonts_1.0.2       rprojroot_2.0.2         grid_4.0.3             
-## [28] R6_2.5.0                textshaping_0.3.5       rmarkdown_2.9          
-## [31] magrittr_2.0.1          htmltools_0.5.1.1       matrixStats_0.59.0     
-## [34] sparseMatrixStats_1.2.1 splines_4.0.3           BiocGenerics_0.36.1    
-## [37] MASS_7.3-54             capushe_1.1.1           ragg_1.1.3             
-## [40] stringi_1.7.3           cachem_1.0.5            crayon_1.4.1</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## R version 4.1.2 (2021-11-01)</span>
+<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
+<span class="co">## Running under: Ubuntu 20.04.3 LTS</span>
+<span class="co">## </span>
+<span class="co">## Matrix products: default</span>
+<span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0</span>
+<span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0</span>
+<span class="co">## </span>
+<span class="co">## locale:</span>
+<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
+<span class="co">##  [3] LC_TIME=fr_FR.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
+<span class="co">##  [5] LC_MONETARY=fr_FR.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
+<span class="co">##  [7] LC_PAPER=fr_FR.UTF-8       LC_NAME=C                 </span>
+<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
+<span class="co">## [11] LC_MEASUREMENT=fr_FR.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="co">## </span>
+<span class="co">## attached base packages:</span>
+<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">## </span>
+<span class="co">## other attached packages:</span>
+<span class="co">## [1] adjclust_0.6.4  snpStats_1.44.0 Matrix_1.4-1    survival_3.2-13</span>
+<span class="co">## </span>
+<span class="co">## loaded via a namespace (and not attached):</span>
+<span class="co">##  [1] Rcpp_1.0.7              highr_0.9               bslib_0.3.1            </span>
+<span class="co">##  [4] compiler_4.1.2          jquerylib_0.1.4         MatrixGenerics_1.6.0   </span>
+<span class="co">##  [7] tools_4.1.2             zlibbioc_1.40.0         digest_0.6.27          </span>
+<span class="co">## [10] jsonlite_1.7.2          evaluate_0.14           memoise_2.0.1          </span>
+<span class="co">## [13] lattice_0.20-45         rlang_0.4.11            yaml_2.2.1             </span>
+<span class="co">## [16] pkgdown_2.0.1           xfun_0.24               fastmap_1.1.0          </span>
+<span class="co">## [19] stringr_1.4.0           knitr_1.33              desc_1.4.0             </span>
+<span class="co">## [22] fs_1.5.0                sass_0.4.0              systemfonts_1.0.3      </span>
+<span class="co">## [25] rprojroot_2.0.2         grid_4.1.2              R6_2.5.1               </span>
+<span class="co">## [28] textshaping_0.3.6       rmarkdown_2.10          purrr_0.3.4            </span>
+<span class="co">## [31] magrittr_2.0.1          matrixStats_0.61.0      htmltools_0.5.2        </span>
+<span class="co">## [34] sparseMatrixStats_1.6.0 splines_4.1.2           BiocGenerics_0.40.0    </span>
+<span class="co">## [37] MASS_7.3-55             capushe_1.1.1           ragg_1.2.1             </span>
+<span class="co">## [40] stringi_1.6.2           cachem_1.0.6            crayon_1.4.1</span></code></pre>
 </div>
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>We have dropped SNP rs2401075 because it produced a missing value due to the lack of genetic diversity in the considered sample.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>We have dropped SNP rs2401075 because it produced a missing value due to the lack of genetic diversity in the considered sample.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -269,11 +271,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu">Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
+  <p></p>
+<p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/" class="external-link">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/" class="external-link">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu" class="external-link">Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -281,6 +285,8 @@
 
   
 
+
+  
 
   </body>
 </html>
