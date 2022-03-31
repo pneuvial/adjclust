@@ -353,8 +353,7 @@ select.chac <- function(x, type = c("capushe", "bstick"), k.max = NULL,
     
     KC <- try(DDSE(in_capushe, pct = pct), silent = TRUE)
     
-    if (class(KC) == "try-error")
-      KC <- Djump(in_capushe)
+    if (inherits(KC, "try-error")) KC <- Djump(in_capushe)
     
     if (graph)
       plot(KC)

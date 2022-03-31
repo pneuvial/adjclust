@@ -24,7 +24,9 @@ In this document, we assume to be given $n$ objects, $\{1, \ldots, n\}$ that hav
 be clustered using adjacency-constrained HAC (CHAC), that is, in such a way that only
 adjacent objects/clusters can be merged.
 
-We refer to [5] for a comprehensive treatment of the applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints.
+We refer to [5] for a comprehensive treatment of the applicability and 
+interpretability of Ward’s hierarchical agglomerative clustering with or without
+contiguity constraints.
 
 # Notes on relations between similarity and dissimilarity implementation
 
@@ -254,9 +256,9 @@ merges and the slot ```height``` of the first is the cumulative sum of the slot
 
 # References
 
-[1] Dehman A. (2015). 
-[Spatial clustering of linkage disequilibrium blocks for genome-wide association studies](https://tel.archives-ouvertes.fr/tel-01288568/). 
-Phd Thesis, Université Paris Saclay.
+[1] Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N. (2019). 
+Adjacency-constrained hierarchical clustering of a band similarity matrix with 
+application to genomics. *Algorithms for Molecular Biology*, **14**, 22.
 
 [2] Grimm, E.C. (1987) CONISS: a fortran 77 program for stratigraphically 
 constrained cluster analysis by the method of incremental sum of squares. 
@@ -271,7 +273,9 @@ Recognition* (SoCPaR 2015).
 clustering method: which algorithms implement Ward's criterion? *Journal of
 Classification*, **31**, 274-295.
 
-[5] Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020). Applicability and interpretability of Ward’s hierarchical agglomerative clustering with or without contiguity constraints. *Journal of Classification* **38**, 1-27.
+[5] Randriamihamison N., Vialaneix N., & Neuvial P. (2020). Applicability and 
+interpretability of Ward’s hierarchical agglomerative clustering with or without
+contiguity constraints. *Journal of Classification* **38**, 1-27.
 
 [6] Ward, J.H. (1963) Hierarchical grouping to optimize an objective function.
 *Journal of the American Statistical Association*, **58**(301), 236-244.

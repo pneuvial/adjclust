@@ -48,12 +48,12 @@ NULL
 #' @references Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
 #'   (2019). \emph{Adjacency-constrained hierarchical clustering of a band
 #'   similarity matrix with application to genomics}, Algorithms for Molecular
-#'   Biology 14(22)"
+#'   Biology 14(22).
 #'
 #' @references Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020).
 #' \emph{Applicability and interpretability of Ward’s hierarchical agglomerative
 #' clustering with or without contiguity constraints}, Journal of Classification
-#' 38, 1-27."
+#' 38, 1-27.
 #'
 #'
 #' @examples

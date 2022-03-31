@@ -36,7 +36,7 @@ test_that("'snpClust' gives identical results regardless of data input format", 
   ld.ceph <- snpStats::ld(ceph.1mb, depth = h, stats = "R.squared", symmetric = TRUE)
   # ld.ceph <- round(ld.ceph, digits = 10)
   
-  expect_identical(diag(ld.ceph), rep(0, p))
+  expect_identical(unname(diag(ld.ceph)), rep(0, p))
   ld.ceph[ld.ceph > 1] <- 1
   expect_message(snpClust(ld.ceph, h = 100), 
                 "Note: forcing the diagonal of the LD similarity matrix to be 1",

@@ -8,8 +8,8 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Vialaneix", role="aut"),             
              person("Gabriel", "Hoffman", role="aut"))
-Date: 2021-07-26
-Version: 0.6.3
+Date: 2022-03-30
+Version: 0.6.4
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 
@@ -43,7 +43,7 @@ biocViews:
     Clustering,
     FeatureExtraction
 VignetteBuilder: knitr
-URL: https://github.com/pneuvial/adjclust
+URL: https://pneuvial.github.io/adjclust/
 BugReports: https://github.com/pneuvial/adjclust/issues
 RoxygenNote: 7.1.1
 LinkingTo: 
