@@ -273,8 +273,7 @@ correct.chac <- function(x) {
 #' @export
 #' 
 cutree_chac <- function(tree, k = NULL, h = NULL) {
-  if (class(tree) != "chac")
-    stop("'tree' must be of class 'chac'")
+  if (!inherits(tree, "chac")) stop("'tree' must be of class 'chac'")
   
   if (any(diff(tree$height) < 0)) {
     if (is.null(k)) {
