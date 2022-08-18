@@ -1,3 +1,7 @@
+# Version 0.6.5 [2022-08-18]
+
+* Code improvement: replaced `class( ) !=` by equivalent expression using `inherits( )`
+
 # Version 0.6.4 [2022-03-30]
 
 * Update URL in DESCRIPTION
