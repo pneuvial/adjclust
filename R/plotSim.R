@@ -279,8 +279,7 @@ plotSim_generic <- function(mat, type = c("similarity", "dissimilarity"),
   }
   
   if (!is.null(dendro)) {
-    if (class(dendro) != "chac")
-      stop("'dendro' is not a 'chac' object.")
+    if (!inherits(dendro, "chac")) stop("'dendro' is not a 'chac' object.")
   }
   
   # initialize
