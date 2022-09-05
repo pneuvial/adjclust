@@ -1,3 +1,7 @@
+# Version 0.6.6 [2022-09-05]
+
+* Minor updates in tests to comply with updates in Matrix 1.5.0
+
 # Version 0.6.5 [2022-08-18]
 
 * Code improvement: replaced `class( ) !=` by equivalent expression using `inherits( )`
