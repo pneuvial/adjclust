@@ -17,3 +17,4 @@ tests/testthat/Rplots.pdf
 ^\.github$
 ^issues$
 ^CRAN-RELEASE$
+^CRAN-SUBMISSION$

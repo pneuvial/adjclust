@@ -20,6 +20,7 @@ HeapHop
 HiTC
 Koskas
 LD
+LinkingTo
 Maugis
 Miyamoto
 Mpb
@@ -28,6 +29,7 @@ OpenMP
 Phd
 Polymorphisms
 PseudoMatrix
+Randriamihamison
 README
 Rcout
 Rcpp
@@ -63,6 +65,7 @@ dsCMatrix
 dscMatrix
 et
 evalCpp
+extdata
 forall
 fortran
 frac
@@ -73,6 +76,7 @@ hicClust
 hpp
 importFrom
 intdata
+interpretability
 intra
 iteratively
 ld
@@ -92,6 +96,7 @@ pre
 prevfit
 pxp
 qquad
+rda
 rioja
 simmatrix
 snpClust

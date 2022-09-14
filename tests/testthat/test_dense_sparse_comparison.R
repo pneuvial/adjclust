@@ -2,16 +2,33 @@ library("adjclust")
 
 context("Comparison between the results of adjClust with sparse and dense matrices")
 
-mat <- matrix(c(1,0,0,0,0,0.1,1,0,0,0,0.5,0.2,1,0,0,0.8,0.6,0.3,1,0,0,0.9,0.7,0.4,1), nrow = 5)
+mat <- matrix(c(1.0, 0.0, 0.0, 0.0, 0.0, 
+                0.1, 1.0, 0.0, 0.0, 0.0, 
+                0.5, 0.2, 1.0, 0.0, 0.0, 
+                0.8, 0.6, 0.3, 1.0, 0.0, 
+                0.0, 0.9, 0.7, 0.4, 1.0),
+              nrow = 5)
 mat <- mat + t(mat)
-smat1 <- as(as(as(mat, "dMatrix"), "generalMatrix"), "unpackedMatrix")
-smat2 <- as(as(as(mat, "dMatrix"), "generalMatrix"), "CsparseMatrix")
-smat3 <- as(as(as(mat, "dMatrix"), "generalMatrix"), "TsparseMatrix")
 
-mat <- Matrix::forceSymmetric(mat)
-smat4 <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "CsparseMatrix")
-smat5 <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "TsparseMatrix")
-smat6 <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "unpackedMatrix")
+if (packageVersion("Matrix") < '1.5.0') {
+  smat1 <- as(mat, "dgeMatrix")
+  smat2 <- as(mat, "dgCMatrix")
+  smat3 <- as(mat, "dgTMatrix")
+  
+  mat <- Matrix::forceSymmetric(mat)
+  smat4 <- as(mat, "dsCMatrix")
+  smat5 <- as(mat, "dsTMatrix")
+  smat6 <- as(mat, "dsyMatrix")
+} else {
+  smat1 <- as(as(as(mat, "dMatrix"), "generalMatrix"), "unpackedMatrix")
+  smat2 <- as(as(as(mat, "dMatrix"), "generalMatrix"), "CsparseMatrix")
+  smat3 <- as(as(as(mat, "dMatrix"), "generalMatrix"), "TsparseMatrix")
+  
+  mat <- Matrix::forceSymmetric(mat)
+  smat4 <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "CsparseMatrix")
+  smat5 <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "TsparseMatrix")
+  smat6 <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "unpackedMatrix")
+}
 
 mat <- as(mat, "matrix")
 p <- nrow(mat)

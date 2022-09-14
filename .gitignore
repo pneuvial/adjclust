@@ -57,3 +57,5 @@ doc
 docs
 Meta
 issues
+local
+vignettes/*.R
