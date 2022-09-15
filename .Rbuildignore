@@ -2,8 +2,6 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^cran-comments\.md$
-^\.travis\.yml$
-^appveyor\.yml$
 ^codecov\.yml$
 tests/testthat/Rplots.pdf
 ^fig$
