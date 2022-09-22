@@ -309,7 +309,7 @@ cutree_chac <- function(tree, k = NULL, h = NULL) {
 #' @importFrom capushe DDSE
 #' @importFrom capushe Djump
 #' @importFrom graphics lines
-#' @references Baudry, J.P., Maugis, C. and Michel, B. (2012) Slope heuristics: 
+#' @references Baudry J.P., Maugis C., and Michel B. (2012). Slope heuristics: 
 #' overview and implementation. \emph{Statistics and Computing}, \strong{22}(2),
 #' 355-470.
 #' MacArthur, R.H. (1957) On the relative abundance of bird species. 
@@ -339,6 +339,12 @@ select.chac <- function(x, type = c("capushe", "bstick"), k.max = NULL,
                         graph = FALSE, pct = 0.15) {
   type <- match.arg(type)
   n <- length(x$labels)
+  if (x$correction != 0) {
+    message(paste("Note: Your data have been preprocess with the addition of ",
+                  "a positive number on the diagonal to ensure positivity.\n",
+                  "Results of the `select` method are affected by this", 
+                  "preprocessing and might be spurious."))
+  }
 
   if (type == "capushe") {
     if (is.null(k.max)) {

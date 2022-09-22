@@ -29,13 +29,19 @@ NULL
 #'   default of positivity in input similarities. Can be disabled to avoid
 #'   computationally expensive checks when the number of features is large.
 #'
-#' @return An object of class \code{\link{chac}} which describes the tree
-#'   produced by the clustering process. The object a list with the same
-#'   elements as an object of class \code{\link{chac}} (\code{merge},
+#' @returns An object of class \code{\link{chac}} which describes the tree
+#'   produced by the clustering process. The object is a list with the same
+#'   elements as an object of class \code{\link[stats]{hclust}} (\code{merge},
 #'   \code{height}, \code{order}, \code{labels}, \code{call}, \code{method},
-#'   \code{dist.method}), and an extra element \code{mat}: the data on which the
-#'   clustering is performed, possibly after pre-transformations described in
-#'   the vignette entitled "Notes on CHAC implementation in adjclust".
+#'   \code{dist.method}), and two extra elements: \itemize{
+#'     \item{\code{mat}}{: (the data on which the clustering has been performed, 
+#'     possibly after the pre-transformations described in the vignette entitled
+#'     \href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html#notes-on-relations-between-similarity-and-dissimilarity-implementation}{"Notes on CHAC implementation in adjclust"}}.
+#'     \item{\code{correction}}{: the value of the correction for non positive
+#'     definite similarity matrices (also described in the same vignette). If
+#'     \code{correction == 0}, it means that the initial data were not 
+#'     pre-transformed.}
+#'  }
 #'
 #' @seealso \code{\link{snpClust}} to cluster SNPs based on linkage
 #'   disequilibrium
@@ -220,8 +226,8 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h,
       message(paste("Note: modifying similarity to ensure positive heights...
         added", res_cc, "to diagonal (merges will not be affected)"))
       mat <- mat + diag(rep(res_cc, ncol(mat)))
-    }
-  }
+    } else res_cc <- 0
+  } else res_cc <- 0
   
   if (is(mat, "sparseMatrix")) { 
     # left  
@@ -318,7 +324,8 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h,
                call = match.call(),
                method = "adjClust",
                dist.method = attr(D, "method"),
-               data = mat)
+               data = mat, 
+               correction = res_cc)
   class(tree) <- c("chac")
     
   if (any(diff(tree$height) < 0)) 
