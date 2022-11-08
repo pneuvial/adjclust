@@ -136,7 +136,7 @@ similarity $s$ for which $d$ is the *ad-hoc* dissimilarity by setting:
 By definition, such an $s$ is normalized and any choice for 
 $(a_i)_{i=1,\ldots,n}$ yields the same clustering (since they all correspond to 
 the same *ad-hoc* dissimilarity). The arbitrary choice $a_i = 1$ for all
-$i=1,\ldots,n$ has thus been made.
+$i=1,\ldots,n$ has thus been made. 
 
 The basic and the sparse implementations are both available with, respectively,
 ```{r ex-dissim, eval=FALSE}
@@ -232,15 +232,15 @@ the absence of reversals in heights.
 
 # Relations with 'hclust' and 'rioja'
 
-As documented in [4], the call to ```hclust(..., method = "Ward.D")``` 
+As documented in [4], the call to ```hclust(..., method = "ward.D")``` 
 implicitly assumes that ```...``` is a *squared* distance matrix. As explained
 above, we did not make such an assumption so 
-```hclust(d^2, method = "Ward.D")``` and 
+```hclust(d^2, method = "ward.D")``` and 
 ```adjClust(d, method = "dissimilarity")``` give identical results when the 
 ordering of the (unconstrained) clustering is compatible with the natural 
 ordering of objects used as a constraint. In addition, since 
-```hclust(..., method = "Ward.D2")``` takes for linkage $\sqrt{m_t}$, 
-```hclust(d, method = "Ward.D2")``` and 
+```hclust(..., method = "ward.D2")``` takes for linkage $\sqrt{m_t}$, 
+```hclust(d, method = "ward.D2")``` and 
 ```adjClust(d, method = "dissimilarity")``` give identical results for the 
 merges and the slot ```height``` of the first is the square root of the slot 
 ```height``` of the second, when the ordering of the (unconstrained) clustering 

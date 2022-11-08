@@ -15,8 +15,8 @@ NULL
 #' sparse similarity matrices (i.e., that have 0 entries outside of a diagonal
 #' band of width \code{h}). The method is fully described in (Dehman, 2015) and
 #' based on a kernel version of the algorithm. The different options for the
-#' implementation are available in the package vignette entitled "Notes on CHAC
-#' implementation in adjclust".
+#' implementation are available in the package vignette entitled 
+#' \href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html}{"Notes on CHAC implementation in adjclust}.
 #'
 #' @param mat A similarity matrix or a dist object. Most sparse formats from
 #'   \code{\link[Matrix]{sparseMatrix}} are allowed
@@ -47,20 +47,39 @@ NULL
 #'   disequilibrium
 #' @seealso \code{\link{hicClust}} to cluster Hi-C data
 #'
-#' @references Dehman A. (2015) \emph{Spatial Clustering of Linkage
+#' @references Murtagh F., and Legendre P. (2014). Ward's hierarchical
+#'   agglomerative clustering method: which algorithms implement Ward's 
+#'   criterion? \emph{Journal of Classification}, \strong{31}, 274-295. 
+#'   DOI: \href{https://doi.org/10.1007/s00357-014-9161-z}{10.1007/s00357-014-9161-z}.
+#' 
+#' @references Dehman A. (2015). \emph{Spatial Clustering of Linkage
 #'   Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis,
-#'   Universite Paris Saclay.
+#'   Universite Paris Saclay, France.
 #'
 #' @references Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
-#'   (2019). \emph{Adjacency-constrained hierarchical clustering of a band
-#'   similarity matrix with application to genomics}, Algorithms for Molecular
-#'   Biology 14(22).
+#'   (2019). Adjacency-constrained hierarchical clustering of a band similarity 
+#'   matrix with application to genomics. \emph{Algorithms for Molecular
+#'   Biology}, \strong{14}(22).
+#'   DOI: \href{http://dx.doi.org/10.1007/s11222-018-9806-6}{10.1007/s11222-018-9806-6}.
 #'
-#' @references Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020).
-#' \emph{Applicability and interpretability of Ward’s hierarchical agglomerative
-#' clustering with or without contiguity constraints}, Journal of Classification
-#' 38, 1-27.
-#'
+#' @references Randriamihamison N., Vialaneix N., and Neuvial P. (2020).
+#'   Applicability and interpretability of Ward's hierarchical agglomerative
+#'   clustering with or without contiguity constraints. \emph{Journal of 
+#'   Classification}, \strong{38}, 1-27.
+#'   DOI: \href{http://dx.doi.org/10.1007/s00357-020-09377-y}{10.1007/s00357-020-09377-y}.
+#' 
+#' @note When performed on a distance matrix \eqn{d} with the option 
+#' \code{type = "dissimilarity"}, \code{adjclust} is identical to using the 
+#' option \code{"ward.D"} on \eqn{d^2} in the function 
+#' \code{\link[stats]{hclust}} when the ordering of the (unconstrained) 
+#' clustering (in \code{\link[stats]{hclust}}) is compatible with the natural 
+#' ordering of objects used as a constraint. It is also equivalent (under the
+#' same assumption or orderings) to the option \code{"ward.D2"} performed on the
+#' distance matrix \eqn{d} itself, except for the final heights of the merges 
+#' that are equal to the square of the heights obtained with \code{"ward.D2"} in
+#' \code{\link[stats]{hclust}}. See the 
+#' \href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html#relations-with-hclust-and-rioja}{vignette on implementation} 
+#' and (Murtagh and Legendre, 2014) for further details.
 #'
 #' @examples
 #' sim <- matrix(
