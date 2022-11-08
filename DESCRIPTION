@@ -31,7 +31,8 @@ Imports:
     sparseMatrixStats,
     methods,
     utils,
-    capushe
+    capushe,
+    ggplot2
 Suggests:
     knitr,
     testthat,

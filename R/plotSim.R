@@ -349,3 +349,89 @@ plotSim_generic <- function(mat, type = c("similarity", "dissimilarity"),
   
   invisible(NULL)
 }
+
+#### ggplot2 version (work in progress)
+
+take_bottomleft <- function(amat) amat[lower.tri(amat, diag = TRUE)]
+
+poly_coords <- function(mat) {
+  UseMethod("poly_coords")
+}
+
+poly_coords.default <- function(mat) {
+  # extracting coordinates in the matrix (genomic) and IF
+  p <- ncol(mat)
+  indi <- row(mat)
+  indi <- take_bottomleft(indi)
+  indj <- col(mat)
+  indj <- take_bottomleft(indj)
+  values <- take_bottomleft(mat)
+  
+  # defining polygon borders (square matrix) and rotate them
+  coords <- cbind(rep(seq_along(indi), 4),
+                  c(indi - 1, indi, indi, indi - 1),
+                  c(indj, indj, indj - 1, indj - 1))
+  theta <- 3*pi/4
+  rotation_matrix <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)),
+                            ncol = 2)
+  coords <- cbind(coords[, 1], rep(indi, 4), rep(indj, 4), 
+                  t(tcrossprod(rotation_matrix, as.matrix(coords[, 2:3]))))
+  coords <- data.frame(coords, rep(values, 4))
+  names(coords) <- c("id", "i", "j", "x", "y", "IF")
+  coords$x <- - coords$x
+  
+  # remove auto-IF bottom polygon border
+  bottom_poly_rm <- (coords$i == coords$j) & (coords$y < 0)
+  coords <- coords[!bottom_poly_rm, ]
+  
+  return(coords)
+}
+
+#' Plot (dis)similarity matrix
+#' 
+#' Heatmap of the (dis)similarity matrix
+#' 
+#' This function produces a heatmap for the used (dis)similarity matrix that 
+#' can be used as a diagnostic plot to check the consistency between the 
+#' obtained clustering and the original (dis)similarity
+#' 
+#' @param mat matrix to plot. It can be of class \code{'matrix'}, 
+#' \code{'dgCMatrix'}, \code{'dsCMatrix'}, \code{'dist'}, \code{'HTCexp'},
+#' \code{'snpMatrix'}.
+#' @param type input matrix type. Can be either \code{"similarity"} or 
+#' \code{"dissimilarity"} (kernels are supposed to be of type 
+#' \code{"similarity"}).
+#' @param log logical. Should the breaks be based on log-scaled values of the
+#' matrix entries. Default to \code{TRUE}.
+#' @import ggplot2
+#' @examples
+#' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity")
+#' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity", log = FALSE)
+#' @seealso \code{\link{select}}, \code{\link{adjClust}}
+#' @export
+
+ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
+                      log = TRUE) {
+  UseMethod("ggPlotSim")
+}
+
+#' @export
+ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
+                              log = TRUE) {
+  type <- match.arg(type)
+  if (type == "dissimilarity") {
+    mat <- max(mat) - mat
+  }
+  
+  coordinates <- poly_coords(mat)
+  
+  if (log) {
+    p <- ggplot(coordinates, aes(x = x, y = y)) + 
+      geom_polygon(aes(group = id, fill = log(IF))) + theme_void()
+  } else {
+    p <- ggplot(coordinates, aes(x = x, y = y)) + 
+      geom_polygon(aes(group = id, fill = IF)) + theme_void()
+  }
+  
+  return(p)
+}
