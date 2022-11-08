@@ -28,12 +28,18 @@ computationally expensive checks when the number of features is large.}
 }
 \value{
 An object of class \code{\link{chac}} which describes the tree
-  produced by the clustering process. The object a list with the same
-  elements as an object of class \code{\link{chac}} (\code{merge},
+  produced by the clustering process. The object is a list with the same
+  elements as an object of class \code{\link[stats]{hclust}} (\code{merge},
   \code{height}, \code{order}, \code{labels}, \code{call}, \code{method},
-  \code{dist.method}), and an extra element \code{mat}: the data on which the
-  clustering is performed, possibly after pre-transformations described in
-  the vignette entitled "Notes on CHAC implementation in adjclust".
+  \code{dist.method}), and two extra elements: \itemize{
+    \item{\code{mat}}{: (the data on which the clustering has been performed, 
+    possibly after the pre-transformations described in the vignette entitled
+    \href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html#notes-on-relations-between-similarity-and-dissimilarity-implementation}{"Notes on CHAC implementation in adjclust"}}.
+    \item{\code{correction}}{: the value of the correction for non positive
+    definite similarity matrices (also described in the same vignette). If
+    \code{correction == 0}, it means that the initial data were not 
+    pre-transformed.}
+ }
 }
 \description{
 Adjacency-constrained hierarchical agglomerative clustering
