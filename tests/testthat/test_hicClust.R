@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Consistency of the results of 'hicClust' across various input formats")
 
 test_that("'hicClust' gives identical results regardless of data input format", {

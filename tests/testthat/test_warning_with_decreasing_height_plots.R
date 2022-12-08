@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Check that the messages or warnings are produced for decreasing 
         heights")
 

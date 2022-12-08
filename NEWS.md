@@ -1,3 +1,7 @@
+# dev version  [2022-12-08]
+
+* Fix issue #49 (calls to 'library' in tests)
+
 # Version 0.6.6 [2022-09-13]
 
 * Minor updates in tests to comply with updates in Matrix 1.5.0
