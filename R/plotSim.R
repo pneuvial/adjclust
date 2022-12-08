@@ -406,6 +406,8 @@ poly_coords.default <- function(mat) {
 #' @param legendName character. Title of the legend. Default to 
 #' \code{"intensity"}.
 #' @param main character. Title of the plot. Default to \code{NULL} (no title).
+#' @param priorCount numeric. Average count to be added to each entry of the
+#' matrix to avoid taking log of zero. Used only if \code{log = TRUE}.
 #' @import ggplot2
 #' @examples \dontrun{
 #' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity",
@@ -420,14 +422,14 @@ poly_coords.default <- function(mat) {
 
 ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
                       log = TRUE, legendName = "intensity",
-                      main = NULL) {
+                      main = NULL, priorCount = 0.5) {
   UseMethod("ggPlotSim")
 }
 
 #' @export
 ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                               log = TRUE, legendName = "intensity", 
-                              main = NULL) {
+                              main = NULL, priorCount = 0.5) {
   type <- match.arg(type)
   if (!is.character(legendName)) 
     stop("'legendName' must be a string!")
@@ -440,9 +442,14 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   coordinates <- poly_coords(mat)
   
   if (log) {
+    if (!is.null(legendName) && legendName != "") {
+      legendName <- ifelse(priorCount == 0,
+                           paste0("log(", legendName, ")"),
+                           paste0("log(", legendName, " + ", priorCount, ")"))
+    }
     p <- ggplot(coordinates, aes(x = x, y = y)) + 
-      geom_polygon(aes(group = id, fill = log(IF))) + theme_void() +
-      scale_fill_viridis_b(name = legendName)
+      geom_polygon(aes(group = id, fill = log(IF + priorCount))) + 
+      theme_void() + scale_fill_viridis_b(name = legendName)
   } else {
     p <- ggplot(coordinates, aes(x = x, y = y)) + 
       geom_polygon(aes(group = id, fill = IF)) + theme_void() +
