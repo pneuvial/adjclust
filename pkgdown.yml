@@ -1,11 +1,11 @@
-pandoc: 2.14.0.3
-pkgdown: 2.0.1
+pandoc: 2.19.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   hicClust: hicClust.html
   notesCHAC: notesCHAC.html
   snpClust: snpClust.html
-last_built: 2022-03-31T19:59Z
+last_built: 2022-12-08T15:14Z
 urls:
   reference: https://pneuvial.github.io/adjclust/reference
   article: https://pneuvial.github.io/adjclust/articles
