@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Check plotSim plots for all types of input")
 
 test_that("'plotSim' works for 'matrix'", {

@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Consistency of the results of 'snpClust' across various input formats")
 
 # check function kept for possible future usage

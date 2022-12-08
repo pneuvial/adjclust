@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Correctness of handling general similarity matrices")
 
 data("iris")

@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Equivalence between similarity and dissimilarity implementations")
 
 data("iris")
