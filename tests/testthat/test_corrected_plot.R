@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Check that the corrected plots have increasing heights")
 
 test_that("'adjClust' returns a dendrogram with increasing heights for 

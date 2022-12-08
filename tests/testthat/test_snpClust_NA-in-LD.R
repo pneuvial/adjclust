@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Case of NA values in LD estimates")
 
 check_missing_ld <- function() {

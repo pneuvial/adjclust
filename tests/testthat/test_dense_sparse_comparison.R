@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Comparison between the results of adjClust with sparse and dense matrices")
 
 mat <- matrix(c(1.0, 0.0, 0.0, 0.0, 0.0, 
