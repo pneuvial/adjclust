@@ -403,22 +403,36 @@ poly_coords.default <- function(mat) {
 #' \code{"similarity"}).
 #' @param log logical. Should the breaks be based on log-scaled values of the
 #' matrix entries. Default to \code{TRUE}.
+#' @param legendName character. Title of the legend. Default to 
+#' \code{"intensity"}.
+#' @param main character. Title of the plot. Default to \code{NULL} (no title).
 #' @import ggplot2
-#' @examples
-#' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity")
-#' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity", log = FALSE)
+#' @examples \dontrun{
+#' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity",
+#'           legendName = "IF")
+#' p <- ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity", 
+#'                log = FALSE)
+#' # custom palette
+#' p + scale_fill_gradient(low = "yellow", high = "red")
+#' }
 #' @seealso \code{\link{select}}, \code{\link{adjClust}}
 #' @export
 
 ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
-                      log = TRUE) {
+                      log = TRUE, legendName = "intensity",
+                      main = NULL) {
   UseMethod("ggPlotSim")
 }
 
 #' @export
 ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
-                              log = TRUE) {
+                              log = TRUE, legendName = "intensity", 
+                              main = NULL) {
   type <- match.arg(type)
+  if (!is.character(legendName)) 
+    stop("'legendName' must be a string!")
+  if (!is.null(main) && !is.character(main)) stop("'main' must be a string!")
+  
   if (type == "dissimilarity") {
     mat <- max(mat) - mat
   }
@@ -427,10 +441,16 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   
   if (log) {
     p <- ggplot(coordinates, aes(x = x, y = y)) + 
-      geom_polygon(aes(group = id, fill = log(IF))) + theme_void()
+      geom_polygon(aes(group = id, fill = log(IF))) + theme_void() +
+      scale_fill_viridis_b(name = legendName)
   } else {
     p <- ggplot(coordinates, aes(x = x, y = y)) + 
-      geom_polygon(aes(group = id, fill = IF)) + theme_void()
+      geom_polygon(aes(group = id, fill = IF)) + theme_void() +
+      scale_fill_viridis_b(name = legendName)
+  }
+  
+  if (!is.null(main)) {
+    p <- p + ggtitle(main)
   }
   
   return(p)
