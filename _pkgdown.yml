@@ -1,4 +1,6 @@
 url: https://pneuvial.github.io/adjclust
+template:
+  bootstrap: 5
 
 reference:
   - title: "Main functions"
