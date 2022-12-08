@@ -1,6 +1,7 @@
 # dev version  [2022-12-08]
 
-* Fix issue #49 (calls to 'library' in tests)
+* Fix #49 (calls to 'library' in tests)
+* Fix #55 (pkgdown action)
 
 # Version 0.6.6 [2022-09-13]
 

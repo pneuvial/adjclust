@@ -16,3 +16,4 @@ tests/testthat/Rplots.pdf
 ^issues$
 ^CRAN-RELEASE$
 ^CRAN-SUBMISSION$
+^pkgdown$
