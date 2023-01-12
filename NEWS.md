@@ -1,5 +1,6 @@
-# dev version  [2022-12-08]
+# dev version  [2023-01-12]
 
+* Fix #45 (update 'calls' for 'adjclust.*' methods)
 * Fix #49 (calls to 'library' in tests)
 * Fix #55 (pkgdown action)
 

@@ -11,7 +11,7 @@ test_that("'hicClust' gives identical results regardless of data input format", 
   mat <- HiTC::intdata(hic_imr90_40_XX) 
   
   fit2 <- hicClust(mat)
-  
+
   V1 <- mat@Dimnames[[1]][mat@i+1]          #loci1names
   V2 <- rep(mat@Dimnames[[2]], diff(mat@p)) #loci2names
   V3 <- mat@x
@@ -32,4 +32,10 @@ test_that("'hicClust' gives identical results regardless of data input format", 
   
   expect_equal(fit1$merge, fit4$merge)
   expect_equal(fit1$height, fit4$height)  
+
+  # test that hicClust methods returns expected 'calls'
+  expect_identical(as.list(fit1$call)[[1]], as.symbol("hicClust"))
+  expect_identical(as.list(fit2$call)[[1]], as.symbol("hicClust"))
+  expect_identical(as.list(fit3$call)[[1]], as.symbol("hicClust"))
+  expect_identical(as.list(fit4$call)[[1]], as.symbol("hicClust"))
 })
