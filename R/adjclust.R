@@ -126,6 +126,8 @@ adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"),
   if (!(isSymmetric(mat)))
     stop("Input matrix is not symmetric")
   res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
+  x <- sys.call()
+  res$call <- update_call(x, "adjClust")
   return(res)
 }
 
@@ -137,6 +139,8 @@ adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   # RcppArmadillo functions don't support dsyMatrix, so convert to matrix
   res <- run.adjclust(as.matrix(mat), type = type, h = h, 
                       strictCheck = strictCheck)
+  x <- sys.call()
+  res$call <- update_call(x, "adjClust")
   return(res)
 }
 
@@ -150,6 +154,8 @@ adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"),
     mat <- forceSymmetric(mat)
   }
   res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
+  x <- sys.call()
+  res$call <- update_call(x, "adjClust")
   return(res)
 }
 
@@ -160,6 +166,8 @@ adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
   res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
+  x <- sys.call()
+  res$call <- update_call(x, "adjClust")
   return(res)
 }
 
@@ -172,6 +180,8 @@ adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
     mat <- forceSymmetric(mat)
   }
   res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
+  x <- sys.call()
+  res$call <- update_call(x, "adjClust")
   return(res)
 }
 
@@ -182,6 +192,8 @@ adjClust.dsTMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
   res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
+  x <- sys.call()
+  res$call <- update_call(x, "adjClust")
   return(res)
 }
 
@@ -195,6 +207,8 @@ adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"),
     mat <- forceSymmetric(mat)
   }
   res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
+  x <- sys.call()
+  res$call <- update_call(x, "adjClust")
   return(res)
 }
 
@@ -207,6 +221,8 @@ adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"),
   mat <- as.matrix(mat)
   res <- adjClust.matrix(mat, type = "dissimilarity", h = h, 
                          strictCheck = strictCheck)
+  x <- sys.call()
+  res$call <- update_call(x, "adjClust")
   return(res)
 }
 

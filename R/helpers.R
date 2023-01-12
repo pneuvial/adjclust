@@ -355,3 +355,11 @@ alt.plot <- function(x, type = c("rectangle", "triangle"), center = FALSE,
                dLeaf = dLeaf, nodePar = nodePar, edgePar = edgePar, 
                horiz = horiz)
 }
+
+# update call to replace e.g. 'run.adjclust' by 'adjclust'
+update_call <- function(x, name_to) {
+  lst <- as.list(x)
+  lst[[1]] <- as.symbol(name_to)
+  as.call(lst)
+}
+
