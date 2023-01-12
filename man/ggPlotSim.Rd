@@ -10,7 +10,9 @@ ggPlotSim(
   log = TRUE,
   legendName = "intensity",
   main = NULL,
-  priorCount = 0.5
+  priorCount = 0.5,
+  stats = c("R.squared", "D.prime"),
+  h = NULL
 )
 }
 \arguments{
@@ -40,16 +42,6 @@ Heatmap of the (dis)similarity matrix
 This function produces a heatmap for the used (dis)similarity matrix that 
 can be used as a diagnostic plot to check the consistency between the 
 obtained clustering and the original (dis)similarity
-}
-\examples{
-\dontrun{
-ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity",
-          legendName = "IF")
-p <- ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity", 
-               log = FALSE)
-# custom palette
-p + scale_fill_gradient(low = "yellow", high = "red")
-}
 }
 \seealso{
 \code{\link{select}}, \code{\link{adjClust}}

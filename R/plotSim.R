@@ -351,21 +351,17 @@ plotSim_generic <- function(mat, type = c("similarity", "dissimilarity"),
 }
 
 #### ggplot2 version (work in progress)
+# HERE: WORK IN PROGRESS #####
+# WORKING ON ISSUE 40 ####
 
 take_bottomleft <- function(amat) amat[lower.tri(amat, diag = TRUE)]
 
-poly_coords <- function(mat) {
-  UseMethod("poly_coords")
-}
-
-poly_coords.default <- function(mat) {
-  # extracting coordinates in the matrix (genomic) and IF
-  p <- ncol(mat)
-  indi <- row(mat)
-  indi <- take_bottomleft(indi)
-  indj <- col(mat)
-  indj <- take_bottomleft(indj)
-  values <- take_bottomleft(mat)
+make_coords <- function(indi, indj, values) {
+  if (any(is.na(values))) {
+    selected <- !is.na(values)
+    indi <- indi[selected]
+    indj <- indj[selected]
+  }
   
   # defining polygon borders (square matrix) and rotate them
   coords <- cbind(rep(seq_along(indi), 4),
@@ -383,6 +379,46 @@ poly_coords.default <- function(mat) {
   # remove auto-IF bottom polygon border
   bottom_poly_rm <- (coords$i == coords$j) & (coords$y < 0)
   coords <- coords[!bottom_poly_rm, ]
+  
+  return(coords)
+}
+
+poly_coords_sparse <- function(mat) {
+  indi <- mat@j + 1
+  indj <- mat@i + 1
+  values <- mat@x
+  selected <- indi >= indj
+  indif <- indi[selected]
+  indjf <- indj[selected]
+  valuesf <- values[selected]
+  
+  coords <- make_coords(indif, indjf, valuesf)
+  
+  return(coords)
+}
+
+poly_coords <- function(mat) {
+  UseMethod("poly_coords")
+}
+
+poly_coords.default <- function(mat) {
+  # extracting coordinates in the matrix (genomic) and IF
+  p <- ncol(mat)
+  indi <- row(mat)
+  indi <- take_bottomleft(indi)
+  indj <- col(mat)
+  indj <- take_bottomleft(indj)
+  values <- take_bottomleft(mat)
+  
+  coords <- make_coords(indi, indj, values)
+  
+  return(coords)
+}
+
+poly_coords.dsCMatrix <- function(mat) {
+  p <- ncol(mat)
+  mat <- as(mat, "TsparseMatrix")
+  coords <- poly_coords_sparse(mat)
   
   return(coords)
 }
@@ -416,30 +452,136 @@ poly_coords.default <- function(mat) {
 #'                log = FALSE)
 #' # custom palette
 #' p + scale_fill_gradient(low = "yellow", high = "red")
+#' # dsCMatrix
+#' m <- Matrix(c(0, 0, 2, 0, 3, 0, 2, 0, 0), ncol = 3)
+#' ggPlotSim(m)
+#' # dgCMatrix
+#' m <- as(m, "generalMatrix")
+#' ggPlotSim(m)
+#' m <- as.dist(m)
+#' if (require("HiTC", quietly = TRUE)) {
+#'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
+#'   ggPlotSim(hic_imr90_40_XX)
 #' }
+#' if (requireNamespace("snpStats", quietly = TRUE)) {
+#'   data(testdata, package = "snpStats")
+#'   ggPlotSim(Autosomes[1:200, 1:5], h = 3, stats = "R.squared")
+#' }
+
 #' @seealso \code{\link{select}}, \code{\link{adjClust}}
 #' @export
 
 ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
                       log = TRUE, legendName = "intensity",
-                      main = NULL, priorCount = 0.5) {
+                      main = NULL, priorCount = 0.5, 
+                      stats = c("R.squared", "D.prime"), h = NULL) {
   UseMethod("ggPlotSim")
 }
 
 #' @export
-ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
-                              log = TRUE, legendName = "intensity", 
-                              main = NULL, priorCount = 0.5) {
-  type <- match.arg(type)
-  if (!is.character(legendName)) 
-    stop("'legendName' must be a string!")
-  if (!is.null(main) && !is.character(main)) stop("'main' must be a string!")
+ggPlotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
+                                log = TRUE, legendName = "intensity", 
+                                main = NULL, priorCount = 0.5, 
+                                stats = c("R.squared", "D.prime"), h = NULL) {
+  p <- ggPlotSim.default(mat, type, log, legendName, main, priorCount)
+
+  return(p)
+}
+
+#' @export
+ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
+                                log = TRUE, legendName = "intensity", 
+                                main = NULL, priorCount = 0.5, 
+                                stats = c("R.squared", "D.prime"), h = NULL) {
+  p <- ncol(mat)
+  if (!isSymmetric(mat)) 
+    warning(paste("Input matrix was not symmetric. Plotting only the",
+                  "upper-triangular part of the matrix."))
   
-  if (type == "dissimilarity") {
-    mat <- max(mat) - mat
+  mat <- forceSymmetric(mat)
+  
+  p <- ggPlotSim.dsCMatrix(mat, type, log, legendName, main, priorCount)
+  
+  return(p)
+}
+
+#' @export
+ggPlotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
+                           log = TRUE, legendName = "intensity", main = NULL, 
+                           priorCount = 0.5, stats = c("R.squared", "D.prime"),
+                           h = NULL) {
+  
+  type <- match.arg(type)
+  if (type != "dissimilarity") {
+    message(paste("Note: input class is 'dist' so 'type' is supposed to be",
+                  "'dissimilarity'."))
+    type <- "dissimilarity"
   }
   
+  mat <- as.matrix(mat)
+  
+  p <- ggPlotSim.default(mat, type, log, legendName, main, priorCount)
+  
+  return(p)
+}
+
+#' @export
+ggPlotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
+                             log = TRUE, legendName = "intensity", main = NULL, 
+                             priorCount = 0.5, 
+                             stats = c("R.squared", "D.prime"), h = NULL) {
+  type <- match.arg(type)
+  if (!requireNamespace("HiTC")) 
+    stop("Package 'HiTC' not available. 'HTCexp' input cannot be used.")
+  if (type != "similarity") 
+    stop("type 'dissimilarity' does not match 'HTCexp' data")
+    
+  mat <- mat@intdata
+  p <- ggPlotSim(mat, type, log, legendName, main, priorCount)
+  
+  return(p)
+}
+
+#' @export
+ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
+                                log = TRUE, legendName = "intensity", 
+                                main = NULL, priorCount = 0.5, 
+                                stats = c("R.squared", "D.prime"), h = NULL) {
+  if (!requireNamespace("snpStats")) 
+    stop("Package 'snpStats' not available. 'SnpMatrix' input cannot be used.")
+  
+  stats <- match.arg(stats)
+  if (is.null(h)) h <- ncol(mat) - 1
+  if (h >= ncol(mat)) stop("h should be strictly less than p")
+  
+  mat <- snpStats::ld(mat, stats = stats, depth = h)
+  mat[mat > 1] <- 1  ## fix numerical aberrations
+  mat[mat < 0] <- 0  ## fix numerical aberrations
+  diag(mat) <- rep(1, nrow(mat))  ## by default the diagonal is 0 after 'snpStats::ld'
+  
+  p <- ggPlotSim(mat, type, log, legendName, main, priorCount)
+  
+  return(p)
+}
+ 
+#' @export
+ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
+                              log = TRUE, legendName = "intensity", 
+                              main = NULL, priorCount = 0.5, 
+                              stats = c("R.squared", "D.prime"), h = NULL) {
+  
+  type <- match.arg(type)
+  if (!is.character(legendName)) stop("'legendName' must be a string!")
+  if (!is.null(main) && !is.character(main)) stop("'main' must be a string!")
+  
+  if (type == "dissimilarity") mat <- max(mat) - mat
+  
   coordinates <- poly_coords(mat)
+  d <- nrow(mat)
+  fake_coords <- make_coords(c(1, d, d), c(1, d, 1), rep(0, 3))
+  
+  p <- ggplot(coordinates, aes(x = x, y = y)) + theme_void() +
+    geom_polygon(data = fake_coords, aes(x = x, y = y), fill = "lightgrey")
   
   if (log) {
     if (!is.null(legendName) && legendName != "") {
@@ -447,12 +589,10 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                            paste0("log(", legendName, ")"),
                            paste0("log(", legendName, " + ", priorCount, ")"))
     }
-    p <- ggplot(coordinates, aes(x = x, y = y)) + 
-      geom_polygon(aes(group = id, fill = log(IF + priorCount))) + 
-      theme_void() + scale_fill_viridis_b(name = legendName)
+    p <- p + geom_polygon(aes(group = id, fill = log(IF + priorCount))) + 
+      scale_fill_viridis_b(name = legendName)
   } else {
-    p <- ggplot(coordinates, aes(x = x, y = y)) + 
-      geom_polygon(aes(group = id, fill = IF)) + theme_void() +
+    p <- p + geom_polygon(aes(group = id, fill = IF)) + 
       scale_fill_viridis_b(name = legendName)
   }
   
