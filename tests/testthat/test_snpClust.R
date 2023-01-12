@@ -74,4 +74,11 @@ test_that("'snpClust' gives identical results regardless of data input format", 
   expect_equal(fit4$height, fit5$height)
   # expect_equal(fit4$merge, fit6$merge) ## identical heights but different merges
   expect_equal(fit4$height, fit6$height)
+  
+  # test that hicClust methods returns expected 'calls'
+  expect_identical(as.list(fit1$call)[[1]], as.symbol("snpClust"))
+  expect_identical(as.list(fit2$call)[[1]], as.symbol("snpClust"))
+  expect_identical(as.list(fit3$call)[[1]], as.symbol("snpClust"))
+  expect_identical(as.list(fit4$call)[[1]], as.symbol("snpClust"))
+  
 })
