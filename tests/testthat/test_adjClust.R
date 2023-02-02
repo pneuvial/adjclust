@@ -28,3 +28,29 @@ test_that("adjClust methods returns expected 'calls'", {
   lst <- as.list(fit4$call)
   expect_identical(lst[[1]], as.symbol("adjClust"))
 })
+
+test_that("adjClust methods properly catches unexpected  'calls'", {
+  mat <- matrix(NA_character_)
+  expect_error(adjClust(mat), "Input matrix is not numeric")
+
+  mat <- matrix(1:2)
+  expect_error(adjClust(mat), "Input matrix is not symmetric")
+
+  # dsyMatrix
+  mat <- matrix(rep(1, 4), 2, 2)
+  smat <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "unpackedMatrix")
+  smat[1, 2] <- 2
+  expect_error(adjClust(smat), "Input matrix is not symmetric")
+  
+  # dgTMatrix
+  smat <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "sparseMatrix")
+  expect_error(adjClust(smat, type = "dissimilarity"), 
+               "'type' can only be 'similarity' with sparse Matrix inputs")
+  
+  dmat <-  as(mat, "dsTMatrix")
+  expect_error(adjClust(dmat, type = "dissimilarity"), 
+               "'type' can only be 'similarity' with sparse Matrix inputs")
+  dmat <-  as(mat, "dgTMatrix")
+  dmat[1, 2] <- 0
+  expect_error(adjClust(dmat), "Input matrix is not symmetric")
+})
