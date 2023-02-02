@@ -447,21 +447,21 @@ poly_coords.dsCMatrix <- function(mat) {
 #' @import ggplot2
 #' @examples \dontrun{
 #' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity",
-#'           legendName = "IF")
+#'           legendName = "IF", axis = TRUE)
 #' p <- ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity", 
 #'                log = FALSE)
 #' # custom palette
 #' p + scale_fill_gradient(low = "yellow", high = "red")
 #' # dsCMatrix
 #' m <- Matrix(c(0, 0, 2, 0, 3, 0, 2, 0, 0), ncol = 3)
-#' ggPlotSim(m)
+#' ggPlotSim(m, axis = TRUE)
 #' # dgCMatrix
 #' m <- as(m, "generalMatrix")
 #' ggPlotSim(m)
 #' m <- as.dist(m)
 #' if (require("HiTC", quietly = TRUE)) {
 #'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
-#'   ggPlotSim(hic_imr90_40_XX)
+#'   ggPlotSim(hic_imr90_40_XX, axis = TRUE)
 #' }
 #' if (requireNamespace("snpStats", quietly = TRUE)) {
 #'   data(testdata, package = "snpStats")
@@ -474,7 +474,9 @@ poly_coords.dsCMatrix <- function(mat) {
 ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
                       log = TRUE, legendName = "intensity",
                       main = NULL, priorCount = 0.5, 
-                      stats = c("R.squared", "D.prime"), h = NULL) {
+                      stats = c("R.squared", "D.prime"), h = NULL,
+                      axis = FALSE, naxis = 10, axistext = NULL, 
+                      xlab = "objects") {
   UseMethod("ggPlotSim")
 }
 
@@ -482,8 +484,12 @@ ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
 ggPlotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                                 log = TRUE, legendName = "intensity", 
                                 main = NULL, priorCount = 0.5, 
-                                stats = c("R.squared", "D.prime"), h = NULL) {
-  p <- ggPlotSim.default(mat, type, log, legendName, main, priorCount)
+                                stats = c("R.squared", "D.prime"), h = NULL,
+                                axis = FALSE, naxis = 10, axistext = NULL, 
+                                xlab = "objects") {
+  p <- ggPlotSim.default(mat, type, log, legendName, main, priorCount, 
+                         axis = axis, naxis = naxis, axistext = axistext, 
+                         xlab = xlab)
 
   return(p)
 }
@@ -492,7 +498,9 @@ ggPlotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                                 log = TRUE, legendName = "intensity", 
                                 main = NULL, priorCount = 0.5, 
-                                stats = c("R.squared", "D.prime"), h = NULL) {
+                                stats = c("R.squared", "D.prime"), h = NULL,
+                                axis = FALSE, naxis = 10, axistext = NULL,
+                                xlab = "objects") {
   p <- ncol(mat)
   if (!isSymmetric(mat)) 
     warning(paste("Input matrix was not symmetric. Plotting only the",
@@ -500,7 +508,9 @@ ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   
   mat <- forceSymmetric(mat)
   
-  p <- ggPlotSim.dsCMatrix(mat, type, log, legendName, main, priorCount)
+  p <- ggPlotSim.dsCMatrix(mat, type, log, legendName, main, priorCount, 
+                           axis = axis, naxis = naxis, axistext = axistext, 
+                           xlab = xlab)
   
   return(p)
 }
@@ -509,7 +519,8 @@ ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 ggPlotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
                            log = TRUE, legendName = "intensity", main = NULL, 
                            priorCount = 0.5, stats = c("R.squared", "D.prime"),
-                           h = NULL) {
+                           h = NULL, axis = FALSE, naxis = 10, 
+                           axistext = NULL, xlab = "objects") {
   
   type <- match.arg(type)
   if (type != "dissimilarity") {
@@ -520,16 +531,20 @@ ggPlotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
   
   mat <- as.matrix(mat)
   
-  p <- ggPlotSim.default(mat, type, log, legendName, main, priorCount)
+  p <- ggPlotSim.default(mat, type, log, legendName, main, priorCount, 
+                         axis = axis, naxis = naxis, axistext = axistext, 
+                         xlab = xlab)
   
   return(p)
 }
 
 #' @export
 ggPlotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
-                             log = TRUE, legendName = "intensity", main = NULL, 
+                             log = TRUE, legendName = "IF", main = NULL, 
                              priorCount = 0.5, 
-                             stats = c("R.squared", "D.prime"), h = NULL) {
+                             stats = c("R.squared", "D.prime"), h = NULL,
+                             axis = FALSE, naxis = 10, axistext = NULL, 
+                             xlab = "bins") {
   type <- match.arg(type)
   if (!requireNamespace("HiTC")) 
     stop("Package 'HiTC' not available. 'HTCexp' input cannot be used.")
@@ -537,16 +552,19 @@ ggPlotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
     stop("type 'dissimilarity' does not match 'HTCexp' data")
     
   mat <- mat@intdata
-  p <- ggPlotSim(mat, type, log, legendName, main, priorCount)
+  p <- ggPlotSim(mat, type, log, legendName, main, priorCount, axis = axis, 
+                 naxis = naxis, axistext = axistext, xlab = xlab)
   
   return(p)
 }
 
 #' @export
 ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                                log = TRUE, legendName = "intensity", 
+                                log = TRUE, legendName = "correlation", 
                                 main = NULL, priorCount = 0.5, 
-                                stats = c("R.squared", "D.prime"), h = NULL) {
+                                stats = c("R.squared", "D.prime"), h = NULL,
+                                axis = FALSE, naxis = 10, axistext = NULL,
+                                xlab = "SNP index") {
   if (!requireNamespace("snpStats")) 
     stop("Package 'snpStats' not available. 'SnpMatrix' input cannot be used.")
   
@@ -559,7 +577,8 @@ ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   mat[mat < 0] <- 0  ## fix numerical aberrations
   diag(mat) <- rep(1, nrow(mat))  ## by default the diagonal is 0 after 'snpStats::ld'
   
-  p <- ggPlotSim(mat, type, log, legendName, main, priorCount)
+  p <- ggPlotSim(mat, type, log, legendName, main, priorCount, axis = axis, 
+                 naxis = naxis, axistext = axistext, xlab = xlab)
   
   return(p)
 }
@@ -568,7 +587,9 @@ ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                               log = TRUE, legendName = "intensity", 
                               main = NULL, priorCount = 0.5, 
-                              stats = c("R.squared", "D.prime"), h = NULL) {
+                              stats = c("R.squared", "D.prime"), h = NULL,
+                              axis = FALSE, naxis = 10, axistext = NULL,
+                              xlab = "objects") {
   
   type <- match.arg(type)
   if (!is.character(legendName)) stop("'legendName' must be a string!")
@@ -598,6 +619,17 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   
   if (!is.null(main)) {
     p <- p + ggtitle(main)
+  }
+  
+  if (axis) {
+    displayed_bins <- floor(seq(1, d, length.out = naxis))
+    displayed_x <- make_coords(displayed_bins, displayed_bins, rep(0, naxis))
+    displayed_x <- displayed_x$x[(naxis + 1):(2 * naxis)]
+    if (is.null(axistext)) axistext <- displayed_bins
+    p <- p + theme(axis.title.x = element_text(), axis.text.x = element_text(),
+                   axis.ticks.x = element_line(), 
+                   axis.ticks.length.x = unit(0.25, "cm")) +
+      scale_x_continuous(name = xlab, breaks = displayed_x, labels = axistext)
   }
   
   return(p)
