@@ -446,10 +446,11 @@ poly_coords.dsCMatrix <- function(mat) {
 #' matrix to avoid taking log of zero. Used only if \code{log = TRUE}.
 #' @import ggplot2
 #' @examples \dontrun{
+#' clustering <- rep(1:3, each = 50)
 #' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity",
-#'           legendName = "IF", axis = TRUE)
+#'           legendName = "IF", axis = TRUE, clustering = clustering)
 #' p <- ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity", 
-#'                log = FALSE)
+#'                log = FALSE, clustering = clustering, cluster_col = "blue")
 #' # custom palette
 #' p + scale_fill_gradient(low = "yellow", high = "red")
 #' # dsCMatrix
@@ -472,35 +473,38 @@ poly_coords.dsCMatrix <- function(mat) {
 #' @export
 
 ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
-                      log = TRUE, legendName = "intensity",
+                      clustering = NULL, log = TRUE, legendName = "intensity",
                       main = NULL, priorCount = 0.5, 
                       stats = c("R.squared", "D.prime"), h = NULL,
                       axis = FALSE, naxis = 10, axistext = NULL, 
-                      xlab = "objects") {
+                      xlab = "objects", cluster_col = "darkred") {
   UseMethod("ggPlotSim")
 }
 
 #' @export
 ggPlotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                                log = TRUE, legendName = "intensity", 
-                                main = NULL, priorCount = 0.5, 
+                                clustering = NULL, log = TRUE, 
+                                legendName = "intensity", main = NULL, 
+                                priorCount = 0.5, 
                                 stats = c("R.squared", "D.prime"), h = NULL,
                                 axis = FALSE, naxis = 10, axistext = NULL, 
-                                xlab = "objects") {
-  p <- ggPlotSim.default(mat, type, log, legendName, main, priorCount, 
-                         axis = axis, naxis = naxis, axistext = axistext, 
-                         xlab = xlab)
+                                xlab = "objects", cluster_col = "darkred") {
+  p <- ggPlotSim.default(mat, type, clustering, log, legendName, main, 
+                         priorCount, axis = axis, naxis = naxis, 
+                         axistext = axistext, xlab = xlab, 
+                         cluster_col = cluster_col)
 
   return(p)
 }
 
 #' @export
 ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                                log = TRUE, legendName = "intensity", 
-                                main = NULL, priorCount = 0.5, 
+                                clustering = NULL, log = TRUE, 
+                                legendName = "intensity", main = NULL, 
+                                priorCount = 0.5, 
                                 stats = c("R.squared", "D.prime"), h = NULL,
                                 axis = FALSE, naxis = 10, axistext = NULL,
-                                xlab = "objects") {
+                                xlab = "objects", cluster_col = "darkred") {
   p <- ncol(mat)
   if (!isSymmetric(mat)) 
     warning(paste("Input matrix was not symmetric. Plotting only the",
@@ -508,19 +512,22 @@ ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   
   mat <- forceSymmetric(mat)
   
-  p <- ggPlotSim.dsCMatrix(mat, type, log, legendName, main, priorCount, 
-                           axis = axis, naxis = naxis, axistext = axistext, 
-                           xlab = xlab)
+  p <- ggPlotSim.dsCMatrix(mat, type, clustering, log, legendName, main, 
+                           priorCount, axis = axis, naxis = naxis, 
+                           axistext = axistext, xlab = xlab, 
+                           cluster_col = cluster_col)
   
   return(p)
 }
 
 #' @export
 ggPlotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
-                           log = TRUE, legendName = "intensity", main = NULL, 
+                           clustering = NULL, log = TRUE, 
+                           legendName = "intensity", main = NULL, 
                            priorCount = 0.5, stats = c("R.squared", "D.prime"),
                            h = NULL, axis = FALSE, naxis = 10, 
-                           axistext = NULL, xlab = "objects") {
+                           axistext = NULL, xlab = "objects", 
+                           cluster_col = "darkred") {
   
   type <- match.arg(type)
   if (type != "dissimilarity") {
@@ -531,20 +538,21 @@ ggPlotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
   
   mat <- as.matrix(mat)
   
-  p <- ggPlotSim.default(mat, type, log, legendName, main, priorCount, 
-                         axis = axis, naxis = naxis, axistext = axistext, 
-                         xlab = xlab)
+  p <- ggPlotSim.default(mat, type, clustering, log, legendName, main, 
+                         priorCount, axis = axis, naxis = naxis, 
+                         axistext = axistext, xlab = xlab, 
+                         cluster_col = cluster_col)
   
   return(p)
 }
 
 #' @export
 ggPlotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
-                             log = TRUE, legendName = "IF", main = NULL, 
-                             priorCount = 0.5, 
+                             clustering = NULL, log = TRUE, legendName = "IF", 
+                             main = NULL, priorCount = 0.5, 
                              stats = c("R.squared", "D.prime"), h = NULL,
                              axis = FALSE, naxis = 10, axistext = NULL, 
-                             xlab = "bins") {
+                             xlab = "bins", cluster_col = "darkred") {
   type <- match.arg(type)
   if (!requireNamespace("HiTC")) 
     stop("Package 'HiTC' not available. 'HTCexp' input cannot be used.")
@@ -552,19 +560,21 @@ ggPlotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
     stop("type 'dissimilarity' does not match 'HTCexp' data")
     
   mat <- mat@intdata
-  p <- ggPlotSim(mat, type, log, legendName, main, priorCount, axis = axis, 
-                 naxis = naxis, axistext = axistext, xlab = xlab)
+  p <- ggPlotSim(mat, type, clustering, log, legendName, main, priorCount, 
+                 axis = axis, naxis = naxis, axistext = axistext, xlab = xlab,
+                 cluster_col = cluster_col)
   
   return(p)
 }
 
 #' @export
 ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                                log = TRUE, legendName = "correlation", 
-                                main = NULL, priorCount = 0.5, 
+                                clustering = NULL, log = TRUE, 
+                                legendName = "correlation", main = NULL, 
+                                priorCount = 0.5, 
                                 stats = c("R.squared", "D.prime"), h = NULL,
                                 axis = FALSE, naxis = 10, axistext = NULL,
-                                xlab = "SNP index") {
+                                xlab = "SNP index", cluster_col = "darkred") {
   if (!requireNamespace("snpStats")) 
     stop("Package 'snpStats' not available. 'SnpMatrix' input cannot be used.")
   
@@ -577,19 +587,21 @@ ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   mat[mat < 0] <- 0  ## fix numerical aberrations
   diag(mat) <- rep(1, nrow(mat))  ## by default the diagonal is 0 after 'snpStats::ld'
   
-  p <- ggPlotSim(mat, type, log, legendName, main, priorCount, axis = axis, 
-                 naxis = naxis, axistext = axistext, xlab = xlab)
+  p <- ggPlotSim(mat, type, clustering, log, legendName, main, priorCount, axis, 
+                 naxis = naxis, axistext = axistext, xlab = xlab, 
+                 cluster_col = cluster_col)
   
   return(p)
 }
  
 #' @export
 ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
-                              log = TRUE, legendName = "intensity", 
-                              main = NULL, priorCount = 0.5, 
+                              clustering = NULL, log = TRUE, 
+                              legendName = "intensity", main = NULL, 
+                              priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
                               axis = FALSE, naxis = 10, axistext = NULL,
-                              xlab = "objects") {
+                              xlab = "objects", cluster_col = "darkred") {
   
   type <- match.arg(type)
   if (!is.character(legendName)) stop("'legendName' must be a string!")
@@ -605,7 +617,7 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     geom_polygon(data = fake_coords, aes(x = x, y = y), fill = "lightgrey")
   
   if (log) {
-    if (!is.null(legendName) && legendName != "") {
+    if (legendName != "") {
       legendName <- ifelse(priorCount == 0,
                            paste0("log(", legendName, ")"),
                            paste0("log(", legendName, " + ", priorCount, ")"))
@@ -615,6 +627,27 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   } else {
     p <- p + geom_polygon(aes(group = id, fill = IF)) + 
       scale_fill_viridis_b(name = legendName)
+  }
+  
+  if (!is.null(clustering)) {
+    all_clusters <- unique(clustering)
+    nb_clust <- length(all_clusters)
+    start_clusters <- sapply(all_clusters, 
+                             function(cc) min(which(clustering == cc)))
+    end_clusters <- sapply(all_clusters, 
+                           function(cc) max(which(clustering == cc)))
+    indi <- c(start_clusters, end_clusters, end_clusters)
+    indj <- c(start_clusters, start_clusters, end_clusters)
+    cluster_coords <- make_coords(indi, indj, rep(0, length(indi)))
+    cluster_coords <- cluster_coords[order(cluster_coords$id), ]
+    to_keep <- c(3*(1:nb_clust), 
+                 3*nb_clust + 4*(1:nb_clust) - 1,
+                 7*nb_clust + 3*(1:nb_clust) - 2)
+    cluster_coords <- cluster_coords[to_keep, ]
+    cluster_coords$cluster <- rep(1:nb_clust, 3)
+    p <- p + geom_path(data = cluster_coords, 
+                       aes(x = x, y = y, group = cluster),
+                       size = 1, colour = cluster_col)
   }
   
   if (!is.null(main)) {

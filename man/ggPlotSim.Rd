@@ -7,12 +7,18 @@
 ggPlotSim(
   mat,
   type = c("similarity", "dissimilarity"),
+  clustering = NULL,
   log = TRUE,
   legendName = "intensity",
   main = NULL,
   priorCount = 0.5,
   stats = c("R.squared", "D.prime"),
-  h = NULL
+  h = NULL,
+  axis = FALSE,
+  naxis = 10,
+  axistext = NULL,
+  xlab = "objects",
+  cluster_col = "darkred"
 )
 }
 \arguments{
