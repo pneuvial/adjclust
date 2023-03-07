@@ -455,13 +455,16 @@ poly_coords.dsCMatrix <- function(mat) {
 #' p + scale_fill_gradient(low = "yellow", high = "red")
 #' # dsCMatrix
 #' m <- Matrix(c(0, 0, 2, 0, 3, 0, 2, 0, 0), ncol = 3)
+#' res <- adjClust(m)
 #' ggPlotSim(m, axis = TRUE)
+#' ggPlotSim(m, dendro = res)
 #' # dgCMatrix
 #' m <- as(m, "generalMatrix")
 #' ggPlotSim(m)
 #' m <- as.dist(m)
 #' if (require("HiTC", quietly = TRUE)) {
 #'   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
+#'   res <- hicClust(hic_imr90_40_XX, log = TRUE)
 #'   ggPlotSim(hic_imr90_40_XX, axis = TRUE)
 #' }
 #' if (requireNamespace("snpStats", quietly = TRUE)) {
@@ -473,8 +476,8 @@ poly_coords.dsCMatrix <- function(mat) {
 #' @export
 
 ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
-                      clustering = NULL, log = TRUE, legendName = "intensity",
-                      main = NULL, priorCount = 0.5, 
+                      clustering = NULL, dendro = NULL, log = TRUE, 
+                      legendName = "intensity", main = NULL, priorCount = 0.5, 
                       stats = c("R.squared", "D.prime"), h = NULL,
                       axis = FALSE, naxis = 10, axistext = NULL, 
                       xlab = "objects", cluster_col = "darkred") {
@@ -483,13 +486,13 @@ ggPlotSim <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 ggPlotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                                clustering = NULL, log = TRUE, 
+                                clustering = NULL, dendro = NULL, log = TRUE, 
                                 legendName = "intensity", main = NULL, 
                                 priorCount = 0.5, 
                                 stats = c("R.squared", "D.prime"), h = NULL,
                                 axis = FALSE, naxis = 10, axistext = NULL, 
                                 xlab = "objects", cluster_col = "darkred") {
-  p <- ggPlotSim.default(mat, type, clustering, log, legendName, main, 
+  p <- ggPlotSim.default(mat, type, clustering, dendro, log, legendName, main, 
                          priorCount, axis = axis, naxis = naxis, 
                          axistext = axistext, xlab = xlab, 
                          cluster_col = cluster_col)
@@ -499,7 +502,7 @@ ggPlotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                                clustering = NULL, log = TRUE, 
+                                clustering = NULL, dendro = NULL, log = TRUE, 
                                 legendName = "intensity", main = NULL, 
                                 priorCount = 0.5, 
                                 stats = c("R.squared", "D.prime"), h = NULL,
@@ -512,7 +515,7 @@ ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   
   mat <- forceSymmetric(mat)
   
-  p <- ggPlotSim.dsCMatrix(mat, type, clustering, log, legendName, main, 
+  p <- ggPlotSim.dsCMatrix(mat, type, clustering, dendro, log, legendName, main, 
                            priorCount, axis = axis, naxis = naxis, 
                            axistext = axistext, xlab = xlab, 
                            cluster_col = cluster_col)
@@ -522,7 +525,7 @@ ggPlotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 ggPlotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
-                           clustering = NULL, log = TRUE, 
+                           clustering = NULL, dendro = NULL, log = TRUE, 
                            legendName = "intensity", main = NULL, 
                            priorCount = 0.5, stats = c("R.squared", "D.prime"),
                            h = NULL, axis = FALSE, naxis = 10, 
@@ -538,7 +541,7 @@ ggPlotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
   
   mat <- as.matrix(mat)
   
-  p <- ggPlotSim.default(mat, type, clustering, log, legendName, main, 
+  p <- ggPlotSim.default(mat, type, clustering, dendro, log, legendName, main, 
                          priorCount, axis = axis, naxis = naxis, 
                          axistext = axistext, xlab = xlab, 
                          cluster_col = cluster_col)
@@ -548,8 +551,8 @@ ggPlotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 ggPlotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
-                             clustering = NULL, log = TRUE, legendName = "IF", 
-                             main = NULL, priorCount = 0.5, 
+                             clustering = NULL, dendro = NULL, log = TRUE, 
+                             legendName = "IF", main = NULL, priorCount = 0.5, 
                              stats = c("R.squared", "D.prime"), h = NULL,
                              axis = FALSE, naxis = 10, axistext = NULL, 
                              xlab = "bins", cluster_col = "darkred") {
@@ -560,16 +563,16 @@ ggPlotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
     stop("type 'dissimilarity' does not match 'HTCexp' data")
     
   mat <- mat@intdata
-  p <- ggPlotSim(mat, type, clustering, log, legendName, main, priorCount, 
-                 axis = axis, naxis = naxis, axistext = axistext, xlab = xlab,
-                 cluster_col = cluster_col)
+  p <- ggPlotSim(mat, type, clustering, dendro, log, legendName, main, 
+                 priorCount, axis = axis, naxis = naxis, axistext = axistext, 
+                 xlab = xlab, cluster_col = cluster_col)
   
   return(p)
 }
 
 #' @export
 ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                                clustering = NULL, log = TRUE, 
+                                clustering = NULL, dendro = NULL, log = TRUE, 
                                 legendName = "correlation", main = NULL, 
                                 priorCount = 0.5, 
                                 stats = c("R.squared", "D.prime"), h = NULL,
@@ -587,16 +590,16 @@ ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   mat[mat < 0] <- 0  ## fix numerical aberrations
   diag(mat) <- rep(1, nrow(mat))  ## by default the diagonal is 0 after 'snpStats::ld'
   
-  p <- ggPlotSim(mat, type, clustering, log, legendName, main, priorCount, axis, 
-                 naxis = naxis, axistext = axistext, xlab = xlab, 
-                 cluster_col = cluster_col)
+  p <- ggPlotSim(mat, type, clustering, dendro, log, legendName, main, 
+                 priorCount, axis, naxis = naxis, axistext = axistext, 
+                 xlab = xlab, cluster_col = cluster_col)
   
   return(p)
 }
  
 #' @export
 ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
-                              clustering = NULL, log = TRUE, 
+                              clustering = NULL, dendro = NULL, log = TRUE, 
                               legendName = "intensity", main = NULL, 
                               priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
@@ -606,15 +609,39 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   type <- match.arg(type)
   if (!is.character(legendName)) stop("'legendName' must be a string!")
   if (!is.null(main) && !is.character(main)) stop("'main' must be a string!")
-  
+
   if (type == "dissimilarity") mat <- max(mat) - mat
   
   coordinates <- poly_coords(mat)
   d <- nrow(mat)
   fake_coords <- make_coords(c(1, d, d), c(1, d, 1), rep(0, 3))
   
-  p <- ggplot(coordinates, aes(x = x, y = y)) + theme_void() +
-    geom_polygon(data = fake_coords, aes(x = x, y = y), fill = "lightgrey")
+  if (!is.null(dendro)) {
+    dd <- as.hclust(dendro)
+    ymax <- max(fake_coords$y)
+    coordinates$y <- coordinates$y / ymax * max(dd$height)
+    coordinates$y <- - coordinates$y
+    
+    xmin <- min(fake_coords$x)
+    xmax <- max(fake_coords$x)
+    coordinates$x <- (d^2 - 1) / d / (xmax - xmin) * coordinates$x
+    coordinates$x <- coordinates$x + (xmax * (d+1) + xmin * (-2*d^2 - d + 1)) / 
+      (2 * d * (xmax - xmin))
+    
+    fake_coords$y <- fake_coords$y / ymax * max(dendro$height)
+    fake_coords$y <- - fake_coords$y
+    fake_coords$x <- (d^2 - 1) / d / (xmax - xmin) * fake_coords$x
+    fake_coords$x <- fake_coords$x + (xmax * (d+1) + xmin * (-2*d^2 - d + 1)) / 
+      (2 * d * (xmax - xmin))
+
+    dd <- as.dendrogram(dd)
+    dd <- dd %>% set("labels", value = rep(NA, d)) %>% as.ggdend()
+    p <- ggplot(dd) + theme_void() +
+      geom_polygon(data = fake_coords, aes(x = x, y = y), fill = "lightgrey")
+  } else {
+    p <- ggplot() + theme_void() +
+      geom_polygon(data = fake_coords, aes(x = x, y = y), fill = "lightgrey")
+  }
   
   if (log) {
     if (legendName != "") {
@@ -622,10 +649,13 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                            paste0("log(", legendName, ")"),
                            paste0("log(", legendName, " + ", priorCount, ")"))
     }
-    p <- p + geom_polygon(aes(group = id, fill = log(IF + priorCount))) + 
+    p <- p + geom_polygon(data = coordinates, 
+                          aes(x = x, y = y, group = id, 
+                              fill = log(IF + priorCount))) + 
       scale_fill_viridis_b(name = legendName)
   } else {
-    p <- p + geom_polygon(aes(group = id, fill = IF)) + 
+    p <- p + geom_polygon(data = coordinates, 
+                          aes(x = x, y = y, group = id, fill = IF)) + 
       scale_fill_viridis_b(name = legendName)
   }
   
