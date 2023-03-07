@@ -1,5 +1,6 @@
-# dev version  [2023-01-12]
+# dev version  [2023-03-07]
 
+* Fix #61 (NAMESPACE error in 'SnpClust.matrix')
 * Fix #45 (update 'calls' for 'adjclust.*' methods)
 * Fix #49 (calls to 'library' in tests)
 * Fix #55 (pkgdown action)

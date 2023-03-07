@@ -46,7 +46,7 @@ biocViews:
 VignetteBuilder: knitr
 URL: https://pneuvial.github.io/adjclust/
 BugReports: https://github.com/pneuvial/adjclust/issues
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 LinkingTo: 
     Rcpp, 
     RcppArmadillo

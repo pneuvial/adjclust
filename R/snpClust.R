@@ -87,6 +87,8 @@ snpClust <- function(x, h = ncol(x) - 1, stats = c("R.squared", "D.prime")) {
 #' @export
 snpClust.matrix <- function(x, h = ncol(x) - 1, 
                             stats = c("R.squared", "D.prime")) {
+  if (!requireNamespace("snpStats"))
+    stop("Package 'snpStats' not available. This function cannot be used with 'matrix' data.")
   if (is.null(rownames(x)))
     rownames(x) <- 1:nrow(x)
   if (is.null(colnames(x)))
