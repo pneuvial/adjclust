@@ -54,3 +54,37 @@ test_that("adjClust methods properly catches unexpected  'calls'", {
   dmat[1, 2] <- 0
   expect_error(adjClust(dmat), "Input matrix is not symmetric")
 })
+
+test_that("'matL' and 'matR' are consistent with C++ versions", {
+  sim <- matrix(
+    c(1.0, 0.1, 0.2, 0.3,
+      0.1, 1.0 ,0.4 ,0.5,
+      0.2, 0.4, 1.0, 0.6,
+      0.3, 0.5, 0.6, 1.0), nrow = 4)
+  ml <- matL(sim, h = 2)
+  mr <- matR(sim, h = 2)
+  mat <- as(sim, "dgCMatrix")
+  expect_identical(matL_full(sim, h = 2), ml)
+  expect_identical(matL(mat, h = 2), ml)
+  expect_identical(matR_full(sim, h = 2), mr)
+  expect_identical(matR(mat, h = 2), mr)
+  expect_identical(matR_sparse(mat, h = 2), 
+                   as(mr, "sparseMatrix"))
+  expect_identical(matL_sparse(mat, h = 2), 
+                   as(ml, "sparseMatrix"))
+})
+
+test_that("WCSS functions", {
+  sim <- matrix(
+    c(1.0, 0.1, 0.2, 0.3,
+      0.1, 1.0 ,0.4 ,0.5,
+      0.2, 0.4, 1.0, 0.6,
+      0.3, 0.5, 0.6, 1.0), nrow = 4)
+  mat <- as(sim, "dgCMatrix")
+
+  clust <- rep(1, ncol(mat))
+  wcss_single(mat, clust)
+  
+  clust_mat <- rbind(clust, clust)
+  WCSS(mat, clust_mat)
+})
