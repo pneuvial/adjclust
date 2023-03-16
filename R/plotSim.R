@@ -687,6 +687,12 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                  3*nb_clust + 4*(1:nb_clust) - 1,
                  7*nb_clust + 3*(1:nb_clust) - 2)
     cluster_coords <- cluster_coords[to_keep, ]
+    if (!is.null(dendro)) {
+      cluster_coords[, c("x", "y")] <- rescale_coords(cluster_coords$x, 
+                                                      cluster_coords$y,
+                                                      ymax_i, ymax_f, xmin_i, 
+                                                      xmax_i, d)
+    }
     cluster_coords$cluster <- rep(1:nb_clust, 3)
     p <- p + geom_path(data = cluster_coords, 
                        aes(x = x, y = y, group = cluster),
