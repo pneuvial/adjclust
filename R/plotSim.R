@@ -462,7 +462,8 @@ poly_coords.dsCMatrix <- function(mat) {
 #' clustering <- rep(1:3, each = 50)
 #' dist_data <- as.matrix(dist(iris[, 1:4]))
 #' dendro_iris <- adjClust(dist_data, type = "dissimilarity")
-#' ggPlotSim(dist_data, type = "dissimilarity", dendro = dendro_iris)
+#' ggPlotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
+#'           axis = TRUE)
 #' ggPlotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
 #'           clustering = clustering)
 #' ggPlotSim(dist_data, type = "dissimilarity", legendName = "IF", axis = TRUE, 
@@ -707,11 +708,20 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     displayed_bins <- floor(seq(1, d, length.out = naxis))
     displayed_x <- make_coords(displayed_bins, displayed_bins, rep(0, naxis))
     displayed_x <- displayed_x$x[(naxis + 1):(2 * naxis)]
+    if (!is.null(dendro)) {
+      # note: y has no meaning here!
+      displayed_x <- rescale_coords(displayed_x, displayed_x, ymax_i, ymax_f, 
+                                    xmin_i, xmax_i, d)$x
+    }
     if (is.null(axistext)) axistext <- displayed_bins
     p <- p + theme(axis.title.x = element_text(), axis.text.x = element_text(),
                    axis.ticks.x = element_line(), 
                    axis.ticks.length.x = unit(0.25, "cm")) +
       scale_x_continuous(name = xlab, breaks = displayed_x, labels = axistext)
+    if (!is.null(dendro)) {
+      p <- p + theme(axis.line.x = element_line(), 
+                     panel.grid.major.x = element_line(colour = "lightgrey"))
+    }
   }
   
   return(p)
