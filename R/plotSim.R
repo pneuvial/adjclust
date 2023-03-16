@@ -40,6 +40,8 @@
 #' @param cluster_col colour for the cluster line if \code{clustering} is not
 #' \code{NULL}.
 #' @import ggplot2
+#' @importFrom dendextend set as.ggdend %>%
+#' @importFrom rlang .data
 #' @examples \dontrun{
 #' clustering <- rep(1:3, each = 50)
 #' dist_data <- as.matrix(dist(iris[, 1:4]))
@@ -209,8 +211,8 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   d <- nrow(mat)
   type <- match.arg(type)
   if (!is.null(clustering)) {
-    clusters <- unique(clustering)
-    if ((length(clustering) != d) || (sort(clusters) != 1:max(clusters))) {
+    clusters <- sort(unique(clustering))
+    if ((length(clustering) != d) || !all.equal(clusters, 1:max(clusters))) {
       stop(paste("'clustering' must be a vector of numeric values between 1",
                  "and K (nb of clusters). Please fix input."))
     }
@@ -272,10 +274,12 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     dd <- as.dendrogram(dd)
     dd <- dd %>% set("labels", value = rep(NA, d)) %>% as.ggdend()
     p <- ggplot(dd) + theme_void() +
-      geom_polygon(data = fake_coords, aes(x = x, y = y), fill = "lightgrey")
+      geom_polygon(data = fake_coords, aes(x = .data$x, y = .data$y), 
+                   fill = "lightgrey")
   } else {
     p <- ggplot() + theme_void() +
-      geom_polygon(data = fake_coords, aes(x = x, y = y), fill = "lightgrey")
+      geom_polygon(data = fake_coords, aes(x = .data$x, y = .data$y), 
+                   fill = "lightgrey")
   }
   
   # Plot ####
@@ -286,12 +290,13 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                            paste0("log(", legendName, " + ", priorCount, ")"))
     }
     p <- p + geom_polygon(data = coordinates, 
-                          aes(x = x, y = y, group = id, 
-                              fill = log(IF + priorCount))) + 
+                          aes(x = .data$x, y = .data$y, group = .data$id, 
+                              fill = log(.data$IF + priorCount))) + 
       scale_fill_viridis_b(name = legendName)
   } else {
     p <- p + geom_polygon(data = coordinates, 
-                          aes(x = x, y = y, group = id, fill = IF)) + 
+                          aes(x = .data$x, y = .data$y, group = .data$id, 
+                              fill = .data$IF)) + 
       scale_fill_viridis_b(name = legendName)
   }
   
@@ -319,7 +324,7 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     }
     cluster_coords$cluster <- rep(1:nb_clust, 3)
     p <- p + geom_path(data = cluster_coords, 
-                       aes(x = x, y = y, group = cluster),
+                       aes(x = .data$x, y = .data$y, group = .data$cluster),
                        size = 1, colour = cluster_col)
   }
   
