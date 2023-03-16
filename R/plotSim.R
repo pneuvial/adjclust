@@ -97,9 +97,9 @@ plotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                               axis = FALSE, naxis = 10, axistext = NULL, 
                               xlab = "objects", cluster_col = "darkred") {
   p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
-                         priorCount, axis = axis, naxis = naxis, 
-                         axistext = axistext, xlab = xlab, 
-                         cluster_col = cluster_col)
+                       priorCount, axis = axis, naxis = naxis, 
+                       axistext = axistext, xlab = xlab, 
+                       cluster_col = cluster_col)
 
   return(p)
 }
@@ -118,11 +118,14 @@ plotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                   "upper-triangular part of the matrix."))
   
   mat <- forceSymmetric(mat)
+  if (is.null(h)) h <- ncol(mat) - 1
+  if (!is.numeric(h) || h <= 0 || h >= ncol(mat)) 
+    stop("'h' should be numeric, larger than 0 and smaller than p.")
   
-  p <- plotSim.dsCMatrix(mat, type, clustering, dendro, log, legendName, main, 
-                           priorCount, axis = axis, naxis = naxis, 
-                           axistext = axistext, xlab = xlab, 
-                           cluster_col = cluster_col)
+  p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
+                         priorCount, h = h, axis = axis, naxis = naxis, 
+                         axistext = axistext, xlab = xlab, 
+                         cluster_col = cluster_col)
   
   return(p)
 }
@@ -145,9 +148,9 @@ plotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
   mat <- as.matrix(mat)
   
   p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
-                         priorCount, axis = axis, naxis = naxis, 
-                         axistext = axistext, xlab = xlab, 
-                         cluster_col = cluster_col)
+                       priorCount, axis = axis, naxis = naxis, 
+                       axistext = axistext, xlab = xlab, 
+                       cluster_col = cluster_col)
   
   return(p)
 }
@@ -167,8 +170,8 @@ plotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
     
   mat <- mat@intdata
   p <- plotSim(mat, type, clustering, dendro, log, legendName, main, 
-                 priorCount, axis = axis, naxis = naxis, axistext = axistext, 
-                 xlab = xlab, cluster_col = cluster_col)
+               priorCount, axis = axis, naxis = naxis, axistext = axistext, 
+               xlab = xlab, cluster_col = cluster_col)
   
   return(p)
 }
@@ -186,16 +189,17 @@ plotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   
   stats <- match.arg(stats)
   if (is.null(h)) h <- ncol(mat) - 1
-  if (h >= ncol(mat)) stop("h should be strictly less than p")
+  if (!is.numeric(h) || h <= 0 || h >= ncol(mat)) 
+    stop("'h' should be numeric, larger than 0 and smaller than p.")
   
   mat <- snpStats::ld(mat, stats = stats, depth = h)
   mat[mat > 1] <- 1  ## fix numerical aberrations
   mat[mat < 0] <- 0  ## fix numerical aberrations
   diag(mat) <- rep(1, nrow(mat))  ## by default the diagonal is 0 after 'snpStats::ld'
   
-  p <- plotSim(mat, type, clustering, dendro, log, legendName, main, 
-                 priorCount, axis = axis, naxis = naxis, axistext = axistext, 
-                 xlab = xlab, cluster_col = cluster_col)
+  p <- plotSim(mat, type, clustering, dendro, log, legendName, main, priorCount,
+               h = h, axis = axis, naxis = naxis, axistext = axistext, 
+               xlab = xlab, cluster_col = cluster_col)
   
   return(p)
 }
@@ -214,7 +218,8 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     clusters <- sort(unique(clustering))
     if ((length(clustering) != d) || !all.equal(clusters, 1:max(clusters))) {
       stop(paste("'clustering' must be a vector of numeric values between 1",
-                 "and K (nb of clusters). Please fix input."))
+                 "and K (nb of clusters) as large as input matrix. Please fix.",
+                 "input."))
     }
   }
   if (!is.null(dendro)) {
@@ -225,6 +230,9 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
       stop(paste("'dendro' can not be converted to class 'hclust'. Please,",
                  "provide a proper dendrogram."))
     }
+    if (length(dd$order) != d)
+      stop(paste("'dendro' must be a dendrogram with the same number of",
+                 "objects than the input matrix. Please fix input."))
   }
   if (!is.logical(log)) stop("'log' must be logical!")
   if (!is.character(legendName)) stop("'legendName' must be a string!")
@@ -259,6 +267,7 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   coordinates <- poly_coords(mat)
   fake_coords <- make_coords(c(1, d, d), c(1, d, 1), rep(0, 3))
   
+  
   if (!is.null(dendro)) {
     ymax_i <- max(fake_coords$y)
     ymax_f <- max(dd$height)
@@ -267,6 +276,11 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     coordinates[, c("x", "y")] <- rescale_coords(coordinates$x, coordinates$y,
                                                  ymax_i, ymax_f, xmin_i, xmax_i,
                                                  d)
+  }
+  if (!is.null(h) && h < d - 1) {
+    fake_coords <- make_coords(c(1, d, d, h+1), c(1, d, d-h, 1), rep(0, 4))
+  }
+  if (!is.null(dendro)) {
     fake_coords[, c("x", "y")] <- rescale_coords(fake_coords$x, fake_coords$y,
                                                  ymax_i, ymax_f, xmin_i, xmax_i,
                                                  d)
@@ -385,7 +399,6 @@ make_coords <- function(indi, indj, values) {
 }
 
 rescale_coords <- function(x, y, ymax_i, ymax_f, xmin_i, xmax_i, xmax_f) {
-  # ymax <- max(fake_coords$y)
   y <- y / ymax_i * ymax_f
   y <- - y
   
