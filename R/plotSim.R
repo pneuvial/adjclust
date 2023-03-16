@@ -624,21 +624,54 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                               stats = c("R.squared", "D.prime"), h = NULL,
                               axis = FALSE, naxis = 10, axistext = NULL,
                               xlab = "objects", cluster_col = "darkred") {
-  
+  # Input checks ####
+  d <- nrow(mat)
   type <- match.arg(type)
+  if (!is.null(clustering)) {
+    clusters <- unique(clustering)
+    if ((length(clustering) != d) || (sort(clusters) != 1:max(clusters))) {
+      stop(paste("'clustering' must be a vector of numeric values between 1",
+                 "and K (nb of clusters). Please fix input."))
+    }
+  }
+  if (!is.null(dendro)) {
+    if (inherits(dendro, "hclust")) {
+      dd <- dendro
+    } else dd <- try(as.hclust(dendro), silent = TRUE)
+    if (inherits(dd, "try-error")) {
+      stop(paste("'dendro' can not be converted to class 'hclust'. Please,",
+                 "provide a proper dendrogram."))
+    }
+  }
+  if (!is.logical(log)) stop("'log' must be logical!")
   if (!is.character(legendName)) stop("'legendName' must be a string!")
   if (!is.null(main) && !is.character(main)) stop("'main' must be a string!")
+  if (log) {
+    if (!is.numeric(priorCount) || length(priorCount) > 1 || priorCount < 0) {
+      stop(paste("'priorCount' must be a single non-negative number!"))
+    }
+  }
+  if (!is.logical(axis)) stop("'axis' must be logical!")
+  if (length(naxis) > 1 || !is.integer(naxis)) {
+    stop(paste("'naxis' must be a single value of type integer!"))
+  }
+  if (!is.null(axistext)) {
+    if (length(axistext) != naxis) {
+      stop("'axistext' length must be equal to 'naxis'.")
+    }
+    if (!is.character(axistext)) axistext <- as.character(axistext)
+  }
+  if (!is.character(xlab)) stop("'xlab' must be a string!")
 
+  # Coordinate computation ####
   if (type == "dissimilarity") mat <- max(mat) - mat
   
   coordinates <- poly_coords(mat)
-  d <- nrow(mat)
   fake_coords <- make_coords(c(1, d, d), c(1, d, 1), rep(0, 3))
   
   if (!is.null(dendro)) {
-    dd <- as.hclust(dendro)
     ymax_i <- max(fake_coords$y)
-    ymax_f <- max(dendro$height)
+    ymax_f <- max(dd$height)
     xmin_i <- min(fake_coords$x)
     xmax_i <- max(fake_coords$x)
     coordinates[, c("x", "y")] <- rescale_coords(coordinates$x, coordinates$y,
@@ -657,6 +690,7 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
       geom_polygon(data = fake_coords, aes(x = x, y = y), fill = "lightgrey")
   }
   
+  # Plot ####
   if (log) {
     if (legendName != "") {
       legendName <- ifelse(priorCount == 0,
@@ -673,6 +707,7 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
       scale_fill_viridis_b(name = legendName)
   }
   
+  # Additional option ####
   if (!is.null(clustering)) {
     all_clusters <- unique(clustering)
     nb_clust <- length(all_clusters)
@@ -700,9 +735,7 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                        size = 1, colour = cluster_col)
   }
   
-  if (!is.null(main)) {
-    p <- p + ggtitle(main)
-  }
+  if (!is.null(main)) p <- p + ggtitle(main)
   
   if (axis) {
     displayed_bins <- floor(seq(1, d, length.out = naxis))
