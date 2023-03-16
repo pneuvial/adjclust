@@ -383,6 +383,19 @@ make_coords <- function(indi, indj, values) {
   return(coords)
 }
 
+rescale_coords <- function(x, y, ymax_i, ymax_f, xmin_i, xmax_i, xmax_f) {
+  # ymax <- max(fake_coords$y)
+  y <- y / ymax_i * ymax_f
+  y <- - y
+  
+  x <- (xmax_f^2 - 1) / xmax_f / (xmax_i - xmin_i) * x
+  x <- x + (xmax_i * (xmax_f+1) + xmin_i * (-2 * xmax_f^2 - xmax_f + 1)) / 
+    (2 * xmax_f * (xmax_i - xmin_i))
+  
+  out <- data.frame("x" = x, "y" = y)
+  return(out)
+}
+
 poly_coords_sparse <- function(mat) {
   indi <- mat@j + 1
   indj <- mat@i + 1
@@ -447,10 +460,15 @@ poly_coords.dsCMatrix <- function(mat) {
 #' @import ggplot2
 #' @examples \dontrun{
 #' clustering <- rep(1:3, each = 50)
-#' ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity",
-#'           legendName = "IF", axis = TRUE, clustering = clustering)
-#' p <- ggPlotSim(as.matrix(dist(iris[, 1:4])), type = "dissimilarity", 
-#'                log = FALSE, clustering = clustering, cluster_col = "blue")
+#' dist_data <- as.matrix(dist(iris[, 1:4]))
+#' dendro_iris <- adjClust(dist_data, type = "dissimilarity")
+#' ggPlotSim(dist_data, type = "dissimilarity", dendro = dendro_iris)
+#' ggPlotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
+#'           clustering = clustering)
+#' ggPlotSim(dist_data, type = "dissimilarity", legendName = "IF", axis = TRUE, 
+#'           clustering = clustering)
+#' p <- ggPlotSim(dist(iris[, 1:4]), type = "dissimilarity", log = FALSE, 
+#'                clustering = clustering, cluster_col = "blue")
 #' # custom palette
 #' p + scale_fill_gradient(low = "yellow", high = "red")
 #' # dsCMatrix
@@ -618,21 +636,16 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   
   if (!is.null(dendro)) {
     dd <- as.hclust(dendro)
-    ymax <- max(fake_coords$y)
-    coordinates$y <- coordinates$y / ymax * max(dd$height)
-    coordinates$y <- - coordinates$y
-    
-    xmin <- min(fake_coords$x)
-    xmax <- max(fake_coords$x)
-    coordinates$x <- (d^2 - 1) / d / (xmax - xmin) * coordinates$x
-    coordinates$x <- coordinates$x + (xmax * (d+1) + xmin * (-2*d^2 - d + 1)) / 
-      (2 * d * (xmax - xmin))
-    
-    fake_coords$y <- fake_coords$y / ymax * max(dendro$height)
-    fake_coords$y <- - fake_coords$y
-    fake_coords$x <- (d^2 - 1) / d / (xmax - xmin) * fake_coords$x
-    fake_coords$x <- fake_coords$x + (xmax * (d+1) + xmin * (-2*d^2 - d + 1)) / 
-      (2 * d * (xmax - xmin))
+    ymax_i <- max(fake_coords$y)
+    ymax_f <- max(dendro$height)
+    xmin_i <- min(fake_coords$x)
+    xmax_i <- max(fake_coords$x)
+    coordinates[, c("x", "y")] <- rescale_coords(coordinates$x, coordinates$y,
+                                                 ymax_i, ymax_f, xmin_i, xmax_i,
+                                                 d)
+    fake_coords[, c("x", "y")] <- rescale_coords(fake_coords$x, fake_coords$y,
+                                                 ymax_i, ymax_f, xmin_i, xmax_i,
+                                                 d)
 
     dd <- as.dendrogram(dd)
     dd <- dd %>% set("labels", value = rep(NA, d)) %>% as.ggdend()
