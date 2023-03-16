@@ -8,6 +8,7 @@ ggPlotSim(
   mat,
   type = c("similarity", "dissimilarity"),
   clustering = NULL,
+  dendro = NULL,
   log = TRUE,
   legendName = "intensity",
   main = NULL,
@@ -30,6 +31,14 @@ ggPlotSim(
 \code{"dissimilarity"} (kernels are supposed to be of type 
 \code{"similarity"}).}
 
+\item{clustering}{vector of clusters to display on the matrix (if not 
+\code{NULL}). If \code{clustering} is provided, it must be a numeric vector
+of length identical to the matrix size with clusters identified as 
+consecutive integers 1, 2, 3, ...}
+
+\item{dendro}{dendrogram provided as an \code{hclust} object, or as another
+type of object that can be converted to \code{hclust} with \code{as.hclust}.}
+
 \item{log}{logical. Should the breaks be based on log-scaled values of the
 matrix entries. Default to \code{TRUE}.}
 
@@ -39,7 +48,28 @@ matrix entries. Default to \code{TRUE}.}
 \item{main}{character. Title of the plot. Default to \code{NULL} (no title).}
 
 \item{priorCount}{numeric. Average count to be added to each entry of the
-matrix to avoid taking log of zero. Used only if \code{log = TRUE}.}
+matrix to avoid taking log of zero. Used only if \code{log == TRUE} and 
+default to 0.5.}
+
+\item{stats}{input SNP correlation type. Used when \code{mat} is of type 
+\code{SnpMatrix}.}
+
+\item{h}{positive integer. Threshold distance for SNP correlation 
+computation. Used when \code{mat} is of type \code{SnpMatrix}.}
+
+\item{axis}{logical. Should x-axis be displayed on the plot? Default to 
+\code{FALSE}.}
+
+\item{naxis}{integer. If \code{axis == TRUE}, number of ticks to display on
+the x-axis.}
+
+\item{axistext}{character vector. If \code{axis == TRUE}, labels to display
+of the x-axis (its length has to be equal to \code{naxis}).}
+
+\item{xlab}{character. If \code{axis == TRUE}, x-axis title.}
+
+\item{cluster_col}{colour for the cluster line if \code{clustering} is not
+\code{NULL}.}
 }
 \description{
 Heatmap of the (dis)similarity matrix
@@ -48,6 +78,42 @@ Heatmap of the (dis)similarity matrix
 This function produces a heatmap for the used (dis)similarity matrix that 
 can be used as a diagnostic plot to check the consistency between the 
 obtained clustering and the original (dis)similarity
+}
+\examples{
+\dontrun{
+clustering <- rep(1:3, each = 50)
+dist_data <- as.matrix(dist(iris[, 1:4]))
+dendro_iris <- adjClust(dist_data, type = "dissimilarity")
+ggPlotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
+          axis = TRUE)
+ggPlotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
+          clustering = clustering)
+ggPlotSim(dist_data, type = "dissimilarity", legendName = "IF", axis = TRUE, 
+          clustering = clustering)
+p <- ggPlotSim(dist(iris[, 1:4]), type = "dissimilarity", log = FALSE, 
+               clustering = clustering, cluster_col = "blue")
+# custom palette
+p + scale_fill_gradient(low = "yellow", high = "red")
+# dsCMatrix
+m <- Matrix(c(0, 0, 2, 0, 3, 0, 2, 0, 0), ncol = 3)
+res <- adjClust(m)
+ggPlotSim(m, axis = TRUE)
+ggPlotSim(m, dendro = res)
+# dgCMatrix
+m <- as(m, "generalMatrix")
+ggPlotSim(m)
+m <- as.dist(m)
+if (require("HiTC", quietly = TRUE)) {
+  load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
+  res <- hicClust(hic_imr90_40_XX, log = TRUE)
+  ggPlotSim(hic_imr90_40_XX, axis = TRUE)
+}
+if (requireNamespace("snpStats", quietly = TRUE)) {
+  data(testdata, package = "snpStats")
+  ggPlotSim(Autosomes[1:200, 1:5], h = 3, stats = "R.squared", axis = TRUE,
+            axistext = c("A", "B", "C", "D", "E"))
+}
+}
 }
 \seealso{
 \code{\link{select}}, \code{\link{adjClust}}

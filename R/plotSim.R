@@ -450,13 +450,33 @@ poly_coords.dsCMatrix <- function(mat) {
 #' @param type input matrix type. Can be either \code{"similarity"} or 
 #' \code{"dissimilarity"} (kernels are supposed to be of type 
 #' \code{"similarity"}).
+#' @param clustering vector of clusters to display on the matrix (if not 
+#' \code{NULL}). If \code{clustering} is provided, it must be a numeric vector
+#' of length identical to the matrix size with clusters identified as 
+#' consecutive integers 1, 2, 3, ...
+#' @param dendro dendrogram provided as an \code{hclust} object, or as another
+#' type of object that can be converted to \code{hclust} with \code{as.hclust}.
 #' @param log logical. Should the breaks be based on log-scaled values of the
 #' matrix entries. Default to \code{TRUE}.
 #' @param legendName character. Title of the legend. Default to 
 #' \code{"intensity"}.
 #' @param main character. Title of the plot. Default to \code{NULL} (no title).
 #' @param priorCount numeric. Average count to be added to each entry of the
-#' matrix to avoid taking log of zero. Used only if \code{log = TRUE}.
+#' matrix to avoid taking log of zero. Used only if \code{log == TRUE} and 
+#' default to 0.5.
+#' @param stats input SNP correlation type. Used when \code{mat} is of type 
+#' \code{SnpMatrix}.
+#' @param h positive integer. Threshold distance for SNP correlation 
+#' computation. Used when \code{mat} is of type \code{SnpMatrix}. 
+#' @param axis logical. Should x-axis be displayed on the plot? Default to 
+#' \code{FALSE}.
+#' @param naxis integer. If \code{axis == TRUE}, number of ticks to display on
+#' the x-axis.
+#' @param axistext character vector. If \code{axis == TRUE}, labels to display
+#' of the x-axis (its length has to be equal to \code{naxis}).
+#' @param xlab character. If \code{axis == TRUE}, x-axis title.
+#' @param cluster_col colour for the cluster line if \code{clustering} is not
+#' \code{NULL}.
 #' @import ggplot2
 #' @examples \dontrun{
 #' clustering <- rep(1:3, each = 50)
@@ -488,7 +508,9 @@ poly_coords.dsCMatrix <- function(mat) {
 #' }
 #' if (requireNamespace("snpStats", quietly = TRUE)) {
 #'   data(testdata, package = "snpStats")
-#'   ggPlotSim(Autosomes[1:200, 1:5], h = 3, stats = "R.squared")
+#'   ggPlotSim(Autosomes[1:200, 1:5], h = 3, stats = "R.squared", axis = TRUE,
+#'             axistext = c("A", "B", "C", "D", "E"))
+#' }
 #' }
 
 #' @seealso \code{\link{select}}, \code{\link{adjClust}}
@@ -610,7 +632,7 @@ ggPlotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   diag(mat) <- rep(1, nrow(mat))  ## by default the diagonal is 0 after 'snpStats::ld'
   
   p <- ggPlotSim(mat, type, clustering, dendro, log, legendName, main, 
-                 priorCount, axis, naxis = naxis, axistext = axistext, 
+                 priorCount, axis = axis, naxis = naxis, axistext = axistext, 
                  xlab = xlab, cluster_col = cluster_col)
   
   return(p)
@@ -652,16 +674,23 @@ ggPlotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     }
   }
   if (!is.logical(axis)) stop("'axis' must be logical!")
-  if (length(naxis) > 1 || !is.integer(naxis)) {
-    stop(paste("'naxis' must be a single value of type integer!"))
-  }
-  if (!is.null(axistext)) {
-    if (length(axistext) != naxis) {
-      stop("'axistext' length must be equal to 'naxis'.")
+  if (axis) {
+    if (length(naxis) > 1 || round(naxis) != naxis) {
+      stop(paste("'naxis' must be a single value of type integer!"))
     }
-    if (!is.character(axistext)) axistext <- as.character(axistext)
+    if (naxis > d) {
+      warning(paste("Reducing the number of ticks on x-axis to the number of",
+                    "objects."))
+      naxis <- d
+    }
+    if (!is.null(axistext)) {
+      if (length(axistext) != naxis) {
+        stop("'axistext' length must be equal to 'naxis'.")
+      }
+      if (!is.character(axistext)) axistext <- as.character(axistext)
+    }
+    if (!is.character(xlab)) stop("'xlab' must be a string!")
   }
-  if (!is.character(xlab)) stop("'xlab' must be a string!")
 
   # Coordinate computation ####
   if (type == "dissimilarity") mat <- max(mat) - mat
