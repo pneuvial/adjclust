@@ -112,20 +112,16 @@ plotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                               stats = c("R.squared", "D.prime"), h = NULL,
                               axis = FALSE, naxis = 10, axistext = NULL,
                               xlab = "objects", cluster_col = "darkred") {
-  p <- ncol(mat)
   if (!isSymmetric(mat)) 
     warning(paste("Input matrix was not symmetric. Plotting only the",
                   "upper-triangular part of the matrix."))
   
   mat <- forceSymmetric(mat)
-  if (is.null(h)) h <- ncol(mat) - 1
-  if (!is.numeric(h) || h <= 0 || h >= ncol(mat)) 
-    stop("'h' should be numeric, larger than 0 and smaller than p.")
   
   p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
-                         priorCount, h = h, axis = axis, naxis = naxis, 
-                         axistext = axistext, xlab = xlab, 
-                         cluster_col = cluster_col)
+                       priorCount, axis = axis, naxis = naxis, 
+                       axistext = axistext, xlab = xlab, 
+                       cluster_col = cluster_col)
   
   return(p)
 }
@@ -196,10 +192,12 @@ plotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   mat[mat > 1] <- 1  ## fix numerical aberrations
   mat[mat < 0] <- 0  ## fix numerical aberrations
   diag(mat) <- rep(1, nrow(mat))  ## by default the diagonal is 0 after 'snpStats::ld'
+  mat <- forceSymmetric(mat)
   
-  p <- plotSim(mat, type, clustering, dendro, log, legendName, main, priorCount,
-               h = h, axis = axis, naxis = naxis, axistext = axistext, 
-               xlab = xlab, cluster_col = cluster_col)
+  p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
+                       priorCount, h = h, axis = axis, naxis = naxis, 
+                       axistext = axistext, xlab = xlab, 
+                       cluster_col = cluster_col)
   
   return(p)
 }

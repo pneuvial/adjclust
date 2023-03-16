@@ -26,9 +26,8 @@ test_that("'plotSim' works for 'dgCMatrix'", {
   p <- plotSim(sim, "dissimilarity", axis = TRUE, naxis = 2)
   expect_s3_class(p, "ggplot")
   
-  expect_message(
-    fit1 <- adjClust(1 - 2*sim, "similarity"),
-    "merges with non increasing heights")
+  expect_message({ fit1 <- adjClust(1 - 2*sim, "similarity") },
+                 "merges with non increasing heights", fixed = FALSE)
   fit1 <- correct(fit1)
   p <- plotSim(sim, "dissimilarity", dendro = fit1)
   expect_s3_class(p, "ggplot")
@@ -43,9 +42,8 @@ test_that("'plotSim' works for 'dsCMatrix'", {
   p <- plotSim(sim, "similarity", axis = TRUE, naxis = 2)
   expect_s3_class(p, "ggplot")
   
-  expect_message(
-    fit1 <- adjClust(sim, "similarity"),
-    "merges with non increasing heights")
+  expect_message({ fit1 <- adjClust(sim, "similarity") },
+                 "merges with non increasing heights", fixed = FALSE)
   fit1 <- correct(fit1)
   p <- plotSim(sim, "dissimilarity", dendro = fit1)
   expect_s3_class(p, "ggplot")
@@ -62,9 +60,10 @@ test_that("'plotSim' works for 'dist'", {
   # permute so as to have constrained HAC = HAC
   dissim <- as.dist(as.matrix(dissim)[fit0$order,fit0$order])
   expect_message(
-    { plotSim(dissim, axis = TRUE, naxis = 2) },
+    { p <- plotSim(dissim, axis = TRUE, naxis = 2) },
     "input class is 'dist' so 'type' is supposed to be 'dissimilarity'",
     fixed = FALSE)
+  expect_s3_class(p, "ggplot")
   
   sim <- 1-as.matrix(dissim)/2
   fit2 <- adjClust(sim*2/9)
@@ -84,12 +83,10 @@ test_that("'plotSim' works for 'snpStats'", {
 
   data("ld.example", package = "snpStats")
   ceph.1mb[4, 286]@.Data[1, 1] <- as.raw(3) ## to avoid NaNs
-  expect_warning({ plotSim(ceph.1mb) },
-                 "Plotting only the upper-triangular part of the matrix.",
-                 fixed = FALSE)
+  p <- plotSim(ceph.1mb)
+  expect_s3_class(p, "ggplot")
   
-  expect_warning({ plotSim(ceph.1mb, h = 100, stats = "D.prime", axis = TRUE) },
-                 "Plotting only the upper-triangular part of the matrix.",
-                 fixed = FALSE)
+  p <- plotSim(ceph.1mb, h = 100, stats = "D.prime", axis = TRUE)
+  expect_s3_class(p, "ggplot")
 })
 
