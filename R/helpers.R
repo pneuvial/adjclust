@@ -40,7 +40,7 @@ checkCondition <- function(mat) {# used only with symmetric matrices to check co
 
 #' @importFrom utils getFromNamespace
 alt.as.dendrogram <- function(object, hang = -1, check = TRUE, ...) {# used for adding the branching order as a node attribute while turning "hclust" objects into "dendrograms"
-
+  
   t <- 1
   nolabels <- is.null(object$labels)
   merge <- object$merge
@@ -113,9 +113,10 @@ alt.as.dendrogram <- function(object, hang = -1, check = TRUE, ...) {# used for 
 #' @importFrom stats is.leaf
 #' @importFrom graphics strheight strwidth text polygon rect
 #' @importFrom utils str
+#' @importFrom graphics par
 alt.plotNode <- function(x1, x2, subtree, type, center, leaflab, dLeaf, nodePar,
                          edgePar, horiz = FALSE) {#modified plotNode function to be able to print a string instead of a unique symbol at each node
-
+  
   inner <- !is.leaf(subtree) && x1 != x2
   yTop <- attr(subtree, "height")
   bx <- plotNodeLimit(x1, x2, subtree, center)
@@ -293,11 +294,11 @@ alt.plotNode <- function(x1, x2, subtree, type, center, leaflab, dLeaf, nodePar,
 #' @importFrom grDevices dev.flush dev.hold
 #' @importFrom graphics strheight strwidth text
 alt.plot <- function(x, type = c("rectangle", "triangle"), center = FALSE, 
-    edge.root = is.leaf(x) || !is.null(attr(x, "edgetext")), 
-    nodePar = NULL, edgePar = list(), leaflab = c("perpendicular", 
-        "textlike", "none"), dLeaf = NULL, xlab = "", ylab = "", 
-    xaxt = "n", yaxt = "s", horiz = FALSE, frame.plot = FALSE, 
-    xlim, ylim, ...) {#To use alt.plotNode instead of plotNode
+                     edge.root = is.leaf(x) || !is.null(attr(x, "edgetext")), 
+                     nodePar = NULL, edgePar = list(), leaflab = c("perpendicular", 
+                                                                   "textlike", "none"), dLeaf = NULL, xlab = "", ylab = "", 
+                     xaxt = "n", yaxt = "s", horiz = FALSE, frame.plot = FALSE, 
+                     xlim, ylim, ...) {#To use alt.plotNode instead of plotNode
   
   type <- match.arg(type)
   leaflab <- match.arg(leaflab)
