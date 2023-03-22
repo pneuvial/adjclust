@@ -337,7 +337,7 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     cluster_coords$cluster <- rep(1:nb_clust, 3)
     p <- p + geom_path(data = cluster_coords, 
                        aes(x = .data$x, y = .data$y, group = .data$cluster),
-                       size = 1, colour = cluster_col)
+                       linewidth = 1, colour = cluster_col)
   }
   
   if (!is.null(main)) p <- p + ggtitle(main)
