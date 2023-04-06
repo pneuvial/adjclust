@@ -14,11 +14,14 @@ test_that("Methods of class 'chac'", {
   fit2 <- correct(fit)
   expect_error(plot(fit2, mode = "corrected"),
                "Already corrected 'chac' object. 'mode' must be set to 'standard'")
-  plot(fit2)
-  plot(fit2, nodeLabel = TRUE)
+  p <- plot(fit2)
+  p <- plot(fit2, nodeLabel = TRUE)
+  p <- plot(fit2, leaflab = "none")
+  p <- plot(fit2, leaflab = "perpendicular")
   diagnose(fit)
   diagnose(fit, graph = TRUE)
-
+  diagnose(fit, verbose = TRUE)
+  
   fit_h <- hclust(dissim)
   expect_error(cutree_chac(fit_h), 
                "'tree' must be of class 'chac'")
