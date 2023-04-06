@@ -77,7 +77,7 @@ test_that("'snpClust' gives identical results regardless of data input format", 
   ld.ceph.2 <- snpStats::ld(ceph.1mb, depth = ncol(ceph.1mb) - 1, stats = "R.squared", symmetric = TRUE)
   ld.ceph.2 <- round(ld.ceph.2, digits = 10)
   fit4 <- snpClust(ld.ceph.2, ncol(ceph.1mb) - 1)
-  fit5 <- snpClust(ld.ceph.2)
+  system.time(fit5 <- snpClust(ld.ceph.2))
   fit6 <- expect_warning(snpClust(ceph.1mb, stats = "R.squared"), 
                          "Forcing the LD similarity to be smaller than or equal to 1")
   expect_equal(fit4$merge, fit5$merge)

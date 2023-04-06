@@ -59,7 +59,7 @@ test_that("adjClust methods properly catches unexpected  'calls'", {
   expect_error(adjClust(smat, type = "dissimilarity"), 
                "'type' can only be 'similarity' with sparse Matrix inputs")
   
-  dmat <-  as(mat, "dsTMatrix")
+  dmat <- as(as(as(smat, "dMatrix"), "symmetricMatrix"), "TsparseMatrix") 
   expect_error(adjClust(dmat, type = "dissimilarity"), 
                "'type' can only be 'similarity' with sparse Matrix inputs")
   dmat <-  as(mat, "dgTMatrix")
