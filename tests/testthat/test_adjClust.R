@@ -40,8 +40,11 @@ test_that("adjClust methods properly catches unexpected  'calls'", {
   expect_error(adjClust(mat), "Input matrix is not symmetric")
 
   mat <- matrix(rep(1, 4), 2, 2)
+  expect_error(adjClust(mat, h = NA_character_), "Input band width 'h' must be numeric")
   expect_error(adjClust(mat, h = -1), "Input band width 'h' must be non negative")
   expect_error(adjClust(mat, h = 0.1), "Input band width 'h' must be an integer")
+  expect_error(adjClust(mat, h = 2), "Input band width 'h' must be strictly less than dimensions of matrix")
+  adjClust(mat, strictCheck = FALSE)
   
   # dsyMatrix/dgeMatrix
   mat <- matrix(rep(1, 4), 2, 2)
