@@ -33,16 +33,25 @@ test_that("adjClust methods properly catches unexpected  'calls'", {
   mat <- matrix(NA_character_)
   expect_error(adjClust(mat), "Input matrix is not numeric")
 
+  mat <- matrix(NA_real_)
+  expect_error(adjClust(mat), "Missing values in the input are not allowed")
+  
   mat <- matrix(1:2)
   expect_error(adjClust(mat), "Input matrix is not symmetric")
 
-  # dsyMatrix
+  mat <- matrix(rep(1, 4), 2, 2)
+  expect_error(adjClust(mat, h = -1), "Input band width 'h' must be non negative")
+  expect_error(adjClust(mat, h = 0.1), "Input band width 'h' must be an integer")
+  
+  # dsyMatrix/dgeMatrix
   mat <- matrix(rep(1, 4), 2, 2)
   smat <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "unpackedMatrix")
-  smat[1, 2] <- 2
+  smat[1, 2] <- 2 # automatic coercion to dgeMatrix
   expect_error(adjClust(smat), "Input matrix is not symmetric")
   
+  
   # dgTMatrix
+  mat <- matrix(rep(1, 4), 2, 2)
   smat <- as(as(as(mat, "dMatrix"), "symmetricMatrix"), "sparseMatrix")
   expect_error(adjClust(smat, type = "dissimilarity"), 
                "'type' can only be 'similarity' with sparse Matrix inputs")
