@@ -83,7 +83,7 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
                     clustering = NULL, dendro = NULL, log = TRUE, 
                     legendName = "intensity", main = NULL, priorCount = 0.5, 
                     stats = c("R.squared", "D.prime"), h = NULL, axis = FALSE,
-                    naxis = 10, axistext = NULL, xlab = "objects", 
+                    naxis = min(10, nrow(mat)), axistext = NULL, xlab = "objects", 
                     cluster_col = "darkred") {
   UseMethod("plotSim")
 }
@@ -94,8 +94,9 @@ plotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                               legendName = "intensity", main = NULL, 
                               priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
-                              axis = FALSE, naxis = 10, axistext = NULL, 
-                              xlab = "objects", cluster_col = "darkred") {
+                              axis = FALSE, naxis = min(10, nrow(mat)), 
+                              axistext = NULL,xlab = "objects", 
+                              cluster_col = "darkred") {
   p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
                        priorCount, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
@@ -110,7 +111,7 @@ plotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                               legendName = "intensity", main = NULL, 
                               priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
-                              axis = FALSE, naxis = 10, axistext = NULL,
+                              axis = FALSE, naxis = min(10, nrow(mat)), axistext = NULL,
                               xlab = "objects", cluster_col = "darkred") {
   if (!isSymmetric(mat)) 
     warning(paste("Input matrix was not symmetric. Plotting only the",
@@ -131,8 +132,9 @@ plotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
                          clustering = NULL, dendro = NULL, log = TRUE, 
                          legendName = "intensity", main = NULL, 
                          priorCount = 0.5, stats = c("R.squared", "D.prime"),
-                         h = NULL, axis = FALSE, naxis = 10, axistext = NULL, 
-                         xlab = "objects", cluster_col = "darkred") {
+                         h = NULL, axis = FALSE, naxis = min(10, nrow(mat)), 
+                         axistext = NULL, xlab = "objects", 
+                         cluster_col = "darkred") {
   
   type <- match.arg(type)
   if (type != "dissimilarity") {
@@ -156,8 +158,9 @@ plotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
                            clustering = NULL, dendro = NULL, log = TRUE, 
                            legendName = "IF", main = NULL, priorCount = 0.5, 
                            stats = c("R.squared", "D.prime"), h = NULL,
-                           axis = FALSE, naxis = 10, axistext = NULL, 
-                           xlab = "bins", cluster_col = "darkred") {
+                           axis = FALSE, naxis = min(10, nrow(mat)),
+                           axistext = NULL, xlab = "bins", 
+                           cluster_col = "darkred") {
   type <- match.arg(type)
   if (!requireNamespace("HiTC")) 
     stop("Package 'HiTC' not available. 'HTCexp' input cannot be used.")
@@ -178,8 +181,10 @@ plotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                               legendName = "correlation", main = NULL, 
                               priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
-                              axis = FALSE, naxis = 10, axistext = NULL,
-                              xlab = "SNP index", cluster_col = "darkred") {
+                              axis = FALSE, naxis = min(10, nrow(mat)), 
+                              axistext = NULL,
+                              xlab = "SNP index", 
+                              cluster_col = "darkred") {
   if (!requireNamespace("snpStats")) 
     stop("Package 'snpStats' not available. 'SnpMatrix' input cannot be used.")
   
@@ -207,17 +212,18 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                             clustering = NULL, dendro = NULL, log = TRUE, 
                             legendName = "intensity", main = NULL, 
                             priorCount = 0.5, stats = c("R.squared", "D.prime"), 
-                            h = NULL, axis = FALSE, naxis = 10, axistext = NULL,
-                            xlab = "objects", cluster_col = "darkred") {
+                            h = NULL, axis = FALSE, naxis = min(10, nrow(mat)),
+                            axistext = NULL, xlab = "objects", 
+                            cluster_col = "darkred") {
   # Input checks ####
   d <- nrow(mat)
   type <- match.arg(type)
   if (!is.null(clustering)) {
     clusters <- sort(unique(clustering))
     if ((length(clustering) != d) || !all.equal(clusters, 1:max(clusters))) {
-      stop(paste("'clustering' must be a vector of numeric values between 1",
-                 "and K (nb of clusters) as large as input matrix. Please fix.",
-                 "input."))
+      stop(paste("'clustering' must be a vector of size nrow(mat) containing",
+                 "all the integers between 1 and K (nb of clusters).",
+                 "Please fix input."))
     }
   }
   if (!is.null(dendro)) {
@@ -225,12 +231,12 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
       dd <- dendro
     } else dd <- try(as.hclust(dendro), silent = TRUE)
     if (inherits(dd, "try-error")) {
-      stop(paste("'dendro' can not be converted to class 'hclust'. Please,",
+      stop(paste("'dendro' can not be converted to class 'hclust'. Please ",
                  "provide a proper dendrogram."))
     }
     if (length(dd$order) != d)
       stop(paste("'dendro' must be a dendrogram with the same number of",
-                 "objects than the input matrix. Please fix input."))
+                 "objects as the input matrix. Please fix input."))
   }
   if (!is.logical(log)) stop("'log' must be logical!")
   if (!is.character(legendName)) stop("'legendName' must be a string!")
@@ -337,7 +343,7 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     cluster_coords$cluster <- rep(1:nb_clust, 3)
     p <- p + geom_path(data = cluster_coords, 
                        aes(x = .data$x, y = .data$y, group = .data$cluster),
-                       size = 1, colour = cluster_col)
+                       linewidth = 1, colour = cluster_col)
   }
   
   if (!is.null(main)) p <- p + ggtitle(main)

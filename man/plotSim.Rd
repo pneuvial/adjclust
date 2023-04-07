@@ -16,7 +16,7 @@ plotSim(
   stats = c("R.squared", "D.prime"),
   h = NULL,
   axis = FALSE,
-  naxis = 10,
+  naxis = min(10, nrow(mat)),
   axistext = NULL,
   xlab = "objects",
   cluster_col = "darkred"

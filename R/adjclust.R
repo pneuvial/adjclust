@@ -134,8 +134,6 @@ adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"),
 #' @export
 adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                             h = ncol(mat) - 1, strictCheck = TRUE) {
-  if (!(isSymmetric(mat)))
-    stop("Input matrix is not symmetric")
   # RcppArmadillo functions don't support dsyMatrix, so convert to matrix
   res <- run.adjclust(as.matrix(mat), type = type, h = h, 
                       strictCheck = strictCheck)
@@ -232,8 +230,6 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h,
                          strictCheck = TRUE) {
   # sanity checks
   type <- match.arg(type)
-  if (!(nrow(mat) == ncol(mat)))
-    stop("Input matrix is not a square matrix")
   if (any(is.na(mat)))
     stop("Missing values in the input are not allowed")
   

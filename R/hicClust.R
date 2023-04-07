@@ -167,7 +167,7 @@ hicClust.dgeMatrix <- function(x, h = NULL, log = FALSE, ...) {
 #' @export
 hicClust.HTCexp <- function(x, h = NULL, log = FALSE, ...) {
   if (!requireNamespace("HiTC", quietly = TRUE))
-    stop("Package 'HiTC' not available. This function cannot be used with 'HTCexp' data.")
+    stop("Package 'HiTC' not available. This function cannot be used with 'HTCexp' data.") # nocov
   x <- HiTC::intdata(x)
   res <- hicClust(x, h = h, log = log) # sparse or dense version
   x <- sys.call()
