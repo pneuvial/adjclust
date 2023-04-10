@@ -5,7 +5,7 @@
 [![R build
 status](https://github.com/pneuvial/adjclust/workflows/R-CMD-check/badge.svg)](https://github.com/pneuvial/adjclust/actions)
 [![Coverage
-Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg)](https://codecov.io/github/pneuvial/adjclust/branch/develop)
+Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg)](https://app.codecov.io/gh/pneuvial/adjclust/tree/develop)
 
 `adjclust` is a package that provides methods to perform
 adjacency-constrained hierarchical agglomerative clustering.
