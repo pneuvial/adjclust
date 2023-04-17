@@ -101,49 +101,18 @@ plot.chac <- function(x, y, ...,
   if (is.null(args$type)) args$type <- "triangle"
   if (is.null(args$leaflab)) args$leaflab <- "none"
   
-  if ((x$method == "adjClust-corrected") & (mode != "standard")) {
-    stop("Already corrected 'chac' object. 'mode' must be set to 'standard'")
+  if (mode == "corrected")
+    res_diagnose <- diagnose(x, graph = FALSE, verbose = FALSE)
+  x <- dendro_for_mode(x, mode)
+  if (is.null(args$ylim)) args$ylim <- range(x$height)
+  if (mode != "standard") {
+    args$ylab <- switch(mode,
+                        "corrected" = "corrected",
+                        "total-disp" = "total dispersion",
+                        "within-disp" = "within-cluster dispersion",
+                        "average-disp" = "average dispersion")
   }
   
-  if (mode == "standard") {
-    if (any(diff(x$height) < 0)) 
-      warning(paste0("\nDetected reversals in dendrogram: ",
-                     "mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant."))
-    if (is.null(args$ylim)) args$ylim <- range(x$height)
-  } else if (mode == "corrected") {
-    res_diagnose <- diagnose(x, graph = FALSE, verbose = FALSE)
-    x <- correct(x)
-    args$ylab <- "corrected"
-  } else if (mode == "total-disp") {
-    x$height <- cumsum(x$height)
-    args$ylab <- "total dispersion"
-  } else if (mode == "within-disp" | mode == "average-disp") {
-    args$ylab <- "within-cluster dispersion"
-    to_correct <- which((x$merge[ ,1] > 0) | (x$merge[ ,2] > 0))
-    for (ind in to_correct) {
-      clusters <- x$merge[ind, ]
-      clusters <- clusters[clusters > 0]
-      x$height[ind] <- x$height[ind] + sum(x$height[clusters])
-    }
-    if (mode == "average-disp") {
-      # search for current cluster size
-      out <- sapply((length(x$height) + 1):1, function(num) {
-        tmp <- table(table(cutree(as.hclust(x), k = num)))
-        res <- rep(0, length(x$height) + 1)
-        res[as.numeric(names(tmp))] <- tmp
-        return(res)
-      })
-      out <- apply(out, 1, diff)
-      sizes <- unlist(apply(out, 1, function(acol) which(acol > 0)))
-      sizes <- as.numeric(sizes)
-      x$height <- x$height / sizes
-      if (any(diff(x$height) < 0)) 
-        warning(paste0("\nDetected reversals in dendrogram: ",
-                       "mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant."))
-      if (is.null(args$ylim)) args$ylim <- range(x$height)
-      args$ylab <- "average dispersion"
-    }
-  }
   if (nodeLabel) {
 	  args$x <- alt.as.dendrogram(as.hclust(x))
 	  do.call(alt.plot, args)
