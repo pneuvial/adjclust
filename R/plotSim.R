@@ -88,8 +88,10 @@ plotSim <- function(mat, type = c("similarity", "dissimilarity"),
                     clustering = NULL, dendro = NULL, k = NULL, log = TRUE, 
                     legendName = "intensity", main = NULL, priorCount = 0.5, 
                     stats = c("R.squared", "D.prime"), h = NULL, axis = FALSE,
-                    naxis = min(10, nrow(mat)), axistext = NULL, xlab = "objects", 
-                    cluster_col = "darkred") {
+                    naxis = min(10, nrow(mat)), axistext = NULL, 
+                    xlab = "objects", cluster_col = "darkred",
+                    mode = c("standard", "corrected", "total-disp", 
+                             "within-disp", "average-disp")) {
   UseMethod("plotSim")
 }
 
@@ -101,11 +103,13 @@ plotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                               stats = c("R.squared", "D.prime"), h = NULL,
                               axis = FALSE, naxis = min(10, nrow(mat)), 
                               axistext = NULL,xlab = "objects", 
-                              cluster_col = "darkred") {
+                              cluster_col = "darkred",
+                              mode = c("standard", "corrected", "total-disp", 
+                                       "within-disp", "average-disp")) {
   p <- plotSim.default(mat, type, clustering, dendro, k, log, legendName, main, 
                        priorCount, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
-                       cluster_col = cluster_col)
+                       cluster_col = cluster_col, mode = mode)
 
   return(p)
 }
@@ -118,7 +122,9 @@ plotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                               stats = c("R.squared", "D.prime"), h = NULL,
                               axis = FALSE, naxis = min(10, nrow(mat)), 
                               axistext = NULL, xlab = "objects", 
-                              cluster_col = "darkred") {
+                              cluster_col = "darkred",
+                              mode = c("standard", "corrected", "total-disp", 
+                                       "within-disp", "average-disp")) {
   if (!isSymmetric(mat)) 
     warning(paste("Input matrix was not symmetric. Plotting only the",
                   "upper-triangular part of the matrix."))
@@ -128,7 +134,7 @@ plotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   p <- plotSim.default(mat, type, clustering, dendro, k, log, legendName, main, 
                        priorCount, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
-                       cluster_col = cluster_col)
+                       cluster_col = cluster_col, mode = mode)
   
   return(p)
 }
@@ -140,7 +146,9 @@ plotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
                          priorCount = 0.5, stats = c("R.squared", "D.prime"),
                          h = NULL, axis = FALSE, naxis = min(10, nrow(mat)), 
                          axistext = NULL, xlab = "objects", 
-                         cluster_col = "darkred") {
+                         cluster_col = "darkred",
+                         mode = c("standard", "corrected", "total-disp", 
+                                  "within-disp", "average-disp")) {
   
   type <- match.arg(type)
   if (type != "dissimilarity") {
@@ -154,7 +162,7 @@ plotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
   p <- plotSim.default(mat, type, clustering, dendro, k, log, legendName, main, 
                        priorCount, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
-                       cluster_col = cluster_col)
+                       cluster_col = cluster_col, mode = mode)
   
   return(p)
 }
@@ -166,7 +174,9 @@ plotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
                            priorCount = 0.5, stats = c("R.squared", "D.prime"), 
                            h = NULL, axis = FALSE, naxis = min(10, nrow(mat)),
                            axistext = NULL, xlab = "bins", 
-                           cluster_col = "darkred") {
+                           cluster_col = "darkred",
+                           mode = c("standard", "corrected", "total-disp", 
+                                    "within-disp", "average-disp")) {
   type <- match.arg(type)
   if (!requireNamespace("HiTC")) 
     stop("Package 'HiTC' not available. 'HTCexp' input cannot be used.")
@@ -176,7 +186,7 @@ plotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
   mat <- mat@intdata
   p <- plotSim(mat, type, clustering, dendro, k, log, legendName, main, 
                priorCount, axis = axis, naxis = naxis, axistext = axistext, 
-               xlab = xlab, cluster_col = cluster_col)
+               xlab = xlab, cluster_col = cluster_col, mode = mode)
   
   return(p)
 }
@@ -188,9 +198,10 @@ plotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
                               main = NULL, priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
                               axis = FALSE, naxis = min(10, nrow(mat)), 
-                              axistext = NULL,
-                              xlab = "SNP index", 
-                              cluster_col = "darkred") {
+                              axistext = NULL, xlab = "SNP index", 
+                              cluster_col = "darkred",
+                              mode = c("standard", "corrected", "total-disp", 
+                                       "within-disp", "average-disp")) {
   if (!requireNamespace("snpStats")) 
     stop("Package 'snpStats' not available. 'SnpMatrix' input cannot be used.")
   
@@ -208,7 +219,7 @@ plotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   p <- plotSim.default(mat, type, clustering, dendro, k, log, legendName, main, 
                        priorCount, h = h, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
-                       cluster_col = cluster_col)
+                       cluster_col = cluster_col, mode = mode)
   
   return(p)
 }
@@ -220,14 +231,18 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
                             priorCount = 0.5, stats = c("R.squared", "D.prime"), 
                             h = NULL, axis = FALSE, naxis = min(10, nrow(mat)),
                             axistext = NULL, xlab = "objects", 
-                            cluster_col = "darkred") {
+                            cluster_col = "darkred", 
+                            mode = c("standard", "corrected", "total-disp", 
+                                     "within-disp", "average-disp")) {
   # Input checks ####
   d <- nrow(mat)
   type <- match.arg(type)
   if (!is.null(dendro)) {
+    mode <- match.arg(mode)
     if (inherits(dendro, "hclust")) {
       dd <- dendro
     } else dd <- try(as.hclust(dendro), silent = TRUE)
+    dendro <- dendro_for_mode(dendro, mode)
     if (inherits(dd, "try-error")) {
       stop(paste("'dendro' can not be converted to class 'hclust'. Please ",
                  "provide a proper dendrogram."))

@@ -20,7 +20,8 @@ plotSim(
   naxis = min(10, nrow(mat)),
   axistext = NULL,
   xlab = "objects",
-  cluster_col = "darkred"
+  cluster_col = "darkred",
+  mode = c("standard", "corrected", "total-disp", "within-disp", "average-disp")
 )
 }
 \arguments{
@@ -92,6 +93,8 @@ dendro_iris <- adjClust(dist_data, type = "dissimilarity")
 plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris, axis = TRUE)
 plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
         clustering = clustering)
+plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris, axis = TRUE,
+        k = 3)
 plotSim(dist_data, type = "dissimilarity", legendName = "IF", axis = TRUE, 
         clustering = clustering)
 p <- plotSim(dist(iris[, 1:4]), type = "dissimilarity", log = FALSE, 
