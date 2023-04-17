@@ -42,6 +42,8 @@
 #' @param xlab character. If \code{axis == TRUE}, x-axis title.
 #' @param cluster_col colour for the cluster line if \code{clustering} is not
 #' \code{NULL}.
+#' @param mode type of dendrogram to plot (see \code{\link{plot.chac}}). Default
+#' to \code{"standard"}.
 #' @import ggplot2
 #' @importFrom dendextend set as.ggdend %>%
 #' @importFrom rlang .data

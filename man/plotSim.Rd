@@ -76,6 +76,9 @@ of the x-axis (its length has to be equal to \code{naxis}).}
 
 \item{cluster_col}{colour for the cluster line if \code{clustering} is not
 \code{NULL}.}
+
+\item{mode}{type of dendrogram to plot (see \code{\link{plot.chac}}). Default
+to \code{"standard"}.}
 }
 \description{
 Heatmap of the (dis)similarity matrix
