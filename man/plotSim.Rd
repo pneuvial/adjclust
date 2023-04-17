@@ -9,6 +9,7 @@ plotSim(
   type = c("similarity", "dissimilarity"),
   clustering = NULL,
   dendro = NULL,
+  k = NULL,
   log = TRUE,
   legendName = "intensity",
   main = NULL,
@@ -38,6 +39,10 @@ consecutive integers 1, 2, 3, ...}
 
 \item{dendro}{dendrogram provided as an \code{hclust} object, or as another
 type of object that can be converted to \code{hclust} with \code{as.hclust}.}
+
+\item{k}{number of clusters to display. Used only when \code{dendro} is not
+\code{NULL} and \code{clustering} is \code{NULL}. The clustering is then 
+deduced from the dendrogram by a standard cut.}
 
 \item{log}{logical. Should the breaks be based on log-scaled values of the
 matrix entries. Default to \code{TRUE}.}
