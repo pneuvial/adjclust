@@ -19,8 +19,7 @@ Description: Implements a constrained version of hierarchical agglomerative
     analysis, where the similarity between items is a decreasing function of 
     their genomic distance. Taking advantage of this feature, the implemented 
     algorithm is time and memory efficient. This algorithm is described in 
-    Ambroise et al (2019) 
-    <https://almob.biomedcentral.com/articles/10.1186/s13015-019-0157-4>.
+    Ambroise et al (2019) <doi:10.1186/s13015-019-0157-4>.
 Depends: R (>= 4.0.0)
 Imports:
     stats,
