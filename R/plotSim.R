@@ -18,6 +18,9 @@
 #' consecutive integers 1, 2, 3, ...
 #' @param dendro dendrogram provided as an \code{hclust} object, or as another
 #' type of object that can be converted to \code{hclust} with \code{as.hclust}.
+#' @param k number of clusters to display. Used only when \code{dendro} is not
+#' \code{NULL} and \code{clustering} is \code{NULL}. The clustering is then 
+#' deduced from the dendrogram by a standard cut.
 #' @param log logical. Should the breaks be based on log-scaled values of the
 #' matrix entries. Default to \code{TRUE}.
 #' @param legendName character. Title of the legend. Default to 
@@ -39,6 +42,8 @@
 #' @param xlab character. If \code{axis == TRUE}, x-axis title.
 #' @param cluster_col colour for the cluster line if \code{clustering} is not
 #' \code{NULL}.
+#' @param mode type of dendrogram to plot (see \code{\link{plot.chac}}). Default
+#' to \code{"standard"}.
 #' @import ggplot2
 #' @importFrom dendextend set as.ggdend %>%
 #' @importFrom rlang .data
@@ -49,6 +54,8 @@
 #' plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris, axis = TRUE)
 #' plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
 #'         clustering = clustering)
+#' plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris, axis = TRUE,
+#'         k = 3)
 #' plotSim(dist_data, type = "dissimilarity", legendName = "IF", axis = TRUE, 
 #'         clustering = clustering)
 #' p <- plotSim(dist(iris[, 1:4]), type = "dissimilarity", log = FALSE, 
@@ -80,61 +87,70 @@
 #' @export
 
 plotSim <- function(mat, type = c("similarity", "dissimilarity"),
-                    clustering = NULL, dendro = NULL, log = TRUE, 
+                    clustering = NULL, dendro = NULL, k = NULL, log = TRUE, 
                     legendName = "intensity", main = NULL, priorCount = 0.5, 
                     stats = c("R.squared", "D.prime"), h = NULL, axis = FALSE,
-                    naxis = min(10, nrow(mat)), axistext = NULL, xlab = "objects", 
-                    cluster_col = "darkred") {
+                    naxis = min(10, nrow(mat)), axistext = NULL, 
+                    xlab = "objects", cluster_col = "darkred",
+                    mode = c("standard", "corrected", "total-disp", 
+                             "within-disp", "average-disp")) {
   UseMethod("plotSim")
 }
 
 #' @export
 plotSim.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                              clustering = NULL, dendro = NULL, log = TRUE, 
-                              legendName = "intensity", main = NULL, 
+                              clustering = NULL, dendro = NULL, k = NULL, 
+                              log = TRUE, legendName = "intensity", main = NULL, 
                               priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
                               axis = FALSE, naxis = min(10, nrow(mat)), 
                               axistext = NULL,xlab = "objects", 
-                              cluster_col = "darkred") {
-  p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
+                              cluster_col = "darkred",
+                              mode = c("standard", "corrected", "total-disp", 
+                                       "within-disp", "average-disp")) {
+  p <- plotSim.default(mat, type, clustering, dendro, k, log, legendName, main, 
                        priorCount, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
-                       cluster_col = cluster_col)
+                       cluster_col = cluster_col, mode = mode)
 
   return(p)
 }
 
 #' @export
 plotSim.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                              clustering = NULL, dendro = NULL, log = TRUE, 
-                              legendName = "intensity", main = NULL, 
-                              priorCount = 0.5, 
+                              clustering = NULL, dendro = NULL, k = NULL, 
+                              log = TRUE, legendName = "intensity", 
+                              main = NULL, priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
-                              axis = FALSE, naxis = min(10, nrow(mat)), axistext = NULL,
-                              xlab = "objects", cluster_col = "darkred") {
+                              axis = FALSE, naxis = min(10, nrow(mat)), 
+                              axistext = NULL, xlab = "objects", 
+                              cluster_col = "darkred",
+                              mode = c("standard", "corrected", "total-disp", 
+                                       "within-disp", "average-disp")) {
   if (!isSymmetric(mat)) 
     warning(paste("Input matrix was not symmetric. Plotting only the",
                   "upper-triangular part of the matrix."))
   
   mat <- forceSymmetric(mat)
   
-  p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
+  p <- plotSim.default(mat, type, clustering, dendro, k, log, legendName, main, 
                        priorCount, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
-                       cluster_col = cluster_col)
+                       cluster_col = cluster_col, mode = mode)
   
   return(p)
 }
 
 #' @export
 plotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
-                         clustering = NULL, dendro = NULL, log = TRUE, 
+                         clustering = NULL, dendro = NULL, k= NULL, log = TRUE, 
                          legendName = "intensity", main = NULL, 
                          priorCount = 0.5, stats = c("R.squared", "D.prime"),
                          h = NULL, axis = FALSE, naxis = min(10, nrow(mat)), 
                          axistext = NULL, xlab = "objects", 
-                         cluster_col = "darkred") {
+                         cluster_col = "darkred",
+                         mode = c("standard", "corrected", "total-disp", 
+                                  "within-disp", "average-disp")) {
   
   type <- match.arg(type)
   if (type != "dissimilarity") {
@@ -145,22 +161,24 @@ plotSim.dist <- function(mat, type = c("similarity", "dissimilarity"),
   
   mat <- as.matrix(mat)
   
-  p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
+  p <- plotSim.default(mat, type, clustering, dendro, k, log, legendName, main, 
                        priorCount, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
-                       cluster_col = cluster_col)
+                       cluster_col = cluster_col, mode = mode)
   
   return(p)
 }
 
 #' @export
 plotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
-                           clustering = NULL, dendro = NULL, log = TRUE, 
-                           legendName = "IF", main = NULL, priorCount = 0.5, 
-                           stats = c("R.squared", "D.prime"), h = NULL,
-                           axis = FALSE, naxis = min(10, nrow(mat)),
+                           clustering = NULL, dendro = NULL, k = NULL, 
+                           log = TRUE, legendName = "IF", main = NULL, 
+                           priorCount = 0.5, stats = c("R.squared", "D.prime"), 
+                           h = NULL, axis = FALSE, naxis = min(10, nrow(mat)),
                            axistext = NULL, xlab = "bins", 
-                           cluster_col = "darkred") {
+                           cluster_col = "darkred",
+                           mode = c("standard", "corrected", "total-disp", 
+                                    "within-disp", "average-disp")) {
   type <- match.arg(type)
   if (!requireNamespace("HiTC")) 
     stop("Package 'HiTC' not available. 'HTCexp' input cannot be used.")
@@ -168,23 +186,24 @@ plotSim.HTCexp <- function(mat, type = c("similarity", "dissimilarity"),
     stop("type 'dissimilarity' does not match 'HTCexp' data")
     
   mat <- mat@intdata
-  p <- plotSim(mat, type, clustering, dendro, log, legendName, main, 
+  p <- plotSim(mat, type, clustering, dendro, k, log, legendName, main, 
                priorCount, axis = axis, naxis = naxis, axistext = axistext, 
-               xlab = xlab, cluster_col = cluster_col)
+               xlab = xlab, cluster_col = cluster_col, mode = mode)
   
   return(p)
 }
 
 #' @export
 plotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
-                              clustering = NULL, dendro = NULL, log = TRUE, 
-                              legendName = "correlation", main = NULL, 
-                              priorCount = 0.5, 
+                              clustering = NULL, dendro = NULL, k = NULL,
+                              log = TRUE, legendName = "correlation", 
+                              main = NULL, priorCount = 0.5, 
                               stats = c("R.squared", "D.prime"), h = NULL,
                               axis = FALSE, naxis = min(10, nrow(mat)), 
-                              axistext = NULL,
-                              xlab = "SNP index", 
-                              cluster_col = "darkred") {
+                              axistext = NULL, xlab = "SNP index", 
+                              cluster_col = "darkred",
+                              mode = c("standard", "corrected", "total-disp", 
+                                       "within-disp", "average-disp")) {
   if (!requireNamespace("snpStats")) 
     stop("Package 'snpStats' not available. 'SnpMatrix' input cannot be used.")
   
@@ -199,37 +218,33 @@ plotSim.SnpMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   diag(mat) <- rep(1, nrow(mat))  ## by default the diagonal is 0 after 'snpStats::ld'
   mat <- forceSymmetric(mat)
   
-  p <- plotSim.default(mat, type, clustering, dendro, log, legendName, main, 
+  p <- plotSim.default(mat, type, clustering, dendro, k, log, legendName, main, 
                        priorCount, h = h, axis = axis, naxis = naxis, 
                        axistext = axistext, xlab = xlab, 
-                       cluster_col = cluster_col)
+                       cluster_col = cluster_col, mode = mode)
   
   return(p)
 }
  
 #' @export
 plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
-                            clustering = NULL, dendro = NULL, log = TRUE, 
-                            legendName = "intensity", main = NULL, 
+                            clustering = NULL, dendro = NULL, k = NULL, 
+                            log = TRUE, legendName = "intensity", main = NULL, 
                             priorCount = 0.5, stats = c("R.squared", "D.prime"), 
                             h = NULL, axis = FALSE, naxis = min(10, nrow(mat)),
                             axistext = NULL, xlab = "objects", 
-                            cluster_col = "darkred") {
+                            cluster_col = "darkred", 
+                            mode = c("standard", "corrected", "total-disp", 
+                                     "within-disp", "average-disp")) {
   # Input checks ####
   d <- nrow(mat)
   type <- match.arg(type)
-  if (!is.null(clustering)) {
-    clusters <- sort(unique(clustering))
-    if ((length(clustering) != d) || !all.equal(clusters, 1:max(clusters))) {
-      stop(paste("'clustering' must be a vector of size nrow(mat) containing",
-                 "all the integers between 1 and K (nb of clusters).",
-                 "Please fix input."))
-    }
-  }
   if (!is.null(dendro)) {
+    mode <- match.arg(mode)
     if (inherits(dendro, "hclust")) {
       dd <- dendro
     } else dd <- try(as.hclust(dendro), silent = TRUE)
+    dendro <- dendro_for_mode(dendro, mode)
     if (inherits(dd, "try-error")) {
       stop(paste("'dendro' can not be converted to class 'hclust'. Please ",
                  "provide a proper dendrogram."))
@@ -237,6 +252,26 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
     if (length(dd$order) != d)
       stop(paste("'dendro' must be a dendrogram with the same number of",
                  "objects as the input matrix. Please fix input."))
+  }
+  if (!is.null(k)) {
+    if (!is.null(clustering))
+      stop("Either 'clustering' or 'k' can be not NULL, not both.")
+    
+    if (is.null(dendro))
+      stop("'dendro' must be provided when 'k' is not NULL.")
+    
+    if (k != round(k, 0) | k <= 1 | k >= length(dd$order))
+      stop(paste("'k' must be an integer larger than 1 and smaller than the",
+                 "number of objects in the input matrix. Please fix input."))
+    clustering <- cutree(dd, k = k)
+  }
+  if (!is.null(clustering)) {
+    clusters <- sort(unique(clustering))
+    if ((length(clustering) != d) || !all.equal(clusters, 1:max(clusters))) {
+      stop(paste("'clustering' must be a vector of size nrow(mat) containing",
+                 "all the integers between 1 and K (nb of clusters).",
+                 "Please fix input."))
+    }
   }
   if (!is.logical(log)) stop("'log' must be logical!")
   if (!is.character(legendName)) stop("'legendName' must be a string!")

@@ -364,3 +364,48 @@ update_call <- function(x, name_to) {
   as.call(lst)
 }
 
+# compute dendrogram heights depending on the mode (used in plotSim and chac)
+dendro_for_mode <- function(x, 
+                            mode = c("standard", "corrected", "total-disp", 
+                                     "within-disp", "average-disp")) {
+  
+  if ((x$method == "adjClust-corrected") & (mode != "standard")) {
+    stop("Already corrected 'chac' object. 'mode' must be set to 'standard'")
+  }
+  
+  if (mode == "standard") {
+    if (any(diff(x$height) < 0)) 
+      warning(paste0("\nDetected reversals in dendrogram: ",
+                     "mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant."), 
+              call. = FALSE)
+  } else if (mode == "corrected") {
+    x <- correct(x)
+  } else if (mode == "total-disp") {
+    x$height <- cumsum(x$height)
+  } else if (mode == "within-disp" | mode == "average-disp") {
+    to_correct <- which((x$merge[ ,1] > 0) | (x$merge[ ,2] > 0))
+    for (ind in to_correct) {
+      clusters <- x$merge[ind, ]
+      clusters <- clusters[clusters > 0]
+      x$height[ind] <- x$height[ind] + sum(x$height[clusters])
+    }
+    if (mode == "average-disp") {
+      # search for current cluster size
+      out <- sapply((length(x$height) + 1):1, function(num) {
+        tmp <- table(table(cutree(as.hclust(x), k = num)))
+        res <- rep(0, length(x$height) + 1)
+        res[as.numeric(names(tmp))] <- tmp
+        return(res)
+      })
+      out <- apply(out, 1, diff)
+      sizes <- unlist(apply(out, 1, function(acol) which(acol > 0)))
+      sizes <- as.numeric(sizes)
+      x$height <- x$height / sizes
+      if (any(diff(x$height) < 0)) 
+        warning(paste0("\nDetected reversals in dendrogram: ",
+                       "mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant."))
+    }
+  }
+  
+  return(x)
+}

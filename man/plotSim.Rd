@@ -9,6 +9,7 @@ plotSim(
   type = c("similarity", "dissimilarity"),
   clustering = NULL,
   dendro = NULL,
+  k = NULL,
   log = TRUE,
   legendName = "intensity",
   main = NULL,
@@ -19,7 +20,8 @@ plotSim(
   naxis = min(10, nrow(mat)),
   axistext = NULL,
   xlab = "objects",
-  cluster_col = "darkred"
+  cluster_col = "darkred",
+  mode = c("standard", "corrected", "total-disp", "within-disp", "average-disp")
 )
 }
 \arguments{
@@ -38,6 +40,10 @@ consecutive integers 1, 2, 3, ...}
 
 \item{dendro}{dendrogram provided as an \code{hclust} object, or as another
 type of object that can be converted to \code{hclust} with \code{as.hclust}.}
+
+\item{k}{number of clusters to display. Used only when \code{dendro} is not
+\code{NULL} and \code{clustering} is \code{NULL}. The clustering is then 
+deduced from the dendrogram by a standard cut.}
 
 \item{log}{logical. Should the breaks be based on log-scaled values of the
 matrix entries. Default to \code{TRUE}.}
@@ -70,6 +76,9 @@ of the x-axis (its length has to be equal to \code{naxis}).}
 
 \item{cluster_col}{colour for the cluster line if \code{clustering} is not
 \code{NULL}.}
+
+\item{mode}{type of dendrogram to plot (see \code{\link{plot.chac}}). Default
+to \code{"standard"}.}
 }
 \description{
 Heatmap of the (dis)similarity matrix
@@ -87,6 +96,8 @@ dendro_iris <- adjClust(dist_data, type = "dissimilarity")
 plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris, axis = TRUE)
 plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
         clustering = clustering)
+plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris, axis = TRUE,
+        k = 3)
 plotSim(dist_data, type = "dissimilarity", legendName = "IF", axis = TRUE, 
         clustering = clustering)
 p <- plotSim(dist(iris[, 1:4]), type = "dissimilarity", log = FALSE, 
