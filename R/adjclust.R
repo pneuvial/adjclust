@@ -50,7 +50,7 @@ NULL
 #' @references Murtagh F., and Legendre P. (2014). Ward's hierarchical
 #'   agglomerative clustering method: which algorithms implement Ward's 
 #'   criterion? \emph{Journal of Classification}, \strong{31}, 274-295. 
-#'   DOI: \href{https://doi.org/10.1007/s00357-014-9161-z}{10.1007/s00357-014-9161-z}.
+#'   DOI: \doi{10.1007/s00357-014-9161-z}.
 #' 
 #' @references Dehman A. (2015). \emph{Spatial Clustering of Linkage
 #'   Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis,
@@ -60,13 +60,13 @@ NULL
 #'   (2019). Adjacency-constrained hierarchical clustering of a band similarity 
 #'   matrix with application to genomics. \emph{Algorithms for Molecular
 #'   Biology}, \strong{14}(22).
-#'   DOI: \href{http://dx.doi.org/10.1007/s11222-018-9806-6}{10.1007/s11222-018-9806-6}.
+#'   DOI: \doi{10.1007/s11222-018-9806-6}.
 #'
 #' @references Randriamihamison N., Vialaneix N., and Neuvial P. (2020).
 #'   Applicability and interpretability of Ward's hierarchical agglomerative
 #'   clustering with or without contiguity constraints. \emph{Journal of 
 #'   Classification}, \strong{38}, 1-27.
-#'   DOI: \href{http://dx.doi.org/10.1007/s00357-020-09377-y}{10.1007/s00357-020-09377-y}.
+#'   DOI: \doi{10.1007/s00357-020-09377-y}.
 #' 
 #' @note When performed on a distance matrix \eqn{d} with the option 
 #' \code{type = "dissimilarity"}, \code{adjclust} is identical to using the 
