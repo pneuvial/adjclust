@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Comparison between the results of adjClust with sparse and dense matrices")
 
 mat <- matrix(c(1.0, 0.0, 0.0, 0.0, 0.0, 
@@ -59,6 +57,16 @@ test_that("test that adjClust gives identical results for sparse and dense matri
   
   expect_equal(fit1$merge, fit7$merge)
   expect_equal(fit1$height, fit7$height)
+  
+  # test that adjClust methods returns expected 'calls' for sparse matrices
+  expect_identical(as.list(fit1$call)[[1]], as.symbol("adjClust"))
+  expect_identical(as.list(fit2$call)[[1]], as.symbol("adjClust"))
+  expect_identical(as.list(fit3$call)[[1]], as.symbol("adjClust"))
+  expect_identical(as.list(fit4$call)[[1]], as.symbol("adjClust"))
+  expect_identical(as.list(fit5$call)[[1]], as.symbol("adjClust"))
+  expect_identical(as.list(fit6$call)[[1]], as.symbol("adjClust"))
+  expect_identical(as.list(fit7$call)[[1]], as.symbol("adjClust"))
+  
 })
 
 test_that("test that adjClust gives identical results for sparse and dense matrices when h is p-1", {

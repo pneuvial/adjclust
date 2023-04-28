@@ -9,16 +9,19 @@ plotSim(
   type = c("similarity", "dissimilarity"),
   clustering = NULL,
   dendro = NULL,
-  palette = heat.colors,
-  breaks = 10,
+  k = NULL,
   log = TRUE,
-  h = NULL,
-  stats = c("R.squared", "D.prime"),
+  legendName = "intensity",
   main = NULL,
-  col.clust = "darkblue",
-  lwd.clust = 2,
-  xaxis = FALSE,
-  naxis = 10
+  priorCount = 0.5,
+  stats = c("R.squared", "D.prime"),
+  h = NULL,
+  axis = FALSE,
+  naxis = min(10, nrow(mat)),
+  axistext = NULL,
+  xlab = "objects",
+  cluster_col = "darkred",
+  mode = c("standard", "corrected", "total-disp", "within-disp", "average-disp")
 )
 }
 \arguments{
@@ -30,43 +33,52 @@ plotSim(
 \code{"dissimilarity"} (kernels are supposed to be of type 
 \code{"similarity"}).}
 
-\item{clustering}{vector of length the number of rows (columns) of the 
-matrix that contains a contiguity constrained clustering (as provided by
-\code{\link{select}} for instance). If supplied the clustering is 
-superimposed over the heatmap.}
+\item{clustering}{vector of clusters to display on the matrix (if not 
+\code{NULL}). If \code{clustering} is provided, it must be a numeric vector
+of length identical to the matrix size with clusters identified as 
+consecutive integers 1, 2, 3, ...}
 
-\item{dendro}{\code{\link{chac}} object as provided, e.g., by the function
-\code{\link{adjClust}} (or any of the other wrappers).}
+\item{dendro}{dendrogram provided as an \code{hclust} object, or as another
+type of object that can be converted to \code{hclust} with \code{as.hclust}.}
 
-\item{palette}{color palette. Default to \code{\link{heat.colors}}}
-
-\item{breaks}{number of breaks used to set colors from the palette. Those
-are based on the quantiles of the matrix entries and for skewed distributions
-the actual number used to set the palette can be lower than \code{breaks}.}
+\item{k}{number of clusters to display. Used only when \code{dendro} is not
+\code{NULL} and \code{clustering} is \code{NULL}. The clustering is then 
+deduced from the dendrogram by a standard cut.}
 
 \item{log}{logical. Should the breaks be based on log-scaled values of the
 matrix entries. Default to \code{TRUE}.}
 
-\item{h}{if \code{mat} is of class \code{"snpMatrix"}, band parameter used to
-compute the linkage disequilibrium (see \code{\link[snpStats]{ld}}).}
+\item{legendName}{character. Title of the legend. Default to 
+\code{"intensity"}.}
 
-\item{stats}{if \code{mat} is of class \code{"snpMatrix"}, type of linkage
-disequilibrium measure (see \code{\link[snpStats]{ld}}).}
+\item{main}{character. Title of the plot. Default to \code{NULL} (no title).}
 
-\item{main}{graphic title.}
+\item{priorCount}{numeric. Average count to be added to each entry of the
+matrix to avoid taking log of zero. Used only if \code{log == TRUE} and 
+default to 0.5.}
 
-\item{col.clust}{color for the borders of the clusters (if \code{clustering}
-is provided).}
+\item{stats}{input SNP correlation type. Used when \code{mat} is of type 
+\code{SnpMatrix}.}
 
-\item{lwd.clust}{line width for the borders of the clusters (if 
-\code{clustering} is provided).}
+\item{h}{positive integer. Threshold distance for SNP correlation 
+computation. Used when \code{mat} is of type \code{SnpMatrix}.}
 
-\item{xaxis}{logical. Should a x-axis be displayed? Default to \code{FALSE}}
+\item{axis}{logical. Should x-axis be displayed on the plot? Default to 
+\code{FALSE}.}
 
-\item{naxis}{number of breaks to display on the x-axis. For 
-\code{HTCexp} objects, the axis is displayed in terms of Mpb and for the 
-other types of input, it is displayed in terms of bin number. Default to 
-\code{10}.}
+\item{naxis}{integer. If \code{axis == TRUE}, number of ticks to display on
+the x-axis.}
+
+\item{axistext}{character vector. If \code{axis == TRUE}, labels to display
+of the x-axis (its length has to be equal to \code{naxis}).}
+
+\item{xlab}{character. If \code{axis == TRUE}, x-axis title.}
+
+\item{cluster_col}{colour for the cluster line if \code{clustering} is not
+\code{NULL}.}
+
+\item{mode}{type of dendrogram to plot (see \code{\link{plot.chac}}). Default
+to \code{"standard"}.}
 }
 \description{
 Heatmap of the (dis)similarity matrix
@@ -77,20 +89,41 @@ can be used as a diagnostic plot to check the consistency between the
 obtained clustering and the original (dis)similarity
 }
 \examples{
-# input as HiTC::HTCexp object
 \dontrun{
+clustering <- rep(1:3, each = 50)
+dist_data <- as.matrix(dist(iris[, 1:4]))
+dendro_iris <- adjClust(dist_data, type = "dissimilarity")
+plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris, axis = TRUE)
+plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris,
+        clustering = clustering)
+plotSim(dist_data, type = "dissimilarity", dendro = dendro_iris, axis = TRUE,
+        k = 3)
+plotSim(dist_data, type = "dissimilarity", legendName = "IF", axis = TRUE, 
+        clustering = clustering)
+p <- plotSim(dist(iris[, 1:4]), type = "dissimilarity", log = FALSE, 
+             clustering = clustering, cluster_col = "blue")
+# custom palette
+p + scale_fill_gradient(low = "yellow", high = "red")
+# dsCMatrix
+m <- Matrix(c(0, 0, 2, 0, 3, 0, 2, 0, 0), ncol = 3)
+res <- adjClust(m)
+plotSim(m, axis = TRUE)
+plotSim(m, dendro = res)
+# dgCMatrix
+m <- as(m, "generalMatrix")
+plotSim(m)
+m <- as.dist(m)
 if (require("HiTC", quietly = TRUE)) {
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
-  plotSim(hic_imr90_40_XX)
-  
-  # with a constrained clustering
   res <- hicClust(hic_imr90_40_XX, log = TRUE)
-  selected.capushe <- select(res)
-  plotSim(hic_imr90_40_XX, clustering = selected.capushe, xaxis = TRUE)
-  plotSim(hic_imr90_40_XX, clustering = selected.capushe, dendro = res)
-}}
-
-plotSim(dist(iris[ ,1:4]), log = FALSE)
+  plotSim(hic_imr90_40_XX, axis = TRUE)
+}
+if (requireNamespace("snpStats", quietly = TRUE)) {
+  data(testdata, package = "snpStats")
+  plotSim(Autosomes[1:200, 1:5], h = 3, stats = "R.squared", axis = TRUE,
+          axistext = c("A", "B", "C", "D", "E"))
+}
+}
 }
 \seealso{
 \code{\link{select}}, \code{\link{adjClust}}

@@ -1,3 +1,15 @@
+# Version 0.6.7  [2023-04-24]
+
+* Fix #60 (increase test coverage)
+* Fix #61 (NAMESPACE error in 'SnpClust.matrix')
+* Fix #45 (update 'calls' for 'adjclust.*' methods)
+* Fix #49 (calls to 'library' in tests)
+* Fix #55 (pkgdown action)
+* Fix #40 (moved plotSim to a ggplot2 version)
+* Fix #30 (improved plotSim, k and correct have been added as new arguments)
+* Fix #62 (citation file corrected)
+* Fix #68 (CRAN note)
+
 # Version 0.6.6 [2022-09-13]
 
 * Minor updates in tests to comply with updates in Matrix 1.5.0

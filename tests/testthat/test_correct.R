@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Test outputs of diagnose and correct.")
 
 test_that("'diagnose' and 'correct' must return a warning or a message when no reversals are found.", {

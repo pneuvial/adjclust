@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Comparison between the results of the 'rioja' and 'adjclust' packages")
 
 test_that("rioja and adjClust with full band give identical results on toy data", {

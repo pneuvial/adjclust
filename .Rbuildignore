@@ -2,8 +2,6 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^cran-comments\.md$
-^\.travis\.yml$
-^appveyor\.yml$
 ^codecov\.yml$
 tests/testthat/Rplots.pdf
 ^fig$
@@ -18,3 +16,4 @@ tests/testthat/Rplots.pdf
 ^issues$
 ^CRAN-RELEASE$
 ^CRAN-SUBMISSION$
+^pkgdown$

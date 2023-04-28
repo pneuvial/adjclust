@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Consistency of the results of 'snpClust' across various input formats")
 
 # check function kept for possible future usage
@@ -57,23 +55,39 @@ test_that("'snpClust' gives identical results regardless of data input format", 
                  "Forcing the LD similarity to be smaller than or equal to 1")
   expect_equal(fit2$merge, fit1$merge)
   expect_equal(fit2$height, fit1$height)  
-    
+
+  expect_error(snpClust(ceph.1mb, h = ncol(ceph.1mb), stats = "R.squared"), 
+                 "h should be strictly less than p")
+      
   #case3: Input belongs class base::matrix
   ceph.1mb <- as.matrix(ceph.1mb)
   fit3 <- expect_warning(snpClust(ceph.1mb, h = 100, stats = "R.squared"), 
                          "Forcing the LD similarity to be smaller than or equal to 1")
   expect_equal(fit3$merge, fit1$merge)
   expect_equal(fit3$height, fit1$height)
-    
+  
+  # increase test coverage
+  ceph.1mb_nonames <- as.matrix(ceph.1mb)
+  colnames(ceph.1mb_nonames) <- NULL
+  rownames(ceph.1mb_nonames) <- NULL
+  expect_warning(snpClust(ceph.1mb_nonames, h = 100, stats = "R.squared"), 
+                         "Forcing the LD similarity to be smaller than or equal to 1")
+  
   #case4: default h
   ld.ceph.2 <- snpStats::ld(ceph.1mb, depth = ncol(ceph.1mb) - 1, stats = "R.squared", symmetric = TRUE)
-  ld.ceph.2 <- round(ld.ceph.2, digits = 10)
-  fit4 <- snpClust(ld.ceph.2, ncol(ceph.1mb) - 1)
-  fit5 <- snpClust(ld.ceph.2)
+  fit4 <- suppressWarnings({ snpClust(ld.ceph.2, ncol(ceph.1mb) - 1) })
+  fit5 <- suppressWarnings({ snpClust(ld.ceph.2) })
   fit6 <- expect_warning(snpClust(ceph.1mb, stats = "R.squared"), 
                          "Forcing the LD similarity to be smaller than or equal to 1")
   expect_equal(fit4$merge, fit5$merge)
   expect_equal(fit4$height, fit5$height)
-  # expect_equal(fit4$merge, fit6$merge) ## identical heights but different merges
+  expect_equal(fit4$merge, fit6$merge) ## identical heights but different merges
   expect_equal(fit4$height, fit6$height)
+  
+  # test that hicClust methods returns expected 'calls'
+  expect_identical(as.list(fit1$call)[[1]], as.symbol("snpClust"))
+  expect_identical(as.list(fit2$call)[[1]], as.symbol("snpClust"))
+  expect_identical(as.list(fit3$call)[[1]], as.symbol("snpClust"))
+  expect_identical(as.list(fit4$call)[[1]], as.symbol("snpClust"))
+  
 })

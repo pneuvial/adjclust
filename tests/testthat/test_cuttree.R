@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Test cuttree in various situations (decreasing merges or not, k and/or
         h given.")
 

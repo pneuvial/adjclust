@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Case of NA values in LD estimates")
 
 check_missing_ld <- function() {
@@ -46,6 +44,10 @@ test_that("NA values in LD estimates gives a warning/error in 'snpClust' (second
   ld.ceph[9,8] <- ld.ceph[8,9] <- NA # manually add NA
   
   expect_error(snpClust(ld.ceph, h = h))
+
+  mat <- matrix(1, nrow = 10, ncol = 2)
+  mat <- as(mat, "SnpMatrix")
+  expect_warning(snpClust(mat))
 })
 
 ## One way to correct this is to drop one of the incriminated SNPs

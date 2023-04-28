@@ -83,6 +83,8 @@ hicClust.data.frame <- function(x, h = NULL, log = FALSE, ...) { # bin pair list
   if (log) mat@x <- log(mat@x + 1)
   
   res <- run.hicclust(mat, h = h)
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
   return(res)
 }
 
@@ -104,7 +106,9 @@ hicClust.character <- function(x, h = NULL, log = FALSE, ...) { # file with bin 
   }
   df <- do.call("read.table", inoptions) 
   res <- hicClust.data.frame(df, h = h, log = log)
-
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
+  
   return(res)
 }
 
@@ -119,6 +123,8 @@ hicClust.matrix <- function(x, h = NULL, log = FALSE, ...) {
     if (log) x <- log(x + 1)
     res <- run.hicclust(x, h = h)
   }
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
   return(res)
 }
 
@@ -126,6 +132,8 @@ hicClust.matrix <- function(x, h = NULL, log = FALSE, ...) {
 hicClust.Matrix <- function(x, h = NULL, log = FALSE, ...) {
   if (log) x <- log(x + 1)
   res <- run.hicclust(x, h = h)
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
   return(res)
 }
 
@@ -133,6 +141,8 @@ hicClust.Matrix <- function(x, h = NULL, log = FALSE, ...) {
 hicClust.dgCMatrix <- function(x, h = NULL, log = FALSE, ...) {
   if (log) x@x <- log(x@x + 1)
   res <- run.hicclust(x, h = h)
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
   return(res)
 }
 
@@ -140,6 +150,8 @@ hicClust.dgCMatrix <- function(x, h = NULL, log = FALSE, ...) {
 hicClust.dsCMatrix <- function(x, h = NULL, log = FALSE, ...) {
   if (log) x@x <- log(x@x + 1)
   res <- run.hicclust(x, h = h)
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
   return(res)
 }
 
@@ -147,15 +159,19 @@ hicClust.dsCMatrix <- function(x, h = NULL, log = FALSE, ...) {
 hicClust.dgeMatrix <- function(x, h = NULL, log = FALSE, ...) {
   if (log) x <- log(x + 1)
   res <- run.hicclust(x, h = h)
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
   return(res)
 }
 
 #' @export
 hicClust.HTCexp <- function(x, h = NULL, log = FALSE, ...) {
   if (!requireNamespace("HiTC", quietly = TRUE))
-    stop("Package 'HiTC' not available. This function cannot be used with 'HTCexp' data.")
+    stop("Package 'HiTC' not available. This function cannot be used with 'HTCexp' data.") # nocov
   x <- HiTC::intdata(x)
   res <- hicClust(x, h = h, log = log) # sparse or dense version
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
   return(res)
 }
 
@@ -166,6 +182,7 @@ run.hicclust <- function(x, h) {
   
   res <- adjClust(x, type = "similarity", h = h)
   res$method <- "hicClust"
-        
+  x <- sys.call()
+  res$call <- update_call(x, "hicClust")
   return(res)
 }

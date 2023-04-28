@@ -87,12 +87,16 @@ snpClust <- function(x, h = ncol(x) - 1, stats = c("R.squared", "D.prime")) {
 #' @export
 snpClust.matrix <- function(x, h = ncol(x) - 1, 
                             stats = c("R.squared", "D.prime")) {
+  if (!requireNamespace("snpStats"))
+    stop("Package 'snpStats' not available. This function cannot be used with 'matrix' data.")
   if (is.null(rownames(x)))
     rownames(x) <- 1:nrow(x)
   if (is.null(colnames(x)))
     colnames(x) <- 1:ncol(x)
   x <- as(x, "SnpMatrix")
   res <- snpClust.snpStats(x, h = h, stats = stats)
+  x <- sys.call()
+  res$call <- update_call(x, "snpClust")
   return(res)
 }
 
@@ -100,6 +104,8 @@ snpClust.matrix <- function(x, h = ncol(x) - 1,
 snpClust.dgCMatrix <- function(x, h = ncol(x) - 1, 
                                stats = c("R.squared", "D.prime")) {
   res <- run.snpClust(x, h = h, stats = stats)
+  x <- sys.call()
+  res$call <- update_call(x, "snpClust")
   return(res)
 }
 
@@ -107,6 +113,8 @@ snpClust.dgCMatrix <- function(x, h = ncol(x) - 1,
 snpClust.dsCMatrix <- function(x, h = ncol(x) - 1, 
                                stats = c("R.squared", "D.prime")) {
   res <- run.snpClust(x, h = h, stats = stats)
+  x <- sys.call()
+  res$call <- update_call(x, "snpClust")
   return(res)
 }
 
@@ -129,6 +137,8 @@ snpClust.snpStats <- function(x, h = ncol(x) - 1,
     return(ww)
   }
   res <- run.snpClust(x, h = h, stats = stats)
+  x <- sys.call()
+  res$call <- update_call(x, "snpClust")
   return(res)
 }
 
@@ -153,8 +163,7 @@ run.snpClust <- function(x, h, stats) {
 
   res <- adjClust(x, type = "similarity", h = h)
   res$method <- "snpClust"
-  
+  x <- sys.call()
+  res$call <- update_call(x, "snpClust")
   return(res)
 }
-
-    

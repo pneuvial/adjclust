@@ -1,5 +1,3 @@
-library("adjclust")
-
 check_snp <- function() {
   if (!require("snpStats")) {
     skip("'snpStats' package not available")

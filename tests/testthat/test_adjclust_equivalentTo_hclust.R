@@ -1,5 +1,3 @@
-library("adjclust")
-
 context("Comparison between the results of the 'hclust' and 'adjclust' when 
         optimal merge is always an adjacent merge")
 

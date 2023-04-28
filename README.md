@@ -1,15 +1,11 @@
 
 # adjclust: Adjacency-constrained clustering
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/adjclust)](https://cran.r-project.org/package=adjclust)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/adjclust)](https://cran.r-project.org/package=adjclust)
 [![R build
 status](https://github.com/pneuvial/adjclust/workflows/R-CMD-check/badge.svg)](https://github.com/pneuvial/adjclust/actions)
-[![Travis Build
-Status](https://travis-ci.org/pneuvial/adjclust.svg?branch=develop)](https://travis-ci.org/pneuvial/adjclust)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=develop&svg=true)](https://ci.appveyor.com/project/pneuvial/adjclust)
 [![Coverage
-Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg)](https://codecov.io/github/pneuvial/adjclust/branch/develop)
+Status](https://codecov.io/gh/pneuvial/adjclust/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/pneuvial/adjclust/tree/develop)
 
 `adjclust` is a package that provides methods to perform
 adjacency-constrained hierarchical agglomerative clustering.
@@ -80,6 +76,7 @@ image(ld.ceph, lwd = 0)
 fit <- snpClust(geno, stats = "R.squared", h = h)
 #> Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to
 #> be smaller than or equal to 1
+#> as(<dsTMatrix>, "dgTMatrix") is deprecated since Matrix 1.4-2; do as(., "generalMatrix") instead
 #> Note: 133 merges with non increasing heights.
 plot(fit)
 #> Warning in plot.chac(fit): 
@@ -103,8 +100,6 @@ Vignette](vignettes/hicClust.Rmd) for details.
 
 ``` r
 library("HiTC")
-#> Warning: package 'BiocGenerics' was built under R version 4.0.5
-#> Warning: package 'GenomeInfoDb' was built under R version 4.0.5
 ```
 
 ``` r
@@ -138,6 +133,6 @@ plotSim(intdata(binned), dendro = fitB) # default: log scale for colors
 ## Credits
 
 Version 0.4.0 of this package was completed by Shubham Chaturvedi as a
-part of the [Google Summer of
-Code 2017](https://summerofcode.withgoogle.com/projects/#4961904920363008)
+part of the [Google Summer of Code
+2017](https://summerofcode.withgoogle.com/projects/#4961904920363008)
 program.

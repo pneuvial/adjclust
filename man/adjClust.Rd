@@ -28,12 +28,18 @@ computationally expensive checks when the number of features is large.}
 }
 \value{
 An object of class \code{\link{chac}} which describes the tree
-  produced by the clustering process. The object a list with the same
-  elements as an object of class \code{\link{chac}} (\code{merge},
+  produced by the clustering process. The object is a list with the same
+  elements as an object of class \code{\link[stats]{hclust}} (\code{merge},
   \code{height}, \code{order}, \code{labels}, \code{call}, \code{method},
-  \code{dist.method}), and an extra element \code{mat}: the data on which the
-  clustering is performed, possibly after pre-transformations described in
-  the vignette entitled "Notes on CHAC implementation in adjclust".
+  \code{dist.method}), and two extra elements: \itemize{
+    \item{\code{mat}}{: (the data on which the clustering has been performed, 
+    possibly after the pre-transformations described in the vignette entitled
+    \href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html#notes-on-relations-between-similarity-and-dissimilarity-implementation}{"Notes on CHAC implementation in adjclust"}}.
+    \item{\code{correction}}{: the value of the correction for non positive
+    definite similarity matrices (also described in the same vignette). If
+    \code{correction == 0}, it means that the initial data were not 
+    pre-transformed.}
+ }
 }
 \description{
 Adjacency-constrained hierarchical agglomerative clustering
@@ -49,8 +55,22 @@ This function is a fast implementation of the method that takes advantage of
 sparse similarity matrices (i.e., that have 0 entries outside of a diagonal
 band of width \code{h}). The method is fully described in (Dehman, 2015) and
 based on a kernel version of the algorithm. The different options for the
-implementation are available in the package vignette entitled "Notes on CHAC
-implementation in adjclust".
+implementation are available in the package vignette entitled 
+\href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html}{"Notes on CHAC implementation in adjclust}.
+}
+\note{
+When performed on a distance matrix \eqn{d} with the option 
+\code{type = "dissimilarity"}, \code{adjclust} is identical to using the 
+option \code{"ward.D"} on \eqn{d^2} in the function 
+\code{\link[stats]{hclust}} when the ordering of the (unconstrained) 
+clustering (in \code{\link[stats]{hclust}}) is compatible with the natural 
+ordering of objects used as a constraint. It is also equivalent (under the
+same assumption or orderings) to the option \code{"ward.D2"} performed on the
+distance matrix \eqn{d} itself, except for the final heights of the merges 
+that are equal to the square of the heights obtained with \code{"ward.D2"} in
+\code{\link[stats]{hclust}}. See the 
+\href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html#relations-with-hclust-and-rioja}{vignette on implementation} 
+and (Murtagh and Legendre, 2014) for further details.
 }
 \examples{
 sim <- matrix(
@@ -80,19 +100,26 @@ plot(fit4)
 
 }
 \references{
-Dehman A. (2015) \emph{Spatial Clustering of Linkage
+Murtagh F., and Legendre P. (2014). Ward's hierarchical
+  agglomerative clustering method: which algorithms implement Ward's 
+  criterion? \emph{Journal of Classification}, \strong{31}, 274-295. 
+  DOI: \doi{10.1007/s00357-014-9161-z}.
+
+Dehman A. (2015). \emph{Spatial Clustering of Linkage
   Disequilibrium Blocks for Genome-Wide Association Studies}, PhD thesis,
-  Universite Paris Saclay.
+  Universite Paris Saclay, France.
 
 Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N
-  (2019). \emph{Adjacency-constrained hierarchical clustering of a band
-  similarity matrix with application to genomics}, Algorithms for Molecular
-  Biology 14(22).
+  (2019). Adjacency-constrained hierarchical clustering of a band similarity 
+  matrix with application to genomics. \emph{Algorithms for Molecular
+  Biology}, \strong{14}(22).
+  DOI: \doi{10.1007/s11222-018-9806-6}.
 
-Randriamihamison, N., Vialaneix, N., & Neuvial, P. (2020).
-\emph{Applicability and interpretability of Ward’s hierarchical agglomerative
-clustering with or without contiguity constraints}, Journal of Classification
-38, 1-27.
+Randriamihamison N., Vialaneix N., and Neuvial P. (2020).
+  Applicability and interpretability of Ward's hierarchical agglomerative
+  clustering with or without contiguity constraints. \emph{Journal of 
+  Classification}, \strong{38}, 1-27.
+  DOI: \doi{10.1007/s00357-020-09377-y}.
 }
 \seealso{
 \code{\link{snpClust}} to cluster SNPs based on linkage

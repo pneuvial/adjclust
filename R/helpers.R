@@ -40,7 +40,7 @@ checkCondition <- function(mat) {# used only with symmetric matrices to check co
 
 #' @importFrom utils getFromNamespace
 alt.as.dendrogram <- function(object, hang = -1, check = TRUE, ...) {# used for adding the branching order as a node attribute while turning "hclust" objects into "dendrograms"
-
+  
   t <- 1
   nolabels <- is.null(object$labels)
   merge <- object$merge
@@ -113,9 +113,10 @@ alt.as.dendrogram <- function(object, hang = -1, check = TRUE, ...) {# used for 
 #' @importFrom stats is.leaf
 #' @importFrom graphics strheight strwidth text polygon rect
 #' @importFrom utils str
+#' @importFrom graphics par
 alt.plotNode <- function(x1, x2, subtree, type, center, leaflab, dLeaf, nodePar,
                          edgePar, horiz = FALSE) {#modified plotNode function to be able to print a string instead of a unique symbol at each node
-
+  
   inner <- !is.leaf(subtree) && x1 != x2
   yTop <- attr(subtree, "height")
   bx <- plotNodeLimit(x1, x2, subtree, center)
@@ -293,11 +294,11 @@ alt.plotNode <- function(x1, x2, subtree, type, center, leaflab, dLeaf, nodePar,
 #' @importFrom grDevices dev.flush dev.hold
 #' @importFrom graphics strheight strwidth text
 alt.plot <- function(x, type = c("rectangle", "triangle"), center = FALSE, 
-    edge.root = is.leaf(x) || !is.null(attr(x, "edgetext")), 
-    nodePar = NULL, edgePar = list(), leaflab = c("perpendicular", 
-        "textlike", "none"), dLeaf = NULL, xlab = "", ylab = "", 
-    xaxt = "n", yaxt = "s", horiz = FALSE, frame.plot = FALSE, 
-    xlim, ylim, ...) {#To use alt.plotNode instead of plotNode
+                     edge.root = is.leaf(x) || !is.null(attr(x, "edgetext")), 
+                     nodePar = NULL, edgePar = list(), leaflab = c("perpendicular", 
+                                                                   "textlike", "none"), dLeaf = NULL, xlab = "", ylab = "", 
+                     xaxt = "n", yaxt = "s", horiz = FALSE, frame.plot = FALSE, 
+                     xlim, ylim, ...) {#To use alt.plotNode instead of plotNode
   
   type <- match.arg(type)
   leaflab <- match.arg(leaflab)
@@ -354,4 +355,57 @@ alt.plot <- function(x, type = c("rectangle", "triangle"), center = FALSE,
   alt.plotNode(x1, x2, x, type = type, center = center, leaflab = leaflab,
                dLeaf = dLeaf, nodePar = nodePar, edgePar = edgePar, 
                horiz = horiz)
+}
+
+# update call to replace e.g. 'run.adjclust' by 'adjclust'
+update_call <- function(x, name_to) {
+  lst <- as.list(x)
+  lst[[1]] <- as.symbol(name_to)
+  as.call(lst)
+}
+
+# compute dendrogram heights depending on the mode (used in plotSim and chac)
+dendro_for_mode <- function(x, 
+                            mode = c("standard", "corrected", "total-disp", 
+                                     "within-disp", "average-disp")) {
+  
+  if ((x$method == "adjClust-corrected") & (mode != "standard")) {
+    stop("Already corrected 'chac' object. 'mode' must be set to 'standard'")
+  }
+  
+  if (mode == "standard") {
+    if (any(diff(x$height) < 0)) 
+      warning(paste0("\nDetected reversals in dendrogram: ",
+                     "mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant."), 
+              call. = FALSE)
+  } else if (mode == "corrected") {
+    x <- correct(x)
+  } else if (mode == "total-disp") {
+    x$height <- cumsum(x$height)
+  } else if (mode == "within-disp" | mode == "average-disp") {
+    to_correct <- which((x$merge[ ,1] > 0) | (x$merge[ ,2] > 0))
+    for (ind in to_correct) {
+      clusters <- x$merge[ind, ]
+      clusters <- clusters[clusters > 0]
+      x$height[ind] <- x$height[ind] + sum(x$height[clusters])
+    }
+    if (mode == "average-disp") {
+      # search for current cluster size
+      out <- sapply((length(x$height) + 1):1, function(num) {
+        tmp <- table(table(cutree(as.hclust(x), k = num)))
+        res <- rep(0, length(x$height) + 1)
+        res[as.numeric(names(tmp))] <- tmp
+        return(res)
+      })
+      out <- apply(out, 1, diff)
+      sizes <- unlist(apply(out, 1, function(acol) which(acol > 0)))
+      sizes <- as.numeric(sizes)
+      x$height <- x$height / sizes
+      if (any(diff(x$height) < 0)) 
+        warning(paste0("\nDetected reversals in dendrogram: ",
+                       "mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant."))
+    }
+  }
+  
+  return(x)
 }
