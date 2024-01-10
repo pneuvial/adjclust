@@ -1,3 +1,8 @@
+# Version 0.6.8  [2024-01-10]
+
+* Fix CRAN error on useNames (deprecated NA)
+* Fix CRAN note on itemize (unecessary use of itemize)
+
 # Version 0.6.7  [2023-04-24]
 
 * Fix #60 (increase test coverage)
