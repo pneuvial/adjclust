@@ -263,24 +263,24 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h,
   if (is(mat, "sparseMatrix")) { 
     # left  
     rCumL <- matL_sparse_rowCumsums(mat, h)
-    rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
+    rcCumL <- colCumsums(rCumL, useNames = FALSE) # p x (h+1) matrix
     rm(rCumL)
 
     # right
     rCumR <- matR_sparse_rowCumsums(mat, h)
-    rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
+    rcCumR <- colCumsums(rCumR, useNames = FALSE) # p x (h+1) matrix
     rm(rCumR)
 
     out_matL <- matL_sparse(mat, 2)
   } else {
     # left
     rCumL <- matL_full_rowCumsums(mat, h)
-    rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
+    rcCumL <- colCumsums(rCumL, useNames = FALSE) # p x (h+1) matrix
     rm(rCumL)
 
     # right
     rCumR <- matR_full_rowCumsums(mat, h)
-    rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
+    rcCumR <- colCumsums(rCumR, useNames = FALSE) # p x (h+1) matrix
     rm(rCumR)
 
     out_matL <- matL_full(mat, 2)
