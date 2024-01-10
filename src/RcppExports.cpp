@@ -132,8 +132,8 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP cWardHeaps(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP percDown(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP cWardHeaps(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+RcppExport SEXP percDown(void *, void *, void *, void *);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_adjclust_matL_sparse", (DL_FUNC) &_adjclust_matL_sparse, 2},
