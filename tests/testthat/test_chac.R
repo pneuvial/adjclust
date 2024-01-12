@@ -1,4 +1,5 @@
 test_that("Methods of class 'chac'", {
+  Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("iris")
   dissim <- dist(iris[, 1:4])^2
   sim <- 1-as.matrix(dissim)/2

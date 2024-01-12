@@ -60,9 +60,8 @@
 #'
 #'
 #' @examples
-#' \dontshow{Sys.setenv("OMP_THREAD_LIMIT" = 2)}
 #' ## a very small example
-#' if (requireNamespace("snpStats", quietly = TRUE)) {
+#' \dontrun{
 #'   data(testdata, package = "snpStats")
 #'
 #'   # input as snpStats::SnpMatrix

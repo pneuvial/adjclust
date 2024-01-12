@@ -1,5 +1,6 @@
 context("Equivalence between similarity and dissimilarity implementations")
 
+Sys.setenv("OMP_THREAD_LIMIT" = 2)
 data("iris")
 dissim <- as.matrix(dist(iris[1:10,1:4]))
 sim <- 12-dissim^2/2
