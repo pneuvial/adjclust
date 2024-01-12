@@ -223,8 +223,8 @@ alt.plotNode <- function(x1, x2, subtree, type, center, leaflab, dLeaf, nodePar,
       vln <- NULL
       if (is.leaf(child) && leaflab == "textlike") {
         nodeText <- asTxt(attr(child, "label"))
-        cat("nodeText 2 vaut : ")
-        print(nodeText)
+        # cat("nodeText 2 vaut : ")
+        # print(nodeText)
         if (getOption("verbose")) 
           cat("-- with \"label\"", format(nodeText))
         hln <- 0.6 * strwidth(nodeText, cex = lab.cex)/2
