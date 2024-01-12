@@ -1,5 +1,5 @@
 test_that("adjClust methods returns expected 'calls'", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   toto <- system.time({sim <- matrix(
     c(1.0, 0.1, 0.2, 0.3,
       0.1, 1.0 ,0.4 ,0.5,
@@ -29,11 +29,11 @@ test_that("adjClust methods returns expected 'calls'", {
   lst <- as.list(fit4$call)
   expect_identical(lst[[1]], as.symbol("adjClust"))})
 
-  expect_equal(Sys.getenv("OMP_THREAD_LIMIT"), "2")
+  #expect_equal(Sys.getenv("OMP_THREAD_LIMIT"), "2")
 })
 
 test_that("adjClust methods properly catches unexpected  'calls'", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   mat <- matrix(NA_character_)
   expect_error(adjClust(mat), "Input matrix is not numeric")
 
@@ -72,7 +72,7 @@ test_that("adjClust methods properly catches unexpected  'calls'", {
 })
 
 test_that("'matL' and 'matR' are consistent with C++ versions", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   sim <- matrix(
     c(1.0, 0.1, 0.2, 0.3,
       0.1, 1.0 ,0.4 ,0.5,
@@ -92,7 +92,7 @@ test_that("'matL' and 'matR' are consistent with C++ versions", {
 })
 
 test_that("WCSS functions", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   sim <- matrix(
     c(1.0, 0.1, 0.2, 0.3,
       0.1, 1.0 ,0.4 ,0.5,

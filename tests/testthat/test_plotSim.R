@@ -1,7 +1,7 @@
 context("Check plotSim plots for all types of input")
 
 test_that("'plotSim' works for 'matrix'", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   sim <- matrix(c(1.0, 0.1, 0.2, 0.3, 
                   0.1, 1.0 ,0.4 ,0.5, 
                   0.2, 0.4, 1.0, 0.6, 
@@ -46,7 +46,7 @@ test_that("'plotSim' works for 'matrix'", {
 })
 
 test_that("'plotSim' works for 'dgCMatrix'", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   sim <- Matrix::Matrix(
     c(0, 2:0, 0, 0, 0, 2:0, 0, 0, 0, 2:0, 2:0, 0, 2:0, 0, 0),
     5, 5)
@@ -68,7 +68,7 @@ test_that("'plotSim' works for 'dgCMatrix'", {
 })
 
 test_that("'plotSim' works for 'dsCMatrix'", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   sim <- Matrix::Matrix(toeplitz(c(10, 0, 1, 0, 3)), sparse = TRUE)
   p <- plotSim(sim, "similarity", axis = TRUE, naxis = 2)
   expect_s3_class(p, "ggplot")
@@ -85,7 +85,7 @@ test_that("'plotSim' works for 'dsCMatrix'", {
 })
 
 test_that("'plotSim' works for 'dist'", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("iris")
   dissim <- dist(iris[1:10, 1:4])^2
   fit0 <- hclust(dissim, method = "ward.D")
@@ -104,8 +104,9 @@ test_that("'plotSim' works for 'dist'", {
 })
 
 test_that("'plotSim' works for 'HTCexp'", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
   testthat::skip_if_not_installed("HiTC")
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
   p <- plotSim(hic_imr90_40_XX, axis = TRUE)
   expect_s3_class(p, "ggplot")
@@ -114,8 +115,8 @@ test_that("'plotSim' works for 'HTCexp'", {
 })
 
 test_that("'plotSim' works for 'snpMatrix'", {
-  Sys.setenv("OMP_THREAD_LIMIT" = 2)
   skip_if_not_installed("snpStats")
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
 
   data("ld.example", package = "snpStats")
   ceph.1mb[4, 286]@.Data[1, 1] <- as.raw(3) ## to avoid NaNs
