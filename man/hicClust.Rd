@@ -55,6 +55,7 @@ res2 <- hicClust(mat)
 }
 
 # input as text file
+\dontshow{Sys.setenv("OMP_THREAD_LIMIT" = 2)}
 res3 <- hicClust(system.file("extdata", "sample.txt", package = "adjclust"))
 
 }

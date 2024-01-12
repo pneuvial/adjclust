@@ -53,6 +53,7 @@ If \code{x} is of class
   values are expected to be in [0,1], otherwise they are truncated to [0,1].
 }
 \examples{
+\dontshow{Sys.setenv("OMP_THREAD_LIMIT" = 2)}
 ## a very small example
 if (requireNamespace("snpStats", quietly = TRUE)) {
   data(testdata, package = "snpStats")

@@ -60,6 +60,7 @@
 #'
 #'
 #' @examples
+#' \dontshow{Sys.setenv("OMP_THREAD_LIMIT" = 2)}
 #' ## a very small example
 #' if (requireNamespace("snpStats", quietly = TRUE)) {
 #'   data(testdata, package = "snpStats")

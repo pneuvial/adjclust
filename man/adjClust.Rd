@@ -72,6 +72,7 @@ that are equal to the square of the heights obtained with \code{"ward.D2"} in
 and (Murtagh and Legendre, 2014) for further details.
 }
 \examples{
+\dontshow{Sys.setenv("OMP_THREAD_LIMIT" = 2)}
 sim <- matrix(
 c(1.0, 0.1, 0.2, 0.3,
   0.1, 1.0 ,0.4 ,0.5,

@@ -2,6 +2,8 @@ context("Case of NA values in LD estimates")
 
 check_missing_ld <- function() {
   skip_if_not_installed("snpStats")
+  
+  Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("ld.example", package = "snpStats")
   p <- ncol(ceph.1mb)
   h <- p - 1

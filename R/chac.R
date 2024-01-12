@@ -292,6 +292,7 @@ cutree_chac <- function(tree, k = NULL, h = NULL) {
 #'   table(selected.bs)
 #' }}
 #' 
+#' \dontshow{Sys.setenv("OMP_THREAD_LIMIT" = 2)}
 #' res <- adjClust(dist(iris[ ,1:4]))
 #' select.clust <- select(res, "bs")
 #' table(select.clust)
