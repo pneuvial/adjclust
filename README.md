@@ -5,7 +5,7 @@
 [![R build
 status](https://github.com/pneuvial/adjclust/workflows/R-CMD-check/badge.svg)](https://github.com/pneuvial/adjclust/actions)
 [![Coverage
-Status](https://codecov.io/gh/pneuvial/adjclust/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/pneuvial/adjclust/tree/develop)
+Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg)](https://app.codecov.io/github/pneuvial/adjclust/branch/develop)
 
 `adjclust` is a package that provides methods to perform
 adjacency-constrained hierarchical agglomerative clustering.
@@ -76,10 +76,9 @@ image(ld.ceph, lwd = 0)
 fit <- snpClust(geno, stats = "R.squared", h = h)
 #> Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity to
 #> be smaller than or equal to 1
-#> as(<dsTMatrix>, "dgTMatrix") is deprecated since Matrix 1.4-2; do as(., "generalMatrix") instead
 #> Note: 133 merges with non increasing heights.
 plot(fit)
-#> Warning in plot.chac(fit): 
+#> Warning: 
 #> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
 ```
 
@@ -88,6 +87,9 @@ plot(fit)
 ``` r
 sel_clust <- select(fit, "bs")
 plotSim(as.matrix(ld.ceph), clustering = sel_clust, dendro = fit)
+#> Warning: 
+#> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
+#> Warning: Removed 602 rows containing missing values (`geom_text()`).
 ```
 
 ![](man/figures/README-snpClust-3.png)<!-- -->
@@ -118,7 +120,7 @@ mapC(binned)
 fitB <- hicClust(binned)
 #> Note: 5 merges with non increasing heights.
 plot(fitB)
-#> Warning in plot.chac(fitB): 
+#> Warning: 
 #> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
 ```
 
@@ -126,6 +128,9 @@ plot(fitB)
 
 ``` r
 plotSim(intdata(binned), dendro = fitB) # default: log scale for colors
+#> Warning: 
+#> Detected reversals in dendrogram: mode = 'corrected', 'within-disp' or 'total-disp' might be more relevant.
+#> Warning: Removed 41 rows containing missing values (`geom_text()`).
 ```
 
 ![](man/figures/README-hicClust-3.png)<!-- -->

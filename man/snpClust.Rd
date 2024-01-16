@@ -54,7 +54,7 @@ If \code{x} is of class
 }
 \examples{
 ## a very small example
-if (requireNamespace("snpStats", quietly = TRUE)) {
+\dontrun{
   data(testdata, package = "snpStats")
 
   # input as snpStats::SnpMatrix

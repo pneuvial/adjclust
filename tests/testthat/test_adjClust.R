@@ -1,5 +1,6 @@
 test_that("adjClust methods returns expected 'calls'", {
-  sim <- matrix(
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
+  toto <- system.time({sim <- matrix(
     c(1.0, 0.1, 0.2, 0.3,
       0.1, 1.0 ,0.4 ,0.5,
       0.2, 0.4, 1.0, 0.6,
@@ -26,10 +27,13 @@ test_that("adjClust methods returns expected 'calls'", {
   ## dissimilarity, h < p-1
   fit4 <- adjClust(dist, "dissimilarity", h = 2)
   lst <- as.list(fit4$call)
-  expect_identical(lst[[1]], as.symbol("adjClust"))
+  expect_identical(lst[[1]], as.symbol("adjClust"))})
+
+  #expect_equal(Sys.getenv("OMP_THREAD_LIMIT"), "2")
 })
 
 test_that("adjClust methods properly catches unexpected  'calls'", {
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   mat <- matrix(NA_character_)
   expect_error(adjClust(mat), "Input matrix is not numeric")
 
@@ -68,6 +72,7 @@ test_that("adjClust methods properly catches unexpected  'calls'", {
 })
 
 test_that("'matL' and 'matR' are consistent with C++ versions", {
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   sim <- matrix(
     c(1.0, 0.1, 0.2, 0.3,
       0.1, 1.0 ,0.4 ,0.5,
@@ -87,6 +92,7 @@ test_that("'matL' and 'matR' are consistent with C++ versions", {
 })
 
 test_that("WCSS functions", {
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   sim <- matrix(
     c(1.0, 0.1, 0.2, 0.3,
       0.1, 1.0 ,0.4 ,0.5,

@@ -1,6 +1,7 @@
 context("Test outputs of diagnose and correct.")
 
 test_that("'diagnose' and 'correct' must return a warning or a message when no reversals are found.", {
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("iris")
   dissim <- dist(iris[ ,1:4])^2
   sim <- 1-as.matrix(dissim)/2

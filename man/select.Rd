@@ -49,7 +49,7 @@ or the broken stick heuristic
   table(selected.bs)
 }}
 
-res <- adjClust(dist(iris[ ,1:4]))
+res <- adjClust(dist(iris[, 1:4]))
 select.clust <- select(res, "bs")
 table(select.clust)
 

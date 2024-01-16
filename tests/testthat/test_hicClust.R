@@ -2,6 +2,8 @@ context("Consistency of the results of 'hicClust' across various input formats")
 
 test_that("'hicClust' gives identical results regardless of data input format", {
   testthat::skip_if_not_installed("HiTC")
+  
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   #case1: Input as HiTC::HTCexp object
   load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
   

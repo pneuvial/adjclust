@@ -33,7 +33,7 @@ NULL
 #'   produced by the clustering process. The object is a list with the same
 #'   elements as an object of class \code{\link[stats]{hclust}} (\code{merge},
 #'   \code{height}, \code{order}, \code{labels}, \code{call}, \code{method},
-#'   \code{dist.method}), and two extra elements: \itemize{
+#'   \code{dist.method}), and two extra elements: 
 #'     \item{\code{mat}}{: (the data on which the clustering has been performed, 
 #'     possibly after the pre-transformations described in the vignette entitled
 #'     \href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html#notes-on-relations-between-similarity-and-dissimilarity-implementation}{"Notes on CHAC implementation in adjclust"}}.
@@ -41,7 +41,6 @@ NULL
 #'     definite similarity matrices (also described in the same vignette). If
 #'     \code{correction == 0}, it means that the initial data were not 
 #'     pre-transformed.}
-#'  }
 #'
 #' @seealso \code{\link{snpClust}} to cluster SNPs based on linkage
 #'   disequilibrium
@@ -263,24 +262,24 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h,
   if (is(mat, "sparseMatrix")) { 
     # left  
     rCumL <- matL_sparse_rowCumsums(mat, h)
-    rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
+    rcCumL <- colCumsums(rCumL, useNames = FALSE) # p x (h+1) matrix
     rm(rCumL)
 
     # right
     rCumR <- matR_sparse_rowCumsums(mat, h)
-    rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
+    rcCumR <- colCumsums(rCumR, useNames = FALSE) # p x (h+1) matrix
     rm(rCumR)
 
     out_matL <- matL_sparse(mat, 2)
   } else {
     # left
     rCumL <- matL_full_rowCumsums(mat, h)
-    rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
+    rcCumL <- colCumsums(rCumL, useNames = FALSE) # p x (h+1) matrix
     rm(rCumL)
 
     # right
     rCumR <- matR_full_rowCumsums(mat, h)
-    rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
+    rcCumR <- colCumsums(rCumR, useNames = FALSE) # p x (h+1) matrix
     rm(rCumR)
 
     out_matL <- matL_full(mat, 2)

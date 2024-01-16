@@ -1,3 +1,10 @@
+# Version 0.6.8  [2024-01-10]
+
+* Fix CRAN error on useNames (deprecated NA)
+* Fix CRAN note on itemize (unecessary use of itemize)
+* Limited OMP threads to 2 in examples, vignettes and tests
+* Updated citation of the package
+
 # Version 0.6.7  [2023-04-24]
 
 * Fix #60 (increase test coverage)

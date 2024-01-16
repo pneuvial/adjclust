@@ -2,6 +2,8 @@ context("Case of NA values in LD estimates")
 
 check_missing_ld <- function() {
   skip_if_not_installed("snpStats")
+  
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("ld.example", package = "snpStats")
   p <- ncol(ceph.1mb)
   h <- p - 1
@@ -20,6 +22,7 @@ test_that("NA values in LD estimates gives a warning/error in 'snpClust'", {
   skip_if_not_installed("snpStats")
   check_missing_ld()
   
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("ld.example", package = "snpStats")
   p <- ncol(ceph.1mb)
   h <- p - 1
@@ -36,6 +39,7 @@ test_that("NA values in LD estimates gives a warning/error in 'snpClust' (second
   # when check_missing_ld() skips the previous test: it means that snpClust does not produce NA
   skip_if_not_installed("snpStats")
 
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("ld.example", package = "snpStats")
   p <- ncol(ceph.1mb)
   h <- p - 1
@@ -55,6 +59,7 @@ test_that("Dropping a SNP yielding NA values in LD fixes the NA problem", {
   skip_if_not_installed("snpStats")
   check_missing_ld()
   
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   geno <- ceph.1mb[, -316]  ## drop one SNP leading to one missing LD value
   p <- ncol(geno)
   h <- p - 1
@@ -76,6 +81,7 @@ test_that("Modifying one genotype also fixes the NA problem", {
   skip_if_not_installed("snpStats")
   check_missing_ld()
   
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("ld.example", package = "snpStats")
   p <- ncol(ceph.1mb)
   h <- p - 1

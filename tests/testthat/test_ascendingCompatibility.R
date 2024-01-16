@@ -7,7 +7,8 @@ check_snp <- function() {
 context("Ascending compatibility of the adjclust algorithm")
 
 test_that("snpClust gives results identical to those of adjclust 0.3.0", {
-  check_snp()  
+  check_snp()
+  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   
   ## Note: this test depends on external data (genotypes) and functions 
   ## (snpStats::ld) which may change over time
