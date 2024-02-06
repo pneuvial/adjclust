@@ -9,8 +9,8 @@ matL_full <- function(Csq, h) {
     .Call(`_adjclust_matL_full`, Csq, h)
 }
 
-matL_sparse_rowCumsums <- function(Csq, h) {
-    .Call(`_adjclust_matL_sparse_rowCumsums`, Csq, h)
+matL_sparse_rowCumsums <- function(Csq, h, nthreads) {
+    .Call(`_adjclust_matL_sparse_rowCumsums`, Csq, h, nthreads)
 }
 
 matL_full_rowCumsums <- function(Csq, h) {

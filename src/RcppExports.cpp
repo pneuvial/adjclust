@@ -36,14 +36,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // matL_sparse_rowCumsums
-arma::mat matL_sparse_rowCumsums(const arma::SpMat<double>& Csq, const int& h);
-RcppExport SEXP _adjclust_matL_sparse_rowCumsums(SEXP CsqSEXP, SEXP hSEXP) {
+arma::mat matL_sparse_rowCumsums(const arma::SpMat<double>& Csq, const int& h, int nthreads);
+RcppExport SEXP _adjclust_matL_sparse_rowCumsums(SEXP CsqSEXP, SEXP hSEXP, SEXP nthreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::SpMat<double>& >::type Csq(CsqSEXP);
     Rcpp::traits::input_parameter< const int& >::type h(hSEXP);
-    rcpp_result_gen = Rcpp::wrap(matL_sparse_rowCumsums(Csq, h));
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(matL_sparse_rowCumsums(Csq, h, nthreads));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -138,7 +139,7 @@ RcppExport SEXP percDown(void *, void *, void *, void *);
 static const R_CallMethodDef CallEntries[] = {
     {"_adjclust_matL_sparse", (DL_FUNC) &_adjclust_matL_sparse, 2},
     {"_adjclust_matL_full", (DL_FUNC) &_adjclust_matL_full, 2},
-    {"_adjclust_matL_sparse_rowCumsums", (DL_FUNC) &_adjclust_matL_sparse_rowCumsums, 2},
+    {"_adjclust_matL_sparse_rowCumsums", (DL_FUNC) &_adjclust_matL_sparse_rowCumsums, 3},
     {"_adjclust_matL_full_rowCumsums", (DL_FUNC) &_adjclust_matL_full_rowCumsums, 2},
     {"_adjclust_matR_sparse", (DL_FUNC) &_adjclust_matR_sparse, 2},
     {"_adjclust_matR_full", (DL_FUNC) &_adjclust_matR_full, 2},

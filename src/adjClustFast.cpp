@@ -2,17 +2,8 @@
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
-#if defined(_OPENMP)
-#include <omp.h>
-extern const bool parallelism_enabled = true;
-#else
-extern const bool parallelism_enabled = false;
-#endif
-
 // write RcppExports.R with: 
 //       Rcpp::compileAttributes(".")
-
-
 
 // Exports from mainFunctions.c
 
@@ -26,8 +17,6 @@ extern const bool parallelism_enabled = false;
 // extern "C" SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP RchainedL, SEXP Rpositions, SEXP Rdistances, SEXP RlHeap, SEXP Rmerge, SEXP Rgains, SEXP RtraceW);
 
 
-
-
 // Replace adjclust::matR() and adjclust::matL() with RcppArmadillo code
 // Use separate version for matrix and sparseMatrix
 
@@ -37,7 +26,6 @@ arma::SpMat<double> matL_sparse(const arma::SpMat<double> & Csq, const int & h) 
 	int p = Csq.n_rows;
 	arma::SpMat<double> out(p, h+1);
 
-	// #pragma omp parallel for if(parallelism_enabled)              
 	for( int i=0; i<p; i++){
 
 		int k = 0;
@@ -68,7 +56,6 @@ arma::mat matL_full(const arma::mat & Csq, const int & h) {
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	// #pragma omp parallel for if(parallelism_enabled)                  
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -93,12 +80,16 @@ arma::mat matL_full(const arma::mat & Csq, const int & h) {
 
 
 // [[Rcpp::export]]
-arma::mat matL_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h) {
+arma::mat matL_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h, int nthreads) {
 
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	#pragma omp parallel for if(parallelism_enabled)                  
+  #if defined(_OPENMP)
+  #include <omp.h>
+  #pragma omp parallel for num_threads(nthreads)
+  #endif
+	
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -130,12 +121,12 @@ arma::mat matL_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h)
 
 
 // [[Rcpp::export]]
-arma::mat matL_full_rowCumsums(const arma::mat & Csq, const int & h) {
+arma::mat matL_full_rowCumsums(const arma::mat & Csq, const int & h, int nthreads) {
 
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	#pragma omp parallel for if(parallelism_enabled)                  
+	#pragma omp parallel for num_threads(nthreads)
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -162,12 +153,6 @@ arma::mat matL_full_rowCumsums(const arma::mat & Csq, const int & h) {
 
 	return out;	           
 }
-
-
-
-
-
-
 
 // [[Rcpp::export]]
 arma::SpMat<double> matR_sparse(const arma::SpMat<double> & Csq, const int & h) {
@@ -175,7 +160,6 @@ arma::SpMat<double> matR_sparse(const arma::SpMat<double> & Csq, const int & h) 
 	int p = Csq.n_rows;
 	arma::SpMat<double> out(p, h+1);
 
-	// #pragma omp parallel for if(parallelism_enabled)    
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -204,7 +188,6 @@ arma::mat matR_full(const arma::mat & Csq, const int & h) {
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	// #pragma omp parallel for if(parallelism_enabled)    
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -226,15 +209,13 @@ arma::mat matR_full(const arma::mat & Csq, const int & h) {
 	return out;
 }
 
-
-
 // [[Rcpp::export]]
-arma::mat matR_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h) {
+arma::mat matR_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h, int nthreads) {
 	               
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	#pragma omp parallel for if(parallelism_enabled)    
+	#pragma omp parallel for num_threads(nthreads)
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -263,15 +244,13 @@ arma::mat matR_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h)
 	return out;
 }
 
-
-
 // [[Rcpp::export]]
-arma::mat matR_full_rowCumsums(const arma::mat & Csq, const int & h) {
+arma::mat matR_full_rowCumsums(const arma::mat & Csq, const int & h, int nthreads) {
 	               
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	#pragma omp parallel for if(parallelism_enabled)    
+	#pragma omp parallel for num_threads(nthreads)
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -299,9 +278,6 @@ arma::mat matR_full_rowCumsums(const arma::mat & Csq, const int & h) {
 
 	return out;
 }
-
-
-
 
 using namespace Rcpp;
 
@@ -350,14 +326,13 @@ NumericVector wcss_single(const arma::SpMat<double> & C, const NumericVector & c
 
 	return result;
 }
-    
 
 // [[Rcpp::export]]
-NumericVector WCSS(const arma::SpMat<double> & C, const NumericMatrix & clusterMat){
+NumericVector WCSS(const arma::SpMat<double> & C, const NumericMatrix & clusterMat, int nthreads){
 
 	std::vector<double> result(clusterMat.ncol());
 
-	#pragma omp parallel for if(parallelism_enabled)
+	#pragma omp parallel for num_threads(nthreads)
 	for(int j=0; j<clusterMat.ncol(); j++){
 
 		NumericVector v = clusterMat(_,j);
@@ -370,5 +345,3 @@ NumericVector WCSS(const arma::SpMat<double> & C, const NumericMatrix & clusterM
 
 	return wrap(result);
 }
-
-
