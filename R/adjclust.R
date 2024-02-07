@@ -112,19 +112,21 @@ NULL
 #' @importFrom Matrix diag
 #' @importFrom Matrix t
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
-                     h = ncol(mat) - 1, strictCheck=TRUE) {
+                     h = ncol(mat) - 1, strictCheck = TRUE, nthreads = 1) {
   UseMethod("adjClust")
 }
 
 #' @importFrom Matrix isSymmetric forceSymmetric
 #' @export
 adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                            h = ncol(mat) - 1, strictCheck = TRUE) {
+                            h = ncol(mat) - 1, strictCheck = TRUE,
+                            nthreads = 1) {
   if (!is.numeric(mat))
     stop("Input matrix is not numeric")
   if (!(isSymmetric(mat)))
     stop("Input matrix is not symmetric")
-  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
+  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck,
+                      nthreads = nthreads)
   x <- sys.call()
   res$call <- update_call(x, "adjClust")
   return(res)
@@ -132,10 +134,11 @@ adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                            h = ncol(mat) - 1, strictCheck = TRUE) {
+                            h = ncol(mat) - 1, strictCheck = TRUE, 
+                            nthreads = 1) {
   # RcppArmadillo functions don't support dsyMatrix, so convert to matrix
   res <- run.adjclust(as.matrix(mat), type = type, h = h, 
-                      strictCheck = strictCheck)
+                      strictCheck = strictCheck, nthreads = nthreads)
   x <- sys.call()
   res$call <- update_call(x, "adjClust")
   return(res)
@@ -143,14 +146,16 @@ adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1, strictCheck = TRUE) {
+                               h = ncol(mat) - 1, strictCheck = TRUE, 
+                               nthreads = 1) {
   type <- match.arg(type)
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
   } else {
     mat <- forceSymmetric(mat)
   }
-  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
+  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck, 
+                  nthreads = nthreads)
   x <- sys.call()
   res$call <- update_call(x, "adjClust")
   return(res)
@@ -158,11 +163,13 @@ adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1, strictCheck = TRUE) {
+                               h = ncol(mat) - 1, strictCheck = TRUE, 
+                               nthreads = 1) {
   type <- match.arg(type)
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
+  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck,
+                      nthreads = nthreads)
   x <- sys.call()
   res$call <- update_call(x, "adjClust")
   return(res)
@@ -170,13 +177,15 @@ adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1, strictCheck = TRUE) {
+                               h = ncol(mat) - 1, strictCheck = TRUE,
+                               nthreads = 1) {
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
   } else {
     mat <- forceSymmetric(mat)
   }
-  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
+  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck, 
+                  nthreads = nthreads)
   x <- sys.call()
   res$call <- update_call(x, "adjClust")
   return(res)
@@ -184,11 +193,13 @@ adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 adjClust.dsTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1, strictCheck = TRUE) {
+                               h = ncol(mat) - 1, strictCheck = TRUE, 
+                               nthreads = 1) {
   type <- match.arg(type)
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
-  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck)
+  res <- run.adjclust(mat, type = type, h = h, strictCheck = strictCheck, 
+                      nthreads = nthreads)
   x <- sys.call()
   res$call <- update_call(x, "adjClust")
   return(res)
@@ -196,14 +207,16 @@ adjClust.dsTMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
-                               h = ncol(mat) - 1, strictCheck = TRUE) {
+                               h = ncol(mat) - 1, strictCheck = TRUE,
+                               nthreads = 1) {
   type <- match.arg(type)
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
   } else {
     mat <- forceSymmetric(mat)
   }
-  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck)
+  res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck,
+                  nthreads = nthreads)
   x <- sys.call()
   res$call <- update_call(x, "adjClust")
   return(res)
@@ -211,13 +224,13 @@ adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"), 
-                          h = ncol(mat) - 1, strictCheck = TRUE) {
+                          h = ncol(mat) - 1, strictCheck = TRUE, nthreads = 1) {
   type <- match.arg(type)
   if (type != "dissimilarity")
     message("Note: input class is 'dist' so 'type' is supposed to be 'dissimilarity'")
   mat <- as.matrix(mat)
   res <- adjClust.matrix(mat, type = "dissimilarity", h = h, 
-                         strictCheck = strictCheck)
+                         strictCheck = strictCheck, nthreads = nthreads)
   x <- sys.call()
   res$call <- update_call(x, "adjClust")
   return(res)
@@ -226,7 +239,7 @@ adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"),
 #' @importFrom methods is
 #' @import Rcpp
 run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h, 
-                         strictCheck = TRUE) {
+                         strictCheck = TRUE, nthreads = 1) {
   # sanity checks
   type <- match.arg(type)
   if (any(is.na(mat)))
@@ -261,24 +274,24 @@ run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h,
   
   if (is(mat, "sparseMatrix")) { 
     # left  
-    rCumL <- matL_sparse_rowCumsums(mat, h)
+    rCumL <- matL_sparse_rowCumsums(mat, h, nthreads = nthreads)
     rcCumL <- colCumsums(rCumL, useNames = FALSE) # p x (h+1) matrix
     rm(rCumL)
 
     # right
-    rCumR <- matR_sparse_rowCumsums(mat, h)
+    rCumR <- matR_sparse_rowCumsums(mat, h, nthreads = nthreads)
     rcCumR <- colCumsums(rCumR, useNames = FALSE) # p x (h+1) matrix
     rm(rCumR)
 
     out_matL <- matL_sparse(mat, 2)
   } else {
     # left
-    rCumL <- matL_full_rowCumsums(mat, h)
+    rCumL <- matL_full_rowCumsums(mat, h, nthreads = nthreads)
     rcCumL <- colCumsums(rCumL, useNames = FALSE) # p x (h+1) matrix
     rm(rCumL)
 
     # right
-    rCumR <- matR_full_rowCumsums(mat, h)
+    rCumR <- matR_full_rowCumsums(mat, h, nthreads = nthreads)
     rcCumR <- colCumsums(rCumR, useNames = FALSE) # p x (h+1) matrix
     rm(rCumR)
 

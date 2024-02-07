@@ -8,7 +8,8 @@ adjClust(
   mat,
   type = c("similarity", "dissimilarity"),
   h = ncol(mat) - 1,
-  strictCheck = TRUE
+  strictCheck = TRUE,
+  nthreads = 1
 )
 }
 \arguments{
