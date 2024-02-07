@@ -16,7 +16,7 @@ NULL
 #' band of width \code{h}). The method is fully described in (Dehman, 2015) and
 #' based on a kernel version of the algorithm. The different options for the
 #' implementation are available in the package vignette entitled 
-#' \href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html}{"Notes on CHAC implementation in adjclust}.
+#' \href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html}{"Notes on CHAC implementation in adjclust"}.
 #'
 #' @param mat A similarity matrix or a dist object. Most sparse formats from
 #'   \code{\link[Matrix]{sparseMatrix}} are allowed
@@ -28,6 +28,8 @@ NULL
 #' @param strictCheck Logical (default to \code{TRUE}) to systematically check
 #'   default of positivity in input similarities. Can be disabled to avoid
 #'   computationally expensive checks when the number of features is large.
+#' @param nthreads Integer (default to \code{1L}). Number of threads use for
+#' matrix precomputations.
 #'
 #' @returns An object of class \code{\link{chac}} which describes the tree
 #'   produced by the clustering process. The object is a list with the same
@@ -112,7 +114,7 @@ NULL
 #' @importFrom Matrix diag
 #' @importFrom Matrix t
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
-                     h = ncol(mat) - 1, strictCheck = TRUE, nthreads = 1) {
+                     h = ncol(mat) - 1, strictCheck = TRUE, nthreads = 1L) {
   UseMethod("adjClust")
 }
 
@@ -120,7 +122,7 @@ adjClust <- function(mat, type = c("similarity", "dissimilarity"),
 #' @export
 adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"), 
                             h = ncol(mat) - 1, strictCheck = TRUE,
-                            nthreads = 1) {
+                            nthreads = 1L) {
   if (!is.numeric(mat))
     stop("Input matrix is not numeric")
   if (!(isSymmetric(mat)))
@@ -135,7 +137,7 @@ adjClust.matrix <- function(mat, type = c("similarity", "dissimilarity"),
 #' @export
 adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                             h = ncol(mat) - 1, strictCheck = TRUE, 
-                            nthreads = 1) {
+                            nthreads = 1L) {
   # RcppArmadillo functions don't support dsyMatrix, so convert to matrix
   res <- run.adjclust(as.matrix(mat), type = type, h = h, 
                       strictCheck = strictCheck, nthreads = nthreads)
@@ -147,7 +149,7 @@ adjClust.dsyMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 #' @export
 adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1, strictCheck = TRUE, 
-                               nthreads = 1) {
+                               nthreads = 1L) {
   type <- match.arg(type)
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
@@ -164,7 +166,7 @@ adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 #' @export
 adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1, strictCheck = TRUE, 
-                               nthreads = 1) {
+                               nthreads = 1L) {
   type <- match.arg(type)
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
@@ -178,7 +180,7 @@ adjClust.dsCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 #' @export
 adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1, strictCheck = TRUE,
-                               nthreads = 1) {
+                               nthreads = 1L) {
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
   } else {
@@ -194,7 +196,7 @@ adjClust.dgCMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 #' @export
 adjClust.dsTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1, strictCheck = TRUE, 
-                               nthreads = 1) {
+                               nthreads = 1L) {
   type <- match.arg(type)
   if (type == "dissimilarity")
     stop("'type' can only be 'similarity' with sparse Matrix inputs")
@@ -208,7 +210,7 @@ adjClust.dsTMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 #' @export
 adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"), 
                                h = ncol(mat) - 1, strictCheck = TRUE,
-                               nthreads = 1) {
+                               nthreads = 1L) {
   type <- match.arg(type)
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
@@ -224,7 +226,8 @@ adjClust.dgTMatrix <- function(mat, type = c("similarity", "dissimilarity"),
 
 #' @export
 adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"), 
-                          h = ncol(mat) - 1, strictCheck = TRUE, nthreads = 1) {
+                          h = ncol(mat) - 1, strictCheck = TRUE, 
+                          nthreads = 1L) {
   type <- match.arg(type)
   if (type != "dissimilarity")
     message("Note: input class is 'dist' so 'type' is supposed to be 'dissimilarity'")
@@ -239,7 +242,7 @@ adjClust.dist <- function(mat, type = c("similarity", "dissimilarity"),
 #' @importFrom methods is
 #' @import Rcpp
 run.adjclust <- function(mat, type = c("similarity", "dissimilarity"), h, 
-                         strictCheck = TRUE, nthreads = 1) {
+                         strictCheck = TRUE, nthreads = 1L) {
   # sanity checks
   type <- match.arg(type)
   if (any(is.na(mat)))
