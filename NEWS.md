@@ -1,3 +1,11 @@
+# Version 0.6.9  [2024-02-07]
+
+* Properly handled OMP threads in C++ code (now default to 1 but with an option
+to increase this value)
+* Reintroduced tests and examples
+* Removed WCSS function that was not exported or documented
+* Fixed a problem in S3class for a non exported function
+
 # Version 0.6.8  [2024-01-10]
 
 * Fix CRAN error on useNames (deprecated NA)
