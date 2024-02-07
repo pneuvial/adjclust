@@ -55,9 +55,7 @@ res2 <- hicClust(mat)
 }
 
 # input as text file
-\dontrun{
 res3 <- hicClust(system.file("extdata", "sample.txt", package = "adjclust"))
-}
 
 }
 \references{

@@ -2,10 +2,9 @@ context("Test cuttree in various situations (decreasing merges or not, k and/or
         h given.")
 
 test_that("'cuttree_chac' must ignore 'h' when reversals are present.", {
-  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("iris")
   dissim <- dist(iris[ ,1:4])^2
-  sim <- 1-as.matrix(dissim)/2
+  sim <- 1 - as.matrix(dissim)/2
   fit <- adjClust(sim)
   fit2 <- correct(fit)
   

@@ -84,10 +84,11 @@ NULL
 #'
 #' @examples
 #' sim <- matrix(
-#' c(1.0, 0.1, 0.2, 0.3,
-#'   0.1, 1.0 ,0.4 ,0.5,
-#'   0.2, 0.4, 1.0, 0.6,
-#'   0.3, 0.5, 0.6, 1.0), nrow = 4)
+#'   c(1.0, 0.1, 0.2, 0.3,
+#'     0.1, 1.0 ,0.4 ,0.5,
+#'     0.2, 0.4, 1.0, 0.6,
+#'     0.3, 0.5, 0.6, 1.0), 
+#'  nrow = 4)
 #'
 #' ## similarity, full width
 #' fit1 <- adjClust(sim, "similarity")
@@ -153,9 +154,7 @@ adjClust.dgeMatrix <- function(mat, type = c("similarity", "dissimilarity"),
   type <- match.arg(type)
   if (!(isSymmetric(mat))) {
     stop("Input matrix is not symmetric")
-  } else {
-    mat <- forceSymmetric(mat)
-  }
+  } else mat <- forceSymmetric(mat)
   res <- adjClust(mat, type = type, h = h, strictCheck = strictCheck, 
                   nthreads = nthreads)
   x <- sys.call()

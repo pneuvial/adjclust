@@ -1,5 +1,4 @@
 context("Comparison between the results of adjClust with sparse and dense matrices")
-#Sys.setenv("OMP_THREAD_LIMIT" = 2)
 
 mat <- matrix(c(1.0, 0.0, 0.0, 0.0, 0.0, 
                 0.1, 1.0, 0.0, 0.0, 0.0, 
@@ -33,7 +32,6 @@ mat <- as(mat, "matrix")
 p <- nrow(mat)
 
 test_that("test that adjClust gives identical results for sparse and dense matrices when h < p-1", {
-  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   fit1 <- adjClust(mat, h = 2)
   fit2 <- adjClust(smat1, h = 2)
   fit3 <- adjClust(smat2, h = 2)
@@ -72,7 +70,6 @@ test_that("test that adjClust gives identical results for sparse and dense matri
 })
 
 test_that("test that adjClust gives identical results for sparse and dense matrices when h is p-1", {
-  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   fit1 <- adjClust(mat)
   fit2 <- adjClust(smat1)
   fit3 <- adjClust(smat2)

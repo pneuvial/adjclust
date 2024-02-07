@@ -77,10 +77,11 @@ and (Murtagh and Legendre, 2014) for further details.
 }
 \examples{
 sim <- matrix(
-c(1.0, 0.1, 0.2, 0.3,
-  0.1, 1.0 ,0.4 ,0.5,
-  0.2, 0.4, 1.0, 0.6,
-  0.3, 0.5, 0.6, 1.0), nrow = 4)
+  c(1.0, 0.1, 0.2, 0.3,
+    0.1, 1.0 ,0.4 ,0.5,
+    0.2, 0.4, 1.0, 0.6,
+    0.3, 0.5, 0.6, 1.0), 
+ nrow = 4)
 
 ## similarity, full width
 fit1 <- adjClust(sim, "similarity")
