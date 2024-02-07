@@ -9,12 +9,12 @@ matL_full <- function(Csq, h) {
     .Call(`_adjclust_matL_full`, Csq, h)
 }
 
-matL_sparse_rowCumsums <- function(Csq, h) {
-    .Call(`_adjclust_matL_sparse_rowCumsums`, Csq, h)
+matL_sparse_rowCumsums <- function(Csq, h, nthreads) {
+    .Call(`_adjclust_matL_sparse_rowCumsums`, Csq, h, nthreads)
 }
 
-matL_full_rowCumsums <- function(Csq, h) {
-    .Call(`_adjclust_matL_full_rowCumsums`, Csq, h)
+matL_full_rowCumsums <- function(Csq, h, nthreads) {
+    .Call(`_adjclust_matL_full_rowCumsums`, Csq, h, nthreads)
 }
 
 matR_sparse <- function(Csq, h) {
@@ -25,19 +25,11 @@ matR_full <- function(Csq, h) {
     .Call(`_adjclust_matR_full`, Csq, h)
 }
 
-matR_sparse_rowCumsums <- function(Csq, h) {
-    .Call(`_adjclust_matR_sparse_rowCumsums`, Csq, h)
+matR_sparse_rowCumsums <- function(Csq, h, nthreads) {
+    .Call(`_adjclust_matR_sparse_rowCumsums`, Csq, h, nthreads)
 }
 
-matR_full_rowCumsums <- function(Csq, h) {
-    .Call(`_adjclust_matR_full_rowCumsums`, Csq, h)
-}
-
-wcss_single <- function(C, cluster) {
-    .Call(`_adjclust_wcss_single`, C, cluster)
-}
-
-WCSS <- function(C, clusterMat) {
-    .Call(`_adjclust_WCSS`, C, clusterMat)
+matR_full_rowCumsums <- function(Csq, h, nthreads) {
+    .Call(`_adjclust_matR_full_rowCumsums`, Csq, h, nthreads)
 }
 

@@ -1,15 +1,17 @@
 Package: adjclust
 Maintainer: Pierre Neuvial <pierre.neuvial@math.univ-toulouse.fr>
-Authors@R: c(person("Christophe", "Ambroise", role="aut"),
-             person("Shubham", "Chaturvedi", role="aut"),
-             person("Alia", "Dehman", role="aut"),
-             person("Pierre", "Neuvial", role=c("aut", "cre"), 
-                 email="pierre.neuvial@math.univ-toulouse.fr"),
-             person("Guillem", "Rigaill", role="aut"),
-             person("Nathalie", "Vialaneix", role="aut"),             
-             person("Gabriel", "Hoffman", role="aut"))
-Date: 2024-01-10
-Version: 0.6.8
+Authors@R: c(person("Christophe", "Ambroise", role = "aut"),
+             person("Shubham", "Chaturvedi", role = "aut"),
+             person("Alia", "Dehman", role = "aut"),
+             person("Pierre", "Neuvial", role = c("aut", "cre"), 
+                    email = "pierre.neuvial@math.univ-toulouse.fr"),
+             person("Guillem", "Rigaill", role = "aut"),
+             person("Nathalie", "Vialaneix", role = "aut", 
+                    email = "nathalie.vialaneix@inrae.fr",
+                    orcid = "0000-0003-1156-0639"),             
+             person("Gabriel", "Hoffman", role = "aut"))
+Date: 2024-02-07
+Version: 0.6.9
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 
@@ -48,7 +50,7 @@ biocViews:
 VignetteBuilder: knitr
 URL: https://pneuvial.github.io/adjclust/
 BugReports: https://github.com/pneuvial/adjclust/issues
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 LinkingTo: 
     Rcpp, 
     RcppArmadillo
