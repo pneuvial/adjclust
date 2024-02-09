@@ -12,7 +12,7 @@ Nucleotide Polymorphisms based on Linkage Disequilibrium"><!-- mathjax --><scrip
     
     <a class="navbar-brand me-2" href="../index.html">adjclust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -136,7 +136,7 @@ missing values are returned.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## a very small example</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"snpStats"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">testdata</span>, package <span class="op">=</span> <span class="st">"snpStats"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># input as snpStats::SnpMatrix</span></span></span>
@@ -149,6 +149,10 @@ missing values are returned.</p>
 <span class="r-in"><span>  <span class="va">ldres</span> <span class="op">&lt;-</span> <span class="fu">snpStats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/snpStats/man/ld.html" class="external-link">ld</a></span><span class="op">(</span><span class="va">Autosomes</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">200</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, depth <span class="op">=</span> <span class="fl">3</span>, stats <span class="op">=</span> <span class="st">"R.squared"</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">fit3</span> <span class="op">&lt;-</span> <span class="fu">snpClust</span><span class="op">(</span><span class="va">ldres</span>, <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Note: 1 merges with non increasing heights.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Note: 1 merges with non increasing heights.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Note: forcing the diagonal of the LD similarity matrix to be 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Note: 1 merges with non increasing heights.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
