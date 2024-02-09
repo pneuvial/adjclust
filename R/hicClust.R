@@ -56,9 +56,7 @@
 #' }
 #' 
 #' # input as text file
-#' \dontrun{
 #' res3 <- hicClust(system.file("extdata", "sample.txt", package = "adjclust"))
-#' }
 #' 
 #' @export
 #' 

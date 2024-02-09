@@ -303,7 +303,10 @@ plotSim.default <- function(mat, type = c("similarity", "dissimilarity"),
   # Coordinate computation ####
   if (type == "dissimilarity") mat <- max(mat) - mat
   
-  coordinates <- poly_coords(mat)
+  if (inherits(mat, "dsCMatrix")) {
+    poly_coords_fun <- poly_coords_dsCMatrix
+  } else poly_coords_fun <- poly_coords_default
+  coordinates <- poly_coords_fun(mat)
   fake_coords <- make_coords(c(1, d, d), c(1, d, 1), rep(0, 3))
   
   
@@ -463,11 +466,7 @@ poly_coords_sparse <- function(mat) {
   return(coords)
 }
 
-poly_coords <- function(mat) {
-  UseMethod("poly_coords")
-}
-
-poly_coords.default <- function(mat) {
+poly_coords_default <- function(mat) {
   # extracting coordinates in the matrix (genomic) and IF
   p <- ncol(mat)
   indi <- row(mat)
@@ -481,7 +480,7 @@ poly_coords.default <- function(mat) {
   return(coords)
 }
 
-poly_coords.dsCMatrix <- function(mat) {
+poly_coords_dsCMatrix <- function(mat) {
   p <- ncol(mat)
   mat <- as(mat, "TsparseMatrix")
   coords <- poly_coords_sparse(mat)

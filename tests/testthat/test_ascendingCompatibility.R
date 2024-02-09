@@ -8,8 +8,6 @@ context("Ascending compatibility of the adjclust algorithm")
 
 test_that("snpClust gives results identical to those of adjclust 0.3.0", {
   check_snp()
-  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
-  
   ## Note: this test depends on external data (genotypes) and functions 
   ## (snpStats::ld) which may change over time
   ## skip_on_cran()
@@ -37,6 +35,5 @@ test_that("snpClust gives results identical to those of adjclust 0.3.0", {
   
   diag(ld.ceph) <- rep(1, p)
   fit <- snpClust(ld.ceph, h = 100)
-  # expect_equal(fit$merge, prevfit$merge) 
   expect_equal(cumsum(fit$height), prevfit$height, tolerance = 1e-5)
 })

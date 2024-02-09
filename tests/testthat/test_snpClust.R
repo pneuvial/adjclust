@@ -13,7 +13,6 @@ test_that("'snpClust' gives identical results regardless of data input format", 
   skip_if_not_installed("snpStats")
   check_snpStat_data()
   
-  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   data("ld.example", package = "snpStats")
   h <- 100
   ld.ceph <- snpStats::ld(ceph.1mb, depth = h, stats = "R.squared")

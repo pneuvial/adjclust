@@ -2,7 +2,6 @@ context("Comparison between the results of the 'rioja' and 'adjclust' packages")
 
 test_that("rioja and adjClust with full band give identical results on toy data", {
   skip_if_not_installed("rioja")
-  #Sys.setenv("OMP_THREAD_LIMIT" = 2)
   
   data("iris")
   sim <- cor(t(iris[, 1:4]))

@@ -8,7 +8,8 @@ adjClust(
   mat,
   type = c("similarity", "dissimilarity"),
   h = ncol(mat) - 1,
-  strictCheck = TRUE
+  strictCheck = TRUE,
+  nthreads = 1L
 )
 }
 \arguments{
@@ -25,6 +26,9 @@ is \code{ncol(mat)-1}}
 \item{strictCheck}{Logical (default to \code{TRUE}) to systematically check
 default of positivity in input similarities. Can be disabled to avoid
 computationally expensive checks when the number of features is large.}
+
+\item{nthreads}{Integer (default to \code{1L}). Number of threads use for
+matrix precomputations.}
 }
 \value{
 An object of class \code{\link{chac}} which describes the tree
@@ -55,7 +59,7 @@ sparse similarity matrices (i.e., that have 0 entries outside of a diagonal
 band of width \code{h}). The method is fully described in (Dehman, 2015) and
 based on a kernel version of the algorithm. The different options for the
 implementation are available in the package vignette entitled 
-\href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html}{"Notes on CHAC implementation in adjclust}.
+\href{https://pneuvial.github.io/adjclust/articles/notesCHAC.html}{"Notes on CHAC implementation in adjclust"}.
 }
 \note{
 When performed on a distance matrix \eqn{d} with the option 
@@ -73,10 +77,11 @@ and (Murtagh and Legendre, 2014) for further details.
 }
 \examples{
 sim <- matrix(
-c(1.0, 0.1, 0.2, 0.3,
-  0.1, 1.0 ,0.4 ,0.5,
-  0.2, 0.4, 1.0, 0.6,
-  0.3, 0.5, 0.6, 1.0), nrow = 4)
+  c(1.0, 0.1, 0.2, 0.3,
+    0.1, 1.0 ,0.4 ,0.5,
+    0.2, 0.4, 1.0, 0.6,
+    0.3, 0.5, 0.6, 1.0), 
+ nrow = 4)
 
 ## similarity, full width
 fit1 <- adjClust(sim, "similarity")

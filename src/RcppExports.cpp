@@ -36,26 +36,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // matL_sparse_rowCumsums
-arma::mat matL_sparse_rowCumsums(const arma::SpMat<double>& Csq, const int& h);
-RcppExport SEXP _adjclust_matL_sparse_rowCumsums(SEXP CsqSEXP, SEXP hSEXP) {
+arma::mat matL_sparse_rowCumsums(const arma::SpMat<double>& Csq, const int& h, int nthreads);
+RcppExport SEXP _adjclust_matL_sparse_rowCumsums(SEXP CsqSEXP, SEXP hSEXP, SEXP nthreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::SpMat<double>& >::type Csq(CsqSEXP);
     Rcpp::traits::input_parameter< const int& >::type h(hSEXP);
-    rcpp_result_gen = Rcpp::wrap(matL_sparse_rowCumsums(Csq, h));
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(matL_sparse_rowCumsums(Csq, h, nthreads));
     return rcpp_result_gen;
 END_RCPP
 }
 // matL_full_rowCumsums
-arma::mat matL_full_rowCumsums(const arma::mat& Csq, const int& h);
-RcppExport SEXP _adjclust_matL_full_rowCumsums(SEXP CsqSEXP, SEXP hSEXP) {
+arma::mat matL_full_rowCumsums(const arma::mat& Csq, const int& h, int nthreads);
+RcppExport SEXP _adjclust_matL_full_rowCumsums(SEXP CsqSEXP, SEXP hSEXP, SEXP nthreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type Csq(CsqSEXP);
     Rcpp::traits::input_parameter< const int& >::type h(hSEXP);
-    rcpp_result_gen = Rcpp::wrap(matL_full_rowCumsums(Csq, h));
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(matL_full_rowCumsums(Csq, h, nthreads));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -84,68 +86,44 @@ BEGIN_RCPP
 END_RCPP
 }
 // matR_sparse_rowCumsums
-arma::mat matR_sparse_rowCumsums(const arma::SpMat<double>& Csq, const int& h);
-RcppExport SEXP _adjclust_matR_sparse_rowCumsums(SEXP CsqSEXP, SEXP hSEXP) {
+arma::mat matR_sparse_rowCumsums(const arma::SpMat<double>& Csq, const int& h, int nthreads);
+RcppExport SEXP _adjclust_matR_sparse_rowCumsums(SEXP CsqSEXP, SEXP hSEXP, SEXP nthreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::SpMat<double>& >::type Csq(CsqSEXP);
     Rcpp::traits::input_parameter< const int& >::type h(hSEXP);
-    rcpp_result_gen = Rcpp::wrap(matR_sparse_rowCumsums(Csq, h));
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(matR_sparse_rowCumsums(Csq, h, nthreads));
     return rcpp_result_gen;
 END_RCPP
 }
 // matR_full_rowCumsums
-arma::mat matR_full_rowCumsums(const arma::mat& Csq, const int& h);
-RcppExport SEXP _adjclust_matR_full_rowCumsums(SEXP CsqSEXP, SEXP hSEXP) {
+arma::mat matR_full_rowCumsums(const arma::mat& Csq, const int& h, int nthreads);
+RcppExport SEXP _adjclust_matR_full_rowCumsums(SEXP CsqSEXP, SEXP hSEXP, SEXP nthreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type Csq(CsqSEXP);
     Rcpp::traits::input_parameter< const int& >::type h(hSEXP);
-    rcpp_result_gen = Rcpp::wrap(matR_full_rowCumsums(Csq, h));
-    return rcpp_result_gen;
-END_RCPP
-}
-// wcss_single
-NumericVector wcss_single(const arma::SpMat<double>& C, const NumericVector& cluster);
-RcppExport SEXP _adjclust_wcss_single(SEXP CSEXP, SEXP clusterSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::SpMat<double>& >::type C(CSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type cluster(clusterSEXP);
-    rcpp_result_gen = Rcpp::wrap(wcss_single(C, cluster));
-    return rcpp_result_gen;
-END_RCPP
-}
-// WCSS
-NumericVector WCSS(const arma::SpMat<double>& C, const NumericMatrix& clusterMat);
-RcppExport SEXP _adjclust_WCSS(SEXP CSEXP, SEXP clusterMatSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::SpMat<double>& >::type C(CSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type clusterMat(clusterMatSEXP);
-    rcpp_result_gen = Rcpp::wrap(WCSS(C, clusterMat));
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(matR_full_rowCumsums(Csq, h, nthreads));
     return rcpp_result_gen;
 END_RCPP
 }
 
-RcppExport SEXP cWardHeaps(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-RcppExport SEXP percDown(void *, void *, void *, void *);
+RcppExport SEXP cWardHeaps(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP percDown(SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_adjclust_matL_sparse", (DL_FUNC) &_adjclust_matL_sparse, 2},
     {"_adjclust_matL_full", (DL_FUNC) &_adjclust_matL_full, 2},
-    {"_adjclust_matL_sparse_rowCumsums", (DL_FUNC) &_adjclust_matL_sparse_rowCumsums, 2},
-    {"_adjclust_matL_full_rowCumsums", (DL_FUNC) &_adjclust_matL_full_rowCumsums, 2},
+    {"_adjclust_matL_sparse_rowCumsums", (DL_FUNC) &_adjclust_matL_sparse_rowCumsums, 3},
+    {"_adjclust_matL_full_rowCumsums", (DL_FUNC) &_adjclust_matL_full_rowCumsums, 3},
     {"_adjclust_matR_sparse", (DL_FUNC) &_adjclust_matR_sparse, 2},
     {"_adjclust_matR_full", (DL_FUNC) &_adjclust_matR_full, 2},
-    {"_adjclust_matR_sparse_rowCumsums", (DL_FUNC) &_adjclust_matR_sparse_rowCumsums, 2},
-    {"_adjclust_matR_full_rowCumsums", (DL_FUNC) &_adjclust_matR_full_rowCumsums, 2},
-    {"_adjclust_wcss_single", (DL_FUNC) &_adjclust_wcss_single, 2},
-    {"_adjclust_WCSS", (DL_FUNC) &_adjclust_WCSS, 2},
+    {"_adjclust_matR_sparse_rowCumsums", (DL_FUNC) &_adjclust_matR_sparse_rowCumsums, 3},
+    {"_adjclust_matR_full_rowCumsums", (DL_FUNC) &_adjclust_matR_full_rowCumsums, 3},
     {"cWardHeaps", (DL_FUNC) &cWardHeaps, 11},
     {"percDown",   (DL_FUNC) &percDown,    4},
     {NULL, NULL, 0}

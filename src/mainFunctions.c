@@ -259,7 +259,7 @@ double* distance_C(int mini, int maxi, int minj, int maxj, double *rcCumRight, d
 SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP RchainedL, SEXP Rpositions, SEXP Rdistances, SEXP RlHeap, SEXP Rmerge, SEXP Rgains, SEXP RtraceW){
     
     int *h, *p, *positions, *lHeap, *merge, *neiL, *neiR;
-    int posMin, k;
+    int posMin;
     double *rcCumRight, *rcCumLeft, *distances, *chainedL, *gains, *traceW, *d1, *d2, *dLast, newDR, newDL, sumSdiag, snew, nii, njj, min_cl1, max_cl1, min_cl2, max_cl2;
     int jj, step, stepInv;
     
@@ -281,8 +281,6 @@ SEXP cWardHeaps(SEXP RrcCumRight, SEXP RrcCumLeft, SEXP Rh, SEXP Rp, SEXP Rchain
     merge = INTEGER(Rmerge);
     gains = REAL(Rgains);
     traceW = REAL(RtraceW);
-    
-    k = *p - 1;
     
     jj = *p;
     sumSdiag = (float)0; // within cluster dispersion (WG)

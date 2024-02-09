@@ -61,7 +61,7 @@
 #'
 #' @examples
 #' ## a very small example
-#' \dontrun{
+#' if (requireNamespace("snpStats", quietly = TRUE)) {
 #'   data(testdata, package = "snpStats")
 #'
 #'   # input as snpStats::SnpMatrix
