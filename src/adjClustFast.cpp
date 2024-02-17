@@ -126,7 +126,11 @@ arma::mat matL_full_rowCumsums(const arma::mat & Csq, const int & h, int nthread
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	#pragma omp parallel for num_threads(nthreads)
+  #if defined(_OPENMP)
+  #include <omp.h>
+  #pragma omp parallel for num_threads(nthreads)
+  #endif
+
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -215,7 +219,11 @@ arma::mat matR_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h,
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	#pragma omp parallel for num_threads(nthreads)
+  #if defined(_OPENMP)
+  #include <omp.h>
+  #pragma omp parallel for num_threads(nthreads)
+  #endif
+
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
@@ -250,7 +258,11 @@ arma::mat matR_full_rowCumsums(const arma::mat & Csq, const int & h, int nthread
 	int p = Csq.n_rows;
 	arma::mat out(p, h+1, arma::fill::zeros);
 
-	#pragma omp parallel for num_threads(nthreads)
+  #if defined(_OPENMP)
+  #include <omp.h>
+  #pragma omp parallel for num_threads(nthreads)
+  #endif
+
 	for( int i=0; i<p; i++){
 		
 		int k = 0;
