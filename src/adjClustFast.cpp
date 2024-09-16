@@ -1,5 +1,8 @@
 // #define ARMA_64BIT_WORD 1
 #include <RcppArmadillo.h>
+#if defined(_OPENMP)
+  #include <omp.h>
+#endif
 // [[Rcpp::depends(RcppArmadillo)]]
 
 // write RcppExports.R with: 
@@ -86,7 +89,6 @@ arma::mat matL_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h,
 	arma::mat out(p, h+1, arma::fill::zeros);
 
   #if defined(_OPENMP)
-  #include <omp.h>
   #pragma omp parallel for num_threads(nthreads)
   #endif
 	
@@ -127,7 +129,6 @@ arma::mat matL_full_rowCumsums(const arma::mat & Csq, const int & h, int nthread
 	arma::mat out(p, h+1, arma::fill::zeros);
 
   #if defined(_OPENMP)
-  #include <omp.h>
   #pragma omp parallel for num_threads(nthreads)
   #endif
 
@@ -220,7 +221,6 @@ arma::mat matR_sparse_rowCumsums(const arma::SpMat<double> & Csq, const int & h,
 	arma::mat out(p, h+1, arma::fill::zeros);
 
   #if defined(_OPENMP)
-  #include <omp.h>
   #pragma omp parallel for num_threads(nthreads)
   #endif
 
@@ -259,7 +259,6 @@ arma::mat matR_full_rowCumsums(const arma::mat & Csq, const int & h, int nthread
 	arma::mat out(p, h+1, arma::fill::zeros);
 
   #if defined(_OPENMP)
-  #include <omp.h>
   #pragma omp parallel for num_threads(nthreads)
   #endif
 
