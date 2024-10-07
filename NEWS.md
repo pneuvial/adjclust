@@ -1,3 +1,7 @@
+# Version 0.6.9  [2024-10-07]
+
+* Bug fix on OMP option (#81)
+
 # Version 0.6.9  [2024-02-07]
 
 * Properly handled OMP threads in C++ code (now default to 1 but with an option
