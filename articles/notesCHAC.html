@@ -5,66 +5,50 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="adjclust">
 <title>Implementation notes for the `adjclust` package • adjclust</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Implementation notes for the `adjclust` package">
-<meta property="og:description" content="adjclust">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Implementation notes for the `adjclust` package">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">adjclust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.10</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/hicClust.html">Clustering of Hi-C contact maps</a>
-    <a class="dropdown-item" href="../articles/notesCHAC.html">Implementation notes for the `adjclust` package</a>
-    <a class="dropdown-item" href="../articles/snpClust.html">Inferring Linkage Disequilibrium blocks from genotypes</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/hicClust.html">Clustering of Hi-C contact maps</a></li>
+    <li><a class="dropdown-item" href="../articles/notesCHAC.html">Implementation notes for the `adjclust` package</a></li>
+    <li><a class="dropdown-item" href="../articles/snpClust.html">Inferring Linkage Disequilibrium blocks from genotypes</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/pneuvial/adjclust/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/pneuvial/adjclust/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -73,13 +57,14 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Implementation notes for the `adjclust` package</h1>
+
+      <h1>Implementation notes for the `adjclust` package</h1>
                         <h4 data-toc-skip class="author">Pierre Neuvial,
 Nathanaël Randriamihamison, Nathalie Vialaneix</h4>
             
-            <h4 data-toc-skip class="date">2024-02-09</h4>
+            <h4 data-toc-skip class="date">2024-10-08</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/pneuvial/adjclust/blob/HEAD/vignettes/notesCHAC.Rmd" class="external-link"><code>vignettes/notesCHAC.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/pneuvial/adjclust/blob/master/vignettes/notesCHAC.Rmd" class="external-link"><code>vignettes/notesCHAC.Rmd</code></a></small>
       <div class="d-none name"><code>notesCHAC.Rmd</code></div>
     </div>
 
@@ -94,9 +79,12 @@ and at explaining implementation choices in
 <li><p>the second part describes the different types of dendrograms that
 are implemented in <code>plot.chac</code>.</p></li>
 </ul>
-<p>In this document, we assume to be given <span class="math inline">\(n\)</span> objects, <span class="math inline">\(\{1, \ldots, n\}\)</span> that have to be
-clustered using adjacency-constrained HAC (CHAC), that is, in such a way
-that only adjacent objects/clusters can be merged.</p>
+<p>In this document, we assume to be given
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+objects,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{1, \ldots, n\}</annotation></semantics></math>
+that have to be clustered using adjacency-constrained HAC (CHAC), that
+is, in such a way that only adjacent objects/clusters can be merged.</p>
 <p>We refer to [5] for a comprehensive treatment of the applicability
 and interpretability of Ward’s hierarchical agglomerative clustering
 with or without contiguity constraints.</p>
@@ -108,16 +96,19 @@ implementation<a class="anchor" aria-label="anchor" href="#notes-on-relations-be
 <h3 id="basic-implementation-of-chac-in-adjclust">Basic implementation of CHAC in <code>adjclust</code><a class="anchor" aria-label="anchor" href="#basic-implementation-of-chac-in-adjclust"></a>
 </h3>
 <p>The basic implementation of <code>adjclust</code> takes, as an input,
-a kernel <span class="math inline">\(k\)</span> which is supposed to be
-symmetric and positive (in the kernel sense). If your data are under
-this format, then the constrained clustering can be performed with</p>
+a kernel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+which is supposed to be symmetric and positive (in the kernel sense). If
+your data are under this format, then the constrained clustering can be
+performed with</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjClust.html">adjClust</a></span><span class="op">(</span><span class="va">k</span>, type <span class="op">=</span> <span class="st">"similarity"</span><span class="op">)</span></span></code></pre></div>
 <p>or with</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjClust.html">adjClust</a></span><span class="op">(</span><span class="va">k</span>, type <span class="op">=</span> <span class="st">"similarity"</span>, h <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span></code></pre></div>
-<p>if, in addition, the kernel <span class="math inline">\(k\)</span> is
-supposed to have only null entries outside of a diagonal of size
+<p>if, in addition, the kernel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+is supposed to have only null entries outside of a diagonal of size
 <code>h</code>.</p>
 <p>The implementation is the one described in [1].</p>
 </div>
@@ -127,64 +118,87 @@ supposed to have only null entries outside of a diagonal of size
 <div class="section level4">
 <h4 id="non-positive-but-normalized-similarities">Non positive but normalized similarities<a class="anchor" aria-label="anchor" href="#non-positive-but-normalized-similarities"></a>
 </h4>
-<p>In this section, the available data set is a matrix <span class="math inline">\(s\)</span> that can either have only positive
-entries (in this case it is called a similarity) or both positive and
-non-positive entries. If, in addition, the matrix <span class="math inline">\(s\)</span> is <em>normalized</em>, <em>i.e.</em>,
-<span class="math inline">\(s(i,i) + s(j,j) - 2s(i,j) \geq 0\)</span>
-for all <span class="math inline">\(i,j=1,\ldots,n\)</span> then the
-algorithm implemented in <code>adjclust</code> can be applied directly,
-similarly as for a standard kernel (section 1). This section explains
-why this is the case.</p>
+<p>In this section, the available data set is a matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+that can either have only positive entries (in this case it is called a
+similarity) or both positive and non-positive entries. If, in addition,
+the matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+is <em>normalized</em>, <em>i.e.</em>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mn>2</mn><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">s(i,i) + s(j,j) - 2s(i,j) \geq 0</annotation></semantics></math>
+for all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>,</mo><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">i,j=1,\ldots,n</annotation></semantics></math>
+then the algorithm implemented in <code>adjclust</code> can be applied
+directly, similarly as for a standard kernel (section 1). This section
+explains why this is the case.</p>
 <p>The interpretation is similar to the kernel case, under the
 assumption that small similarity values or similarity values that are
 strongly negative are less expected to be clustered together than large
 similarity values. The application of the method is justified by the
-fact that, for a given matrix <span class="math inline">\(s\)</span>
-described as above, we can find a <span class="math inline">\(\lambda
-&gt; 0\)</span> such that the matrix <span class="math inline">\(k_\lambda\)</span> defined by <span class="math display">\[
-  \forall\,1,\ldots,n,\qquad k_\lambda(i,j) = s(i,j) + \lambda
+fact that, for a given matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+described as above, we can find a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\lambda &gt; 0</annotation></semantics></math>
+such that the matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mi>λ</mi></msub><annotation encoding="application/x-tex">k_\lambda</annotation></semantics></math>
+defined by
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∀</mo><mspace width="0.167em"></mspace><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>k</mi><mi>λ</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>λ</mi><msub><mn>𝟙</mn><mrow><mo stretchy="false" form="prefix">{</mo><mi>i</mi><mo>=</mo><mi>j</mi><mo stretchy="false" form="postfix">}</mo></mrow></msub></mrow><annotation encoding="application/x-tex">
+  \forall\,1,\ldots,n,\qquad k_\lambda(i,j) = s(i,j) + \lambda 
   \mathbb{1}_{\{i=j\}}
-\]</span> is a kernel (<em>i.e.</em>, the matrix <span class="math inline">\(k = s + \lambda I\)</span> is positive definite;
-indeed, it is the case for any <span class="math inline">\(\lambda\)</span> larger than the opposite of the
-smallest negative eigenvalue of <span class="math inline">\(s\)</span>.
+</annotation></semantics></math> is a kernel (<em>i.e.</em>, the matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mi>s</mi><mo>+</mo><mi>λ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">k = s + \lambda I</annotation></semantics></math>
+is positive definite; indeed, it is the case for any
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
+larger than the opposite of the smallest negative eigenvalue of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>.
 [3] shows that the HAC obtained from the distance induced by the kernel
-<span class="math inline">\(k_\lambda\)</span> in its feature space and
-the HAC obtained from the <em>ad hoc</em> dissimilarity defined by <span class="math display">\[
-  \forall\, i,j=1,\ldots,n,\qquad d(i,j) = \sqrt{s(i,i) + s(j,j) -
-2s(i,j)}
-\]</span> are identical, except that all the merging levels are shifted
-by <span class="math inline">\(\lambda\)</span>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mi>λ</mi></msub><annotation encoding="application/x-tex">k_\lambda</annotation></semantics></math>
+in its feature space and the HAC obtained from the <em>ad hoc</em>
+dissimilarity defined by
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∀</mo><mspace width="0.167em"></mspace><mi>i</mi><mo>,</mo><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>,</mo><mspace width="2.0em"></mspace><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mn>2</mn><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">
+  \forall\, i,j=1,\ldots,n,\qquad d(i,j) = \sqrt{s(i,i) + s(j,j) - 2s(i,j)}
+</annotation></semantics></math> are identical, except that all the
+merging levels are shifted by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>.</p>
 <p>In conclusion, to address this case, the command lines that have to
 be used are the ones described in section 1.</p>
 </div>
 <div class="section level4">
 <h4 id="non-normalized-similarities">Non normalized similarities<a class="anchor" aria-label="anchor" href="#non-normalized-similarities"></a>
 </h4>
-<p>Suppose now that the data set is described by a matrix <span class="math inline">\(s\)</span> as in the previous section except that
-this similarity matrix is not normalized, meaning that, there is at
-least one pair <span class="math inline">\((i,j)\)</span>, such that
-<span class="math display">\[
+<p>Suppose now that the data set is described by a matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+as in the previous section except that this similarity matrix is not
+normalized, meaning that, there is at least one pair
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math>,
+such that
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>&gt;</mo><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
   2s(i,j) &gt; s(i,i) + s(j,j).
-\]</span></p>
+</annotation></semantics></math></p>
 <p>The package then performs the following pre-transformation: a matrix
-<span class="math inline">\(s^{*}\)</span> is defined as <span class="math display">\[
-  \forall\,i,j=1,\ldots,n,\qquad s^{*}(i,j) = s(i,j) + \lambda
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>s</mi><mo>*</mo></msup><annotation encoding="application/x-tex">s^{*}</annotation></semantics></math>
+is defined as
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∀</mo><mspace width="0.167em"></mspace><mi>i</mi><mo>,</mo><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>,</mo><mspace width="2.0em"></mspace><msup><mi>s</mi><mo>*</mo></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>λ</mi><msub><mn>𝟙</mn><mrow><mo stretchy="false" form="prefix">{</mo><mi>i</mi><mo>=</mo><mi>j</mi><mo stretchy="false" form="postfix">}</mo></mrow></msub></mrow><annotation encoding="application/x-tex">
+  \forall\,i,j=1,\ldots,n,\qquad s^{*}(i,j) = s(i,j) + \lambda 
   \mathbb{1}_{\{i=j\}}
-\]</span> for a <span class="math inline">\(\lambda\)</span> large
-enough to ensure that <span class="math inline">\(s^{*}\)</span> becomes
-normalized. In the package, <span class="math inline">\(\lambda\)</span>
-is chosen as <span class="math display">\[
-  \lambda := \epsilon + \max_{i,j} \left(2s(i,j) - s(i,i) -
-s(j,j)\right)_+
-\]</span> for a small <span class="math inline">\(\epsilon &gt;
-0\)</span>. This case is justified by the property described in Section
-2.1 (Non-positive but normalized similarities). The underlying idea is
-that, shifting the diagonal entries of a similarity matrix does not
-change HAC result and thus they can be shifted until they induce a
-proper <em>ad-hoc</em> dissimilarity matrix. The transformation affects
-only the heights to ensure that they are all positive and the two
-command lines described in the first section of this note are still
-valid.</p>
+</annotation></semantics></math> for a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
+large enough to ensure that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>s</mi><mo>*</mo></msup><annotation encoding="application/x-tex">s^{*}</annotation></semantics></math>
+becomes normalized. In the package,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
+is chosen as
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>:=</mo><mi>ϵ</mi><mo>+</mo><munder><mo>max</mo><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></munder><msub><mrow><mo stretchy="true" form="prefix">(</mo><mn>2</mn><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo></msub></mrow><annotation encoding="application/x-tex">
+  \lambda := \epsilon + \max_{i,j} \left(2s(i,j) - s(i,i) - s(j,j)\right)_+
+</annotation></semantics></math> for a small
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\epsilon &gt; 0</annotation></semantics></math>.
+This case is justified by the property described in Section 2.1
+(Non-positive but normalized similarities). The underlying idea is that,
+shifting the diagonal entries of a similarity matrix does not change HAC
+result and thus they can be shifted until they induce a proper
+<em>ad-hoc</em> dissimilarity matrix. The transformation affects only
+the heights to ensure that they are all positive and the two command
+lines described in the first section of this note are still valid.</p>
 </div>
 <div class="section level4">
 <h4 id="case-of-dissimilarity-data">Case of dissimilarity data<a class="anchor" aria-label="anchor" href="#case-of-dissimilarity-data"></a>
@@ -194,27 +208,48 @@ valid.</p>
 However, the implementation of <code>adjclust</code> is based on a
 kernel/similarity approach. We describe in this section how the
 dissimilarity case is handled.</p>
-<p>Suppose given a dissimilarity <span class="math inline">\(d\)</span>
+<p>Suppose given a dissimilarity
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
 which satisfies:</p>
 <ul>
-<li><p><span class="math inline">\(d\)</span> has non negative entries:
-<span class="math inline">\(d(i,j) \geq 0\)</span> for all <span class="math inline">\(i=1,\ldots,n\)</span>;</p></li>
-<li><p><span class="math inline">\(d\)</span> is symmetric: <span class="math inline">\(d(i,j) = d(j,i)\)</span> for all <span class="math inline">\(i,j=1,\ldots,n\)</span>;</p></li>
-<li><p><span class="math inline">\(d\)</span> has a null diagonal: <span class="math inline">\(d(i,i) = 0\)</span> for all <span class="math inline">\(i=1,\ldots,n\)</span>.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+has non negative entries:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">d(i,j) \geq 0</annotation></semantics></math>
+for all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">i=1,\ldots,n</annotation></semantics></math>;</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+is symmetric:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d(i,j) = d(j,i)</annotation></semantics></math>
+for all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>,</mo><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">i,j=1,\ldots,n</annotation></semantics></math>;</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+has a null diagonal:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">d(i,i) = 0</annotation></semantics></math>
+for all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">i=1,\ldots,n</annotation></semantics></math>.</p></li>
 </ul>
-<p>Any sequence of positive numbers <span class="math inline">\((a_i)_{i=1,\ldots,n}\)</span> would provide a
-similarity <span class="math inline">\(s\)</span> for which <span class="math inline">\(d\)</span> is the <em>ad-hoc</em> dissimilarity by
-setting: <span class="math display">\[
+<p>Any sequence of positive numbers
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">(a_i)_{i=1,\ldots,n}</annotation></semantics></math>
+would provide a similarity
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+for which
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+is the <em>ad-hoc</em> dissimilarity by setting:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>a</mi><mi>i</mi></msub></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mi>s</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>+</mo><msub><mi>a</mi><mi>j</mi></msub><mo>−</mo><msup><mi>d</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
   \left\{ \begin{array}{l}
     s(i,i) = a_i\\
     s(i,j) = \frac{1}{2} (a_i + a_j - d^2(i,j))
   \end{array} \right. .
-\]</span> By definition, such an <span class="math inline">\(s\)</span>
-is normalized and any choice for <span class="math inline">\((a_i)_{i=1,\ldots,n}\)</span> yields the same
-clustering (since they all correspond to the same <em>ad-hoc</em>
-dissimilarity). The arbitrary choice <span class="math inline">\(a_i =
-1\)</span> for all <span class="math inline">\(i=1,\ldots,n\)</span> has
-thus been made.</p>
+</annotation></semantics></math> By definition, such an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+is normalized and any choice for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">(a_i)_{i=1,\ldots,n}</annotation></semantics></math>
+yields the same clustering (since they all correspond to the same
+<em>ad-hoc</em> dissimilarity). The arbitrary choice
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_i = 1</annotation></semantics></math>
+for all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">i=1,\ldots,n</annotation></semantics></math>
+has thus been made.</p>
 <p>The basic and the sparse implementations are both available with,
 respectively,</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -228,57 +263,79 @@ respectively,</p>
 <div class="section level2">
 <h2 id="options-for-displaying-the-dendrogram">Options for displaying the dendrogram<a class="anchor" aria-label="anchor" href="#options-for-displaying-the-dendrogram"></a>
 </h2>
-<p>In this section, we suppose given an Euclidean distance <span class="math inline">\(d\)</span> between objects (even though the
-results described in this section are not specific to this case, they
-are described more easily using this framework). Ward’s criterion, that
-is implemented in <code>adjclust</code> aims at minimizing the Error Sum
-of Squares (ESS) which is equal to: <span class="math display">\[
-  \mbox{ESS}(\mathcal{C}) = \sum_{C \in \mathcal{C}} \sum_{i \in C}
-d^2(i, g_C)
-\]</span> where <span class="math inline">\(\mathcal{C}\)</span> is the
-clustering and <span class="math inline">\(g_C = \frac{1}{\mu_C} \sum_{i
-\in C} i\)</span> is the center of gravity of the cluster <span class="math inline">\(C\)</span> with <span class="math inline">\(\mu_C\)</span> elements [6]. In the sequel, we
-will denote:</p>
+<p>In this section, we suppose given an Euclidean distance
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+between objects (even though the results described in this section are
+not specific to this case, they are described more easily using this
+framework). Ward’s criterion, that is implemented in
+<code>adjclust</code> aims at minimizing the Error Sum of Squares (ESS)
+which is equal to:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">ESS</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝒞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>∑</mo><mrow><mi>C</mi><mo>∈</mo><mi>𝒞</mi></mrow></munder><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>C</mi></mrow></munder><msup><mi>d</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><msub><mi>g</mi><mi>C</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+  \mbox{ESS}(\mathcal{C}) = \sum_{C \in \mathcal{C}} \sum_{i \in C} d^2(i, g_C)
+</annotation></semantics></math> where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝒞</mi><annotation encoding="application/x-tex">\mathcal{C}</annotation></semantics></math>
+is the clustering and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>C</mi></msub><mo>=</mo><mfrac><mn>1</mn><msub><mi>μ</mi><mi>C</mi></msub></mfrac><msub><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>C</mi></mrow></msub><mi>i</mi></mrow><annotation encoding="application/x-tex">g_C = \frac{1}{\mu_C} \sum_{i \in C}
+i</annotation></semantics></math> is the center of gravity of the
+cluster
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>μ</mi><mi>C</mi></msub><annotation encoding="application/x-tex">\mu_C</annotation></semantics></math>
+elements [6]. In the sequel, we will denote:</p>
 <ul>
 <li><p><em>within-cluster dispersion</em> which, for a given cluster
-<span class="math inline">\(C\)</span>, is equal to <span class="math display">\[
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>,
+is equal to
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>C</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>C</mi></mrow></munder><msup><mi>d</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><msub><mi>g</mi><mi>C</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 I(C) = \sum_{i \in C} d^2(i, g_C).
-\]</span> We can prove that <span class="math inline">\(I(C) =
-\frac{1}{2\mu_C} \sum_{i,j \in C} d^2(i,j)\)</span> (see [4] for
-instance);</p></li>
+</annotation></semantics></math> We can prove that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>C</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><msub><mi>μ</mi><mi>C</mi></msub></mrow></mfrac><msub><mo>∑</mo><mrow><mi>i</mi><mo>,</mo><mi>j</mi><mo>∈</mo><mi>C</mi></mrow></msub><msup><mi>d</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I(C) = \frac{1}{2\mu_C} \sum_{i,j \in C} d^2(i,j)</annotation></semantics></math>
+(see [4] for instance);</p></li>
 <li><p><em>average within-cluster dispersion</em> which is equal to
-<span class="math inline">\(\frac{I(C)}{\mu_C}\)</span> and corresponds
-to the cluster variance.</p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>C</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><msub><mi>μ</mi><mi>C</mi></msub></mfrac><annotation encoding="application/x-tex">\frac{I(C)}{\mu_C}</annotation></semantics></math>
+and corresponds to the cluster variance.</p></li>
 </ul>
 <p>Usually, the results of standard HAC are displayed under the form of
 a dendrogram for which the heights of the different merges correspond to
-the linkage criterion <span class="math display">\[
+the linkage criterion
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mo>∪</mo><mi>B</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>B</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
   \delta(A,B) = I(A \cup B) - I(A) - I(B)
-\]</span> of that merge. This criterion corresponds to the increase in
-total dispersion (ESS) that occurs by merging the two clusters <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. However, for constrained HAC, there is
-no guaranty that this criterion is non decreasing (see [2] for instance)
-and thus, the dendrogram build using this method can contain reversals
-in its branches. This is the default option in <code>plot.chac</code>
-(that corresponds to <code>mode = "standard"</code>). To provide
-dendrograms that are easier to interpret, alternative options have been
-implemented in the package: the first one is a simple correction of the
-standard method, and the three others are suggested by [3].</p>
-<p>In the sequel, we denote by <span class="math inline">\((m_t)_{t=1,\ldots,n-1}\)</span> the series of
-linkage criterion values obtained during the clustering.</p>
+</annotation></semantics></math> of that merge. This criterion
+corresponds to the increase in total dispersion (ESS) that occurs by
+merging the two clusters
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>.
+However, for constrained HAC, there is no guaranty that this criterion
+is non decreasing (see [2] for instance) and thus, the dendrogram build
+using this method can contain reversals in its branches. This is the
+default option in <code>plot.chac</code> (that corresponds to
+<code>mode = "standard"</code>). To provide dendrograms that are easier
+to interpret, alternative options have been implemented in the package:
+the first one is a simple correction of the standard method, and the
+three others are suggested by [3].</p>
+<p>In the sequel, we denote by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>m</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>t</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">(m_t)_{t=1,\ldots,n-1}</annotation></semantics></math>
+the series of linkage criterion values obtained during the
+clustering.</p>
 <div class="section level3">
 <h3 id="mode-corrected">
 <code>mode = "corrected"</code><a class="anchor" aria-label="anchor" href="#mode-corrected"></a>
 </h3>
 <p>This option simply corrects the heights by adding the minimal value
-making them non decreasing. More precisely, if at a given step <span class="math inline">\(t \in \{2,\ldots,n-1\}\)</span> of the clustering,
-we have that <span class="math inline">\(m_t &lt; m_{t-1}\)</span> then,
-we define the corrected weights as: <span class="math display">\[
+making them non decreasing. More precisely, if at a given step
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">t \in \{2,\ldots,n-1\}</annotation></semantics></math>
+of the clustering, we have that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>m</mi><mi>t</mi></msub><mo>&lt;</mo><msub><mi>m</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">m_t &lt; m_{t-1}</annotation></semantics></math>
+then, we define the corrected weights as:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>m</mi><mo accent="true">̃</mo></mover><mrow><mi>t</mi><mi>′</mi></mrow></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><msub><mi>m</mi><mrow><mi>t</mi><mi>′</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left"><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mi>t</mi><mi>′</mi><mo>&lt;</mo><mi>t</mi></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><msub><mi>m</mi><mrow><mi>t</mi><mi>′</mi></mrow></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>m</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>m</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext></mtd></mtr></mtable></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
   \tilde{m}_{t'} = \left\{ \begin{array}{ll}
     m_{t'} &amp; \textrm{if } t' &lt; t\\
     m_{t'} + (m_{t-1} - m_t) &amp; \textrm{otherwise}
   \end{array} \right..
-\]</span> This correction is iteratively performed for all decreasing
-merges, ensuring a visually increasing dendrogram.</p>
+</annotation></semantics></math> This correction is iteratively
+performed for all decreasing merges, ensuring a visually increasing
+dendrogram.</p>
 </div>
 <div class="section level3">
 <h3 id="mode-total-disp">
@@ -286,8 +343,9 @@ merges, ensuring a visually increasing dendrogram.</p>
 </h3>
 <p>This option represents the dendrogram using the total dispersion
 (that is the objective function) at every level of the clustering. It
-can easily be proved that the total dispersion is equal to ESS<span class="math inline">\(_t = \sum_{t' \leq t} m_{t'}\)</span> and
-that this quantity is always non decreasing. This is the quantity
+can easily be proved that the total dispersion is equal to
+ESS<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mi>t</mi></msub><mo>=</mo><msub><mo>∑</mo><mrow><mi>t</mi><mi>′</mi><mo>≤</mo><mi>t</mi></mrow></msub><msub><mi>m</mi><mrow><mi>t</mi><mi>′</mi></mrow></msub></mrow><annotation encoding="application/x-tex">_t = \sum_{t' \leq t} m_{t'}</annotation></semantics></math>
+and that this quantity is always non decreasing. This is the quantity
 recommended by [2] to display the dendrogram.</p>
 </div>
 <div class="section level3">
@@ -324,17 +382,20 @@ above, we did not make such an assumption so
 results when the ordering of the (unconstrained) clustering is
 compatible with the natural ordering of objects used as a constraint. In
 addition, since <code>hclust(..., method = "ward.D2")</code> takes for
-linkage <span class="math inline">\(\sqrt{m_t}\)</span>,
+linkage
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><msub><mi>m</mi><mi>t</mi></msub></msqrt><annotation encoding="application/x-tex">\sqrt{m_t}</annotation></semantics></math>,
 <code>hclust(d, method = "ward.D2")</code> and
 <code>adjClust(d, method = "dissimilarity")</code> give identical
 results for the merges and the slot <code>height</code> of the first is
 the square root of the slot <code>height</code> of the second, when the
 ordering of the (unconstrained) clustering is compatible with the
 natural ordering of objects used as a constraint.</p>
-<p>Finally, <code>rioja</code> uses ESS<span class="math inline">\(_t\)</span> to display the heights of the
-dendrogram (because, as documented above, this quantity is non
-decreasing, in the Euclidean case, even for constrained clusterings).
-Hence, <code>rioja(d, method = "coniss")</code> and
+<p>Finally, <code>rioja</code> uses
+ESS<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mi>t</mi></msub><annotation encoding="application/x-tex">_t</annotation></semantics></math>
+to display the heights of the dendrogram (because, as documented above,
+this quantity is non decreasing, in the Euclidean case, even for
+constrained clusterings). Hence,
+<code>rioja(d, method = "coniss")</code> and
 <code>adjClust(d, method = "dissimilarity")</code> give identical
 results for the merges and the slot <code>height</code> of the first is
 the cumulative sum of the slot <code>height</code> of the second.</p>
@@ -366,28 +427,26 @@ Classification</em> <strong>38</strong>, 1-27.</p>
 function. <em>Journal of the American Statistical Association</em>,
 <strong>58</strong>(301), 236-244.</p>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/" class="external-link">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/" class="external-link">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu" class="external-link">Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
+  <p>Developed by <a href="http://www.math-evry.cnrs.fr/members/cambroise/" class="external-link">Christophe Ambroise</a>, Shubham Chaturvedi, Alia Dehman, <a href="https://www.math.univ-toulouse.fr/~pneuvial/" class="external-link">Pierre Neuvial</a>, Guillem Rigaill, <a href="http://www.nathalievialaneix.eu" class="external-link">Nathalie Vialaneix</a>, Gabriel Hoffman.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
