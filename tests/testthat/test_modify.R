@@ -16,7 +16,7 @@ test_that("Results of 'adjclust' are shifted by lambda when similarity is shifte
 
 test_that("Results of the algorithm are shifted by lambda when similarity is unnormalized and heights are positive", {
   expect_message(fit3 <- adjClust(sim2), "added")
-  expect_message(fit4 <- adjClust(sim2), fit3$correction)
+  expect_message(fit4 <- adjClust(sim2), as.character(fit3$correction))
 
   tmp <- sweep(-2*sim2, 1, diag(sim2), "+")
   tmp <- sweep(tmp, 2, diag(sim2), "+")
