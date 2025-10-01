@@ -1,4 +1,9 @@
-# Version 0.6.9  [2024-10-07]
+# Version 0.6.11  [2025-10-01]
+
+* Update gh test coverage workflow to v4 (#84)
+* Fix for upcoming testthat 3.3 release (#83)
+
+# Version 0.6.10  [2024-10-07]
 
 * Bug fix on OMP option (#81)
 
