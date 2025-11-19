@@ -29,7 +29,7 @@ NULL
 #'   default of positivity in input similarities. Can be disabled to avoid
 #'   computationally expensive checks when the number of features is large.
 #' @param nthreads Integer (default to \code{1L}). Number of threads use for
-#' matrix precomputations.
+#' matrix pre-computations.
 #'
 #' @returns An object of class \code{\link{chac}} which describes the tree
 #'   produced by the clustering process. The object is a list with the same
