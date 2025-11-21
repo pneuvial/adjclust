@@ -1,0 +1,266 @@
+# Implementation notes for the \`adjclust\` package
+
+This document has two parts:
+
+- the first part aims at clarifying relations between dissimilarity and
+  similarity methods for hierarchical agglomerative clustering (HAC) and
+  at explaining implementation choices in `adjclust`;
+
+- the second part describes the different types of dendrograms that are
+  implemented in `plot.chac`.
+
+In this document, we assume to be given $n$ objects, $\{ 1,\ldots,n\}$
+that have to be clustered using adjacency-constrained HAC (CHAC), that
+is, in such a way that only adjacent objects/clusters can be merged.
+
+We refer to \[5\] for a comprehensive treatment of the applicability and
+interpretability of Ward’s hierarchical agglomerative clustering with or
+without contiguity constraints.
+
+## Notes on relations between similarity and dissimilarity implementation
+
+### Basic implementation of CHAC in `adjclust`
+
+The basic implementation of `adjclust` takes, as an input, a kernel $k$
+which is supposed to be symmetric and positive (in the kernel sense). If
+your data are under this format, then the constrained clustering can be
+performed with
+
+``` r
+fit <- adjClust(k, type = "similarity")
+```
+
+or with
+
+``` r
+fit <- adjClust(k, type = "similarity", h = h)
+```
+
+if, in addition, the kernel $k$ is supposed to have only null entries
+outside of a diagonal of size `h`.
+
+The implementation is the one described in \[1\].
+
+### More advanced used for kernel or similarity matrices
+
+#### Non positive but normalized similarities
+
+In this section, the available data set is a matrix $s$ that can either
+have only positive entries (in this case it is called a similarity) or
+both positive and non-positive entries. If, in addition, the matrix $s$
+is *normalized*, *i.e.*, $s(i,i) + s(j,j) - 2s(i,j) \geq 0$ for all
+$i,j = 1,\ldots,n$ then the algorithm implemented in `adjclust` can be
+applied directly, similarly as for a standard kernel (section 1). This
+section explains why this is the case.
+
+The interpretation is similar to the kernel case, under the assumption
+that small similarity values or similarity values that are strongly
+negative are less expected to be clustered together than large
+similarity values. The application of the method is justified by the
+fact that, for a given matrix $s$ described as above, we can find a
+$\lambda > 0$ such that the matrix $k_{\lambda}$ defined by
+$$\forall\, 1,\ldots,n,\qquad k_{\lambda}(i,j) = s(i,j) + \lambda\mathbb{1}_{\{ i = j\}}$$
+is a kernel (*i.e.*, the matrix $k = s + \lambda I$ is positive
+definite; indeed, it is the case for any $\lambda$ larger than the
+opposite of the smallest negative eigenvalue of $s$. \[3\] shows that
+the HAC obtained from the distance induced by the kernel $k_{\lambda}$
+in its feature space and the HAC obtained from the *ad hoc*
+dissimilarity defined by
+$$\forall\, i,j = 1,\ldots,n,\qquad d(i,j) = \sqrt{s(i,i) + s(j,j) - 2s(i,j)}$$
+are identical, except that all the merging levels are shifted by
+$\lambda$.
+
+In conclusion, to address this case, the command lines that have to be
+used are the ones described in section 1.
+
+#### Non normalized similarities
+
+Suppose now that the data set is described by a matrix $s$ as in the
+previous section except that this similarity matrix is not normalized,
+meaning that, there is at least one pair $(i,j)$, such that
+$$2s(i,j) > s(i,i) + s(j,j).$$
+
+The package then performs the following pre-transformation: a matrix
+$s^{*}$ is defined as
+$$\forall\, i,j = 1,\ldots,n,\qquad s^{*}(i,j) = s(i,j) + \lambda\mathbb{1}_{\{ i = j\}}$$
+for a $\lambda$ large enough to ensure that $s^{*}$ becomes normalized.
+In the package, $\lambda$ is chosen as
+$$\lambda:=\epsilon + \max\limits_{i,j}\left( 2s(i,j) - s(i,i) - s(j,j) \right)_{+}$$
+for a small $\epsilon > 0$. This case is justified by the property
+described in Section 2.1 (Non-positive but normalized similarities). The
+underlying idea is that, shifting the diagonal entries of a similarity
+matrix does not change HAC result and thus they can be shifted until
+they induce a proper *ad-hoc* dissimilarity matrix. The transformation
+affects only the heights to ensure that they are all positive and the
+two command lines described in the first section of this note are still
+valid.
+
+#### Case of dissimilarity data
+
+The original implementation of (unconstrained) HAC in
+[`stats::hclust`](https://rdrr.io/r/stats/hclust.html) takes as input a
+dissimilarity matrix. However, the implementation of `adjclust` is based
+on a kernel/similarity approach. We describe in this section how the
+dissimilarity case is handled.
+
+Suppose given a dissimilarity $d$ which satisfies:
+
+- $d$ has non negative entries: $d(i,j) \geq 0$ for all
+  $i = 1,\ldots,n$;
+
+- $d$ is symmetric: $d(i,j) = d(j,i)$ for all $i,j = 1,\ldots,n$;
+
+- $d$ has a null diagonal: $d(i,i) = 0$ for all $i = 1,\ldots,n$.
+
+Any sequence of positive numbers $\left( a_{i} \right)_{i = 1,\ldots,n}$
+would provide a similarity $s$ for which $d$ is the *ad-hoc*
+dissimilarity by setting: $$\left\{ \begin{array}{l}
+{s(i,i) = a_{i}} \\
+{s(i,j) = \frac{1}{2}\left( a_{i} + a_{j} - d^{2}(i,j) \right)}
+\end{array} \right..$$ By definition, such an $s$ is normalized and any
+choice for $\left( a_{i} \right)_{i = 1,\ldots,n}$ yields the same
+clustering (since they all correspond to the same *ad-hoc*
+dissimilarity). The arbitrary choice $a_{i} = 1$ for all
+$i = 1,\ldots,n$ has thus been made.
+
+The basic and the sparse implementations are both available with,
+respectively,
+
+``` r
+fit <- adjClust(d, type = "dissimilarity")
+```
+
+and
+
+``` r
+fit <- adjClust(d, type = "dissimilarity", h = h)
+```
+
+## Options for displaying the dendrogram
+
+In this section, we suppose given an Euclidean distance $d$ between
+objects (even though the results described in this section are not
+specific to this case, they are described more easily using this
+framework). Ward’s criterion, that is implemented in `adjclust` aims at
+minimizing the Error Sum of Squares (ESS) which is equal to:
+$$\text{ESS}(\mathcal{C}) = \sum\limits_{C \in \mathcal{C}}\sum\limits_{i \in C}d^{2}\left( i,g_{C} \right)$$
+where $\mathcal{C}$ is the clustering and
+$g_{C} = \frac{1}{\mu_{C}}\sum_{i \in C}i$ is the center of gravity of
+the cluster $C$ with $\mu_{C}$ elements \[6\]. In the sequel, we will
+denote:
+
+- *within-cluster dispersion* which, for a given cluster $C$, is equal
+  to $$I(C) = \sum\limits_{i \in C}d^{2}\left( i,g_{C} \right).$$ We can
+  prove that $I(C) = \frac{1}{2\mu_{C}}\sum_{i,j \in C}d^{2}(i,j)$ (see
+  \[4\] for instance);
+
+- *average within-cluster dispersion* which is equal to
+  $\frac{I(C)}{\mu_{C}}$ and corresponds to the cluster variance.
+
+Usually, the results of standard HAC are displayed under the form of a
+dendrogram for which the heights of the different merges correspond to
+the linkage criterion $$\delta(A,B) = I(A \cup B) - I(A) - I(B)$$ of
+that merge. This criterion corresponds to the increase in total
+dispersion (ESS) that occurs by merging the two clusters $A$ and $B$.
+However, for constrained HAC, there is no guaranty that this criterion
+is non decreasing (see \[2\] for instance) and thus, the dendrogram
+build using this method can contain reversals in its branches. This is
+the default option in `plot.chac` (that corresponds to
+`mode = "standard"`). To provide dendrograms that are easier to
+interpret, alternative options have been implemented in the package: the
+first one is a simple correction of the standard method, and the three
+others are suggested by \[3\].
+
+In the sequel, we denote by $\left( m_{t} \right)_{t = 1,\ldots,n - 1}$
+the series of linkage criterion values obtained during the clustering.
+
+### `mode = "corrected"`
+
+This option simply corrects the heights by adding the minimal value
+making them non decreasing. More precisely, if at a given step
+$t \in \{ 2,\ldots,n - 1\}$ of the clustering, we have that
+$m_{t} < m_{t - 1}$ then, we define the corrected weights as:
+$${\widetilde{m}}_{t\prime} = \begin{cases}
+m_{t\prime} & {{\text{if}\mspace{6mu}}t\prime < t} \\
+{m_{t\prime} + \left( m_{t - 1} - m_{t} \right)} & \text{otherwise}
+\end{cases}.$$ This correction is iteratively performed for all
+decreasing merges, ensuring a visually increasing dendrogram.
+
+### `mode = "total-disp"`
+
+This option represents the dendrogram using the total dispersion (that
+is the objective function) at every level of the clustering. It can
+easily be proved that the total dispersion is equal to
+ESS$_{t} = \sum_{t\prime \leq t}m_{t\prime}$ and that this quantity is
+always non decreasing. This is the quantity recommended by \[2\] to
+display the dendrogram.
+
+### `mode = "within-disp"`
+
+This option represents a cluster specific criterion by using the within
+cluster dispersion of the two clusters being merged at every given step
+of the algorithm. It can be proved that this quantity is also non
+decreasing, but it is depends strongly on the cluster size, leading to
+flattened dendrogram in most cases.
+
+### `mode = "average-disp"`
+
+This last option addresses the problem of the dependency to cluster
+sizes posed by the previous method (`"within-disp"`) by using the
+average within-cluster dispersion of the two clusters being merged at
+every given step of the algorithm. This criterion is also a cluster
+specific one but does not guaranty the absence of reversals in heights.
+
+## Relations with ‘hclust’ and ‘rioja’
+
+As documented in \[4\], the call to `hclust(..., method = "ward.D")`
+implicitly assumes that `...` is a *squared* distance matrix. As
+explained above, we did not make such an assumption so
+`hclust(d^2, method = "ward.D")` and
+`adjClust(d, method = "dissimilarity")` give identical results when the
+ordering of the (unconstrained) clustering is compatible with the
+natural ordering of objects used as a constraint. In addition, since
+`hclust(..., method = "ward.D2")` takes for linkage $\sqrt{m_{t}}$,
+`hclust(d, method = "ward.D2")` and
+`adjClust(d, method = "dissimilarity")` give identical results for the
+merges and the slot `height` of the first is the square root of the slot
+`height` of the second, when the ordering of the (unconstrained)
+clustering is compatible with the natural ordering of objects used as a
+constraint.
+
+Finally, `rioja` uses ESS$_{t}$ to display the heights of the dendrogram
+(because, as documented above, this quantity is non decreasing, in the
+Euclidean case, even for constrained clusterings). Hence,
+`rioja(d, method = "coniss")` and
+`adjClust(d, method = "dissimilarity")` give identical results for the
+merges and the slot `height` of the first is the cumulative sum of the
+slot `height` of the second.
+
+## References
+
+\[1\] Ambroise C., Dehman A., Neuvial P., Rigaill G., and Vialaneix N.
+(2019). Adjacency-constrained hierarchical clustering of a band
+similarity matrix with application to genomics. *Algorithms for
+Molecular Biology*, **14**, 22.
+
+\[2\] Grimm, E.C. (1987) CONISS: a fortran 77 program for
+stratigraphically constrained cluster analysis by the method of
+incremental sum of squares. *Computers & Geosciences*, **13**(1), 13-35.
+
+\[3\] Miyamoto S., Abe R., Endo Y., Takeshita J. (2015) Ward method of
+hierarchical clustering for non-Euclidean similarity measures. In:
+*Proceedings of the VIIth International Conference of Soft Computing and
+Pattern Recognition* (SoCPaR 2015).
+
+\[4\] Murtagh, F. and Legendre, P. (2014) Ward’s hierarchical
+agglomerative clustering method: which algorithms implement Ward’s
+criterion? *Journal of Classification*, **31**, 274-295.
+
+\[5\] Randriamihamison N., Vialaneix N., & Neuvial P. (2020).
+Applicability and interpretability of Ward’s hierarchical agglomerative
+clustering with or without contiguity constraints. *Journal of
+Classification* **38**, 1-27.
+
+\[6\] Ward, J.H. (1963) Hierarchical grouping to optimize an objective
+function. *Journal of the American Statistical Association*,
+**58**(301), 236-244.
