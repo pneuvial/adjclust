@@ -1,4 +1,10 @@
-# Version 0.6.9  [2024-10-07]
+# Version 0.6.11  [2025-11-19]
+
+* Fix minor spelling errors
+* Update github test coverage workflow to v4 (#84)
+* Fix for upcoming "testthat" 3.3 release (#83)
+
+# Version 0.6.10  [2024-10-07]
 
 * Bug fix on OMP option (#81)
 
@@ -7,24 +13,24 @@
 * Properly handled OMP threads in C++ code (now default to 1 but with an option
 to increase this value)
 * Reintroduced tests and examples
-* Removed WCSS function that was not exported or documented
+* Removed 'WCSS' function that was not exported or documented
 * Fixed a problem in S3class for a non exported function
 
 # Version 0.6.8  [2024-01-10]
 
-* Fix CRAN error on useNames (deprecated NA)
-* Fix CRAN note on itemize (unecessary use of itemize)
+* Fix CRAN error on `useNames` (deprecated NA)
+* Fix CRAN note on itemize (unnecessary use of itemize)
 * Limited OMP threads to 2 in examples, vignettes and tests
 * Updated citation of the package
 
 # Version 0.6.7  [2023-04-24]
 
 * Fix #60 (increase test coverage)
-* Fix #61 (NAMESPACE error in 'SnpClust.matrix')
+* Fix #61 (NAMESPACE error in 'snpClust.matrix')
 * Fix #45 (update 'calls' for 'adjclust.*' methods)
 * Fix #49 (calls to 'library' in tests)
 * Fix #55 (pkgdown action)
-* Fix #40 (moved plotSim to a ggplot2 version)
+* Fix #40 (moved plotSim to a 'ggplot2' version)
 * Fix #30 (improved plotSim, k and correct have been added as new arguments)
 * Fix #62 (citation file corrected)
 * Fix #68 (CRAN note)

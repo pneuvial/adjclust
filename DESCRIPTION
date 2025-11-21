@@ -11,8 +11,8 @@ Authors@R: c(person("Christophe", "Ambroise", role = "aut"),
                     email = "nathalie.vialaneix@inrae.fr",
 		    comment = c(ORCID = "0000-0003-1156-0639")),
              person("Gabriel", "Hoffman", role = "aut"))
-Date: 2024-10-07
-Version: 0.6.10
+Date: 2025-11-19
+Version: 0.6.11
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity Matrix
 Description: Implements a constrained version of hierarchical agglomerative 

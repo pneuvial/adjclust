@@ -74,7 +74,7 @@ of the x-axis (its length has to be equal to \code{naxis}).}
 
 \item{xlab}{character. If \code{axis == TRUE}, x-axis title.}
 
-\item{cluster_col}{colour for the cluster line if \code{clustering} is not
+\item{cluster_col}{color for the cluster line if \code{clustering} is not
 \code{NULL}.}
 
 \item{mode}{type of dendrogram to plot (see \code{\link{plot.chac}}). Default

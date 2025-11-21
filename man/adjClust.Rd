@@ -28,7 +28,7 @@ default of positivity in input similarities. Can be disabled to avoid
 computationally expensive checks when the number of features is large.}
 
 \item{nthreads}{Integer (default to \code{1L}). Number of threads use for
-matrix precomputations.}
+matrix pre-computations.}
 }
 \value{
 An object of class \code{\link{chac}} which describes the tree
